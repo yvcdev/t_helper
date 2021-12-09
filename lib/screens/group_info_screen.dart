@@ -23,10 +23,18 @@ class GroupInfoScreen extends StatelessWidget {
               height: 10,
             ),
             GroupInfoListTile(
+              trailing: Icons.groups_rounded,
               onTap: () {
                 Navigator.pushNamed(context, 'group_members');
               },
               title: 'Group members',
+            ),
+            GroupInfoListTile(
+              trailing: Icons.work,
+              onTap: () {
+                Navigator.pushNamed(context, 'group_activities');
+              },
+              title: 'Group Activities',
             ),
           ],
         ));

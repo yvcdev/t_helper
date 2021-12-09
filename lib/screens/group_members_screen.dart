@@ -16,7 +16,7 @@ class GroupMembersScreen extends StatelessWidget {
           return GroupInfoListTile(
             title: 'Student Name',
             subtitle: 'Student ID',
-            image:
+            trailing:
                 'https://img.freepik.com/free-photo/pleasant-looking-serious-man-stands-profile-has-confident-expression-wears-casual-white-t-shirt_273609-16959.jpg?size=626&ext=jpg',
             onTap: () {
               print('$index');

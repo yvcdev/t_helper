@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         'registered_groups': (_) => const RegisteredGroupScreen(),
         'group_info': (_) => const GroupInfoScreen(),
         'group_members': (_) => const GroupMembersScreen(),
+        'group_activities': (_) => const GroupActivitiesScreen(),
         'create_activity': (_) => const CreateActivityScreen(),
         'create_group': (_) => const CreateGroupScreen(),
       },

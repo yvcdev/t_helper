@@ -7,3 +7,4 @@ export 'package:t_helper/screens/group_info_screen.dart';
 export 'package:t_helper/screens/notifications_screen.dart';
 export 'package:t_helper/screens/create_activity_screen.dart';
 export 'package:t_helper/screens/create_group_screen.dart';
+export 'package:t_helper/screens/group_activities.dart';

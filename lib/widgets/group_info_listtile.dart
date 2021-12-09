@@ -4,14 +4,14 @@ class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
   final String title;
   final String? subtitle;
-  final String? image;
+  final dynamic trailing;
 
   const GroupInfoListTile(
       {Key? key,
       required this.onTap,
       required this.title,
       this.subtitle,
-      this.image})
+      this.trailing})
       : super(key: key);
 
   @override
@@ -33,12 +33,7 @@ class GroupInfoListTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Row(children: [
-                image == null
-                    ? const SizedBox()
-                    : CircleAvatar(
-                        foregroundImage: NetworkImage(image!),
-                        radius: 25,
-                      ),
+                _Trailing(trailing: trailing),
                 const SizedBox(
                   width: 10,
                 ),
@@ -56,6 +51,33 @@ class GroupInfoListTile extends StatelessWidget {
             ),
           )),
     );
+  }
+}
+
+class _Trailing extends StatelessWidget {
+  final dynamic trailing;
+
+  const _Trailing({Key? key, this.trailing}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (trailing != null) {
+      if (trailing is String && trailing.toString().startsWith('http')) {
+        return CircleAvatar(
+          foregroundImage: NetworkImage(trailing!),
+          radius: 25,
+        );
+      } else if (trailing is IconData) {
+        return Icon(
+          trailing,
+          size: 40,
+        );
+      }
+    } else {
+      return const SizedBox();
+    }
+
+    return const SizedBox();
   }
 }
 

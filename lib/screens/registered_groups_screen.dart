@@ -16,7 +16,7 @@ class RegisteredGroupScreen extends StatelessWidget {
           return GroupInfoListTile(
             title: 'Group Name',
             subtitle: 'Group ID',
-            image:
+            trailing:
                 'https://www.nubedigital.mx/flexo/assets/imagenesblog/imagenesblog/f-google-classroom-para-empresas.jpg',
             onTap: () {
               Navigator.pushNamed(context, 'group_info');
