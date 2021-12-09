@@ -17,10 +17,17 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: 'teacher_home',
+      initialRoute: 'home',
       routes: {
-        'teacher_home': (_) => const TeacherHomeScreen(),
         'login': (_) => const LoginScreen(),
+        'signup': (_) => const SignupScreen(),
+        'home': (_) => const HomeScreen(),
+        'notifications': (_) => const NotificationsScreen(),
+        'registered_groups': (_) => const RegisteredGroupScreen(),
+        'group_info': (_) => const GroupInfoScreen(),
+        'group_members': (_) => const GroupMembersScreen(),
+        'create_activity': (_) => const CreateActivityScreen(),
+        'create_group': (_) => const CreateGroupScreen(),
       },
     );
   }
@@ -37,6 +44,7 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold),
               subtitle2:
                   TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+              headline3: const TextStyle(color: Colors.white, fontSize: 24),
             ),
       ),
       iconTheme: const IconThemeData(color: Colors.white),

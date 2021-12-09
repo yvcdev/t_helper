@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 
-class GroupListTile extends StatelessWidget {
+class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
+  final String title;
+  final String? subtitle;
+  final String? image;
 
-  const GroupListTile({Key? key, required this.onTap}) : super(key: key);
+  const GroupInfoListTile(
+      {Key? key,
+      required this.onTap,
+      required this.title,
+      this.subtitle,
+      this.image})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: Container(
-          margin: const EdgeInsets.only(left: 10, right: 10, top: 15),
+          margin: const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(15),
@@ -23,20 +32,26 @@ class GroupListTile extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: Row(children: const [
-                CircleAvatar(
-                  radius: 25,
-                ),
-                SizedBox(
+              child: Row(children: [
+                image == null
+                    ? const SizedBox()
+                    : CircleAvatar(
+                        foregroundImage: NetworkImage(image!),
+                        radius: 25,
+                      ),
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
-                  child: _Center(),
+                  child: _Center(
+                    title: title,
+                    subtitle: subtitle,
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
-                Icon(Icons.arrow_forward_ios_rounded),
+                const Icon(Icons.arrow_forward_ios_rounded),
               ]),
             ),
           )),
@@ -45,8 +60,13 @@ class GroupListTile extends StatelessWidget {
 }
 
 class _Center extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+
   const _Center({
     Key? key,
+    required this.title,
+    this.subtitle,
   }) : super(key: key);
 
   @override
@@ -58,16 +78,18 @@ class _Center extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Group name',
+          title,
           style: textStyle.subtitle1,
         ),
-        const SizedBox(
-          height: 6,
+        SizedBox(
+          height: subtitle == null ? 0 : 6,
         ),
-        Text(
-          'Group ID',
-          style: textStyle.subtitle2,
-        ),
+        subtitle == null
+            ? const SizedBox()
+            : Text(
+                subtitle!,
+                style: textStyle.subtitle2,
+              ),
       ],
     );
   }
