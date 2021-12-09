@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import 'package:t_helper/activity_screens/activity_screens.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/utils/custom_colors.dart';
+import 'package:t_helper/services/services.dart';
+import 'package:t_helper/utils/utils.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppState());
+}
+
+class AppState extends StatelessWidget {
+  const AppState({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      child: const MyApp(),
+      providers: [
+        ChangeNotifierProvider(create: (_) => SentenceService()),
+      ],
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: 'home',
+      initialRoute: 'activity/sort_sentence',
       routes: {
         'login': (_) => const LoginScreen(),
         'signup': (_) => const SignupScreen(),
@@ -29,6 +46,7 @@ class MyApp extends StatelessWidget {
         'group_activities': (_) => const GroupActivitiesScreen(),
         'create_activity': (_) => const CreateActivityScreen(),
         'create_group': (_) => const CreateGroupScreen(),
+        'activity/sort_sentence': (_) => const ASortSentenceScreen(),
       },
     );
   }
