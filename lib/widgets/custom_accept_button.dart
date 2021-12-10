@@ -18,27 +18,24 @@ class CustomAcceptButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(UiConsts.borderRadius),
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: UiConsts.extraLargePadding,
-              vertical: UiConsts.normalPadding),
-          child: Text(title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: UiConsts.largeFontSize,
-              )),
-          decoration: ShapeDecoration(
-              shape: const StadiumBorder(),
-              color: color ?? CustomColors.green,
-              shadows: [UiConsts.boxShadow]),
-        ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(UiConsts.borderRadius),
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: UiConsts.extraLargePadding,
+            vertical: UiConsts.normalPadding),
+        child: Text(title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: UiConsts.largeFontSize,
+            )),
+        decoration: ShapeDecoration(
+            shape: const StadiumBorder(),
+            color: color ?? CustomColors.green,
+            shadows: [UiConsts.boxShadow]),
       ),
     );
   }

@@ -53,9 +53,10 @@ class MyApp extends StatelessWidget {
 
   ThemeData _themeData(BuildContext context) {
     return ThemeData(
+      canvasColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
           backgroundColor: CustomColors.primary, centerTitle: true),
-      textTheme: GoogleFonts.latoTextTheme(
+      textTheme: GoogleFonts.robotoTextTheme(
         Theme.of(context).textTheme.copyWith(
               subtitle1: const TextStyle(
                   color: Colors.white,

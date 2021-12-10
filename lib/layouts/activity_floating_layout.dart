@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:t_helper/constants/constants.dart';
 
-import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class ActivityFloatingLayoutLayout extends StatelessWidget {
@@ -23,21 +23,21 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         centerTitle: false,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: FloatingActionButton(
-          onPressed: () {
-            if (floatingAction == null) {
-              Navigator.pushNamed(context, 'home');
-            } else {
-              floatingAction!();
-            }
-          },
-          backgroundColor: CustomColors.primary,
-          child: Icon(floatingIcon ?? Icons.home),
-        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (floatingAction == null) {
+                Navigator.pushNamed(context, 'home');
+              } else {
+                floatingAction!();
+              }
+            },
+            icon: Icon(
+              floatingIcon ?? Icons.home,
+              size: UiConsts.largeFontSize,
+            ),
+          ),
+        ],
       ),
       body: GradientBackground(
         child: child,

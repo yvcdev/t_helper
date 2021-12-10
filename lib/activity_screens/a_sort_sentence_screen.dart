@@ -4,6 +4,7 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/constants/ui.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/services/services.dart';
+import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class ASortSentenceScreen extends StatelessWidget {
@@ -15,11 +16,12 @@ class ASortSentenceScreen extends StatelessWidget {
       title: 'Sentence Sorting',
       child: Column(
         children: [
-          const SizedBox(height: UiConsts.extraLargeSpacing),
+          const SizedBox(height: UiConsts.normalSpacing),
           const Text(
             'Long press to order the sentence',
             style: TextStyle(
-                color: Colors.white, fontSize: UiConsts.normalFontSize),
+                color: CustomColors.almostWhite,
+                fontSize: UiConsts.normalFontSize),
           ),
           const SizedBox(
             height: UiConsts.largeSpacing,
@@ -91,7 +93,7 @@ class _WordCard extends StatelessWidget {
             alignment: Alignment.center,
             padding: const EdgeInsets.all(UiConsts.normalPadding),
             margin:
-                const EdgeInsets.symmetric(horizontal: UiConsts.normalSpacing),
+                const EdgeInsets.symmetric(horizontal: UiConsts.smallSpacing),
             child: Text(
               text,
               style: const TextStyle(
@@ -102,7 +104,7 @@ class _WordCard extends StatelessWidget {
             height: UiConsts.normalCardHeight,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(UiConsts.borderRadius),
-                color: Colors.white,
+                color: CustomColors.almostWhite,
                 boxShadow: [UiConsts.boxShadow]),
           ),
         ),
@@ -130,7 +132,7 @@ class _SentenceCreatedContainer extends StatelessWidget {
         alignment: Alignment.center,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: CustomColors.almostWhite,
             borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
         child: Text(
           sentenceService.sentenceString,
