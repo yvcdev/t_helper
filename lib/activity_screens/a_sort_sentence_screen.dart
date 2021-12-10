@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/constants/ui.dart';
 import 'package:t_helper/layouts/layouts.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -12,6 +13,12 @@ class ASortSentenceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sentenceService = Provider.of<SentenceService>(context);
+
+    if (sentenceService.isLoading) {
+      return const LoadingScreen();
+    }
+
     return ActivityFloatingLayoutLayout(
       title: 'Sentence Sorting',
       child: Column(
@@ -34,7 +41,8 @@ class ASortSentenceScreen extends StatelessWidget {
           ),
           CustomAcceptButton(
               onTap: () {
-                print('da');
+                print(sentenceService.currentScreen);
+                sentenceService.nextScreen();
               },
               title: 'Okay! Let\'s check'),
           const SizedBox(
@@ -52,7 +60,7 @@ class _ReordableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sentenceService = Provider.of<SentenceService>(context);
-    final sentence = sentenceService.sentence;
+    final sentence = sentenceService.currentSentence;
 
     return ReorderableListView(
       scrollDirection: Axis.horizontal,
@@ -70,7 +78,6 @@ class _ReordableList extends StatelessWidget {
 
         final word = sentenceService.removeWordAt(oldIndex);
         sentenceService.insertWord(newIndex, word);
-        sentenceService.stringifySentence();
       },
     );
   }
@@ -135,7 +142,8 @@ class _SentenceCreatedContainer extends StatelessWidget {
             color: CustomColors.almostWhite,
             borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
         child: Text(
-          sentenceService.sentenceString,
+          sentenceService.stringifiedSentence,
+          textAlign: TextAlign.center,
           style: const TextStyle(
               fontSize: UiConsts.largeFontSize, fontWeight: FontWeight.bold),
         ),

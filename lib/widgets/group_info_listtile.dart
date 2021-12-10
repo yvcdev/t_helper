@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:t_helper/constants/constants.dart';
 
 class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
@@ -19,10 +20,14 @@ class GroupInfoListTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-          margin: const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
+          margin: const EdgeInsets.only(
+              left: UiConsts.smallSpacing,
+              right: UiConsts.smallSpacing,
+              top: UiConsts.smallPadding,
+              bottom: UiConsts.smallPadding),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(15),
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(UiConsts.borderRadius),
           ),
           child: InkWell(
             customBorder:
@@ -31,11 +36,11 @@ class GroupInfoListTile extends StatelessWidget {
               onTap();
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.all(UiConsts.smallPadding),
               child: Row(children: [
                 _Trailing(trailing: trailing),
                 const SizedBox(
-                  width: 10,
+                  width: UiConsts.smallSpacing,
                 ),
                 Expanded(
                   child: _Center(
@@ -63,14 +68,22 @@ class _Trailing extends StatelessWidget {
   Widget build(BuildContext context) {
     if (trailing != null) {
       if (trailing is String && trailing.toString().startsWith('http')) {
-        return CircleAvatar(
-          foregroundImage: NetworkImage(trailing!),
-          radius: 25,
-        );
+        return Container(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: FadeInImage(
+              image: NetworkImage(trailing!),
+              placeholder: const AssetImage('assets/no_image.jpg'),
+              fit: BoxFit.cover,
+            ),
+            height: UiConsts.normalImageRadius * 2,
+            width: UiConsts.normalImageRadius * 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UiConsts.normalImageRadius),
+            ));
       } else if (trailing is IconData) {
         return Icon(
           trailing,
-          size: 40,
+          size: UiConsts.extraLargeFontSize,
         );
       }
     } else {

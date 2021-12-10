@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -11,13 +13,10 @@ class CustomDrawer extends StatelessWidget {
       child: Column(
         children: [
           const _Header(),
-          const Divider(
-            height: 0.2,
-          ),
           SizedBox(
-            height: 10,
+            height: UiConsts.smallSpacing,
             child: Container(
-              color: CustomColors.primary.withOpacity(0.95),
+              color: CustomColors.primary,
             ),
           ),
           const _Body(),
@@ -36,14 +35,17 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        color: CustomColors.primary.withOpacity(0.95),
+        color: CustomColors.almostWhite,
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
-            _ListTile(iconData: Icons.home, route: 'home', title: 'Home'),
+          children: [
+            _ListTile(
+                iconData: Icons.home,
+                route: Routes.TEACHER_HOME,
+                title: 'Home'),
             _ListTile(
                 iconData: Icons.group,
-                route: 'registered_groups',
+                route: Routes.REGISTERED_GROUPS,
                 title: 'Your Groups'),
           ],
         ),
@@ -71,7 +73,7 @@ class _ListTile extends StatelessWidget {
     return ListTile(
       trailing: Icon(
         iconData,
-        color: Colors.white,
+        color: CustomColors.almostBlack,
       ),
       onTap: () {
         routeName == route
@@ -81,7 +83,8 @@ class _ListTile extends StatelessWidget {
       title: Text(
         title,
         textAlign: TextAlign.end,
-        style: const TextStyle(color: Colors.white, fontSize: 18),
+        style: const TextStyle(
+            color: CustomColors.almostBlack, fontSize: UiConsts.smallFontSize),
       ),
     );
   }
@@ -100,18 +103,27 @@ class _Header extends StatelessWidget {
         width: double.infinity,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
-            Image(
+          children: [
+            const Image(
               width: 100,
               image: AssetImage('assets/logo.png'),
               fit: BoxFit.contain,
             ),
-            Expanded(child: SizedBox()),
-            CircleAvatar(
-              radius: 45,
-              foregroundImage: NetworkImage(
-                  'https://www.whatsappprofiledpimages.com/wp-content/uploads/2021/08/Profile-Photo-Wallpaper.jpg'),
-            ),
+            const Expanded(child: SizedBox()),
+            Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: const FadeInImage(
+                  image: NetworkImage(
+                      'https://www.whatsappprofiledpimages.com/wp-content/uploads/2021/08/Profile-Photo-Wallpaper.jpg'),
+                  placeholder: AssetImage('assets/no_image.jpg'),
+                  fit: BoxFit.cover,
+                ),
+                height: UiConsts.largeImageRadius * 2,
+                width: UiConsts.largeImageRadius * 2,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(UiConsts.largeImageRadius),
+                )),
           ],
         ),
       ),

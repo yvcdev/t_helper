@@ -1,20 +1,21 @@
 import 'dart:convert';
 
 class Sentence {
-  Sentence({
-    required this.words,
-  });
-  List<String> words;
+  final List<String> words;
 
-  factory Sentence.fromJson(String str) => Sentence.fromMap(json.decode(str));
+  Sentence({required this.words});
 
-  String toJson() => json.encode(toMap());
+  factory Sentence.dynamic(List<dynamic> words) {
+    List<String> stringList = List<String>.from(words);
+    return Sentence(words: stringList);
+  }
 
-  factory Sentence.fromMap(Map<String, dynamic> json) => Sentence(
-        words: List<String>.from(json["sentence"].map((x) => x)),
-      );
+  factory Sentence.shuffledWords(List<String> words) {
+    words.shuffle();
+    return Sentence(words: words);
+  }
 
-  Map<String, dynamic> toMap() => {
-        "sentence": List<dynamic>.from(words.map((x) => x)),
-      };
+  String getStringSentence() {
+    return words.join(" ");
+  }
 }

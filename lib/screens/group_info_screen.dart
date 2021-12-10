@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:t_helper/layouts/layouts.dart';
+import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class GroupInfoScreen extends StatelessWidget {
@@ -25,14 +26,14 @@ class GroupInfoScreen extends StatelessWidget {
             GroupInfoListTile(
               trailing: Icons.groups_rounded,
               onTap: () {
-                Navigator.pushNamed(context, 'group_members');
+                Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
               },
-              title: 'Group members',
+              title: 'Group Members',
             ),
             GroupInfoListTile(
               trailing: Icons.work,
               onTap: () {
-                Navigator.pushNamed(context, 'group_activities');
+                Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
               },
               title: 'Group Activities',
             ),

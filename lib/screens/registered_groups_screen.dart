@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/layouts/layouts.dart';
+import 'package:t_helper/routes/routes.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -10,19 +11,21 @@ class RegisteredGroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return NotificationsAppBarLayout(
       title: 'Your Groups',
-      child: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return GroupInfoListTile(
-            title: 'Group Name',
-            subtitle: 'Group ID',
-            trailing:
-                'https://www.nubedigital.mx/flexo/assets/imagenesblog/imagenesblog/f-google-classroom-para-empresas.jpg',
-            onTap: () {
-              Navigator.pushNamed(context, 'group_info');
-            },
-          );
-        },
+      child: Expanded(
+        child: ListView.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return GroupInfoListTile(
+              title: 'Group Name',
+              subtitle: 'Group ID',
+              trailing:
+                  'https://www.nubedigital.mx/flexo/assets/imagenesblog/imagenesblog/f-google-classroom-para-empresas.jpg',
+              onTap: () {
+                Navigator.pushNamed(context, Routes.GROUP_INFO);
+              },
+            );
+          },
+        ),
       ),
     );
   }

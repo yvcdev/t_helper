@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:t_helper/routes/routes.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
 
 class NotificationsAppBarLayout extends StatelessWidget {
   final Widget child;
   final String? title;
+  final bool? topSeparation;
 
-  const NotificationsAppBarLayout({Key? key, required this.child, this.title})
+  const NotificationsAppBarLayout(
+      {Key? key, required this.child, this.title, this.topSeparation = true})
       : super(key: key);
 
   @override
@@ -22,10 +25,10 @@ class NotificationsAppBarLayout extends StatelessWidget {
               Icons.notifications_none_rounded,
               color: Colors.white,
             ),
-            onPressed: routeName == 'notifications'
+            onPressed: routeName == Routes.NOTIFICATIONS
                 ? null
                 : () {
-                    Navigator.pushNamed(context, 'notifications');
+                    Navigator.pushNamed(context, Routes.NOTIFICATIONS);
                   },
             iconSize: 30,
             splashRadius: 20,
@@ -38,8 +41,8 @@ class NotificationsAppBarLayout extends StatelessWidget {
       body: GradientBackground(
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            Expanded(child: child),
+            SizedBox(height: topSeparation! ? 10 : 0),
+            child,
           ],
         ),
       ),

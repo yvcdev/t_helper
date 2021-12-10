@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/routes/routes.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -27,7 +28,7 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
           IconButton(
             onPressed: () {
               if (floatingAction == null) {
-                Navigator.pushNamed(context, 'home');
+                Navigator.pushNamed(context, Routes.TEACHER_HOME);
               } else {
                 floatingAction!();
               }

@@ -6,50 +6,64 @@ import 'package:t_helper/models/models.dart';
 
 class SentenceService extends ChangeNotifier {
   final String _baseUrl = 't-helper-a0132-default-rtdb.firebaseio.com';
-  final List<Sentence> sentences = [];
+  final List<Sentence> orderedSentences = [];
+  final List<Sentence> shuffledSentences = [];
 
-  final Sentence createdSentence = Sentence(words: []);
-
-  Sentence sentence = Sentence(words: ['My', 'name', 'is', 'Yeison']);
-  String sentenceString = '';
-
+  Sentence currentSentence = Sentence(words: []);
+  String stringifiedSentence = '';
+  int currentScreen = 0;
   bool isLoading = true;
-  Color bgColor = Colors.transparent;
 
-  Future<Sentence> getSentence(index) async {
+  void getSentences() async {
     isLoading = true;
     notifyListeners();
 
-    final url =
-        Uri.https(_baseUrl, 'sentences/uidicoye06/sentences/$index.json');
+    final url = Uri.https(_baseUrl, 'sentences/uidicoye06/sentences.json');
     final res = await http.get(url);
 
     final List<dynamic> resSentence = jsonDecode(res.body);
-    final List<String> stringList = List<String>.from(resSentence);
 
-    sentence = Sentence(words: stringList);
+    for (var sentence in resSentence) {
+      List<String> stringList = List<String>.from(sentence);
+      Sentence newOrderedSentence = Sentence(words: stringList);
+      orderedSentences.add(newOrderedSentence);
+
+      stringList.shuffle();
+      Sentence newShuffledSentence = Sentence(words: stringList);
+      shuffledSentences.add(newShuffledSentence);
+
+      currentSentence = shuffledSentences[currentScreen];
+      stringifiedSentence =
+          shuffledSentences[currentScreen].getStringSentence();
+    }
 
     isLoading = false;
-    notifyListeners();
-
-    return sentence;
-  }
-
-  addWordCreatedSentence(String word) {
-    createdSentence.words.add(word);
-    notifyListeners();
-  }
-
-  stringifySentence() {
-    sentenceString = sentence.words.join(" ");
     notifyListeners();
   }
 
   String removeWordAt(int index) {
-    return sentence.words.removeAt(index);
+    String res = currentSentence.words.removeAt(index);
+    stringifiedSentence = currentSentence.getStringSentence();
+    notifyListeners();
+
+    return res;
   }
 
   void insertWord(int newIndex, String word) {
-    sentence.words.insert(newIndex, word);
+    currentSentence.words.insert(newIndex, word);
+    stringifiedSentence = currentSentence.getStringSentence();
+    notifyListeners();
+  }
+
+  void nextScreen() {
+    currentScreen += 1;
+    currentSentence = shuffledSentences[currentScreen];
+    stringifiedSentence = currentSentence.getStringSentence();
+    notifyListeners();
+  }
+
+  void previousScreen() {
+    currentScreen -= 1;
+    notifyListeners();
   }
 }

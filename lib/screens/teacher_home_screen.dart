@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:t_helper/constants/constants.dart';
 
 import 'package:t_helper/layouts/layouts.dart';
+import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/utils/utils.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class TeacherHomeScreen extends StatelessWidget {
+  const TeacherHomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class HomeScreen extends StatelessWidget {
         title: 'Home',
         child: Column(children: [
           const SizedBox(
-            height: 20,
+            height: UiConsts.normalSpacing,
           ),
           _Row(children: [
             {
@@ -19,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               'icon': Icons.create,
               'text': 'Create activity',
               'onTap': () {
-                Navigator.pushNamed(context, 'create_activity');
+                Navigator.pushNamed(context, Routes.CREATE_ACTIVITY);
               },
             },
             {
@@ -27,7 +30,7 @@ class HomeScreen extends StatelessWidget {
               'icon': Icons.group_add,
               'text': 'Create group',
               'onTap': () {
-                Navigator.pushNamed(context, 'create_group');
+                Navigator.pushNamed(context, Routes.CREATE_GROUP);
               },
             }
           ])
@@ -78,45 +81,43 @@ class _SingleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        customBorder:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        onTap: () => onTap(),
-        child: Container(
-          height: 120,
-          width: 120,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: color,
-                size: 45,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+    return InkWell(
+      customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
+      onTap: () => onTap(),
+      child: Container(
+        height: UiConsts.smallCardHeight,
+        width: UiConsts.smallCardHeight,
+        padding: const EdgeInsets.all(UiConsts.smallPadding),
+        decoration: BoxDecoration(
+            color: CustomColors.almostWhite,
+            borderRadius: BorderRadius.circular(UiConsts.borderRadius),
+            boxShadow: [UiConsts.boxShadow]),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: UiConsts.extraLargeFontSize,
+            ),
+            const SizedBox(
+              height: UiConsts.smallSpacing,
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: CustomColors.almostBlack,
+                      fontSize: UiConsts.smallFontSize,
+                      fontWeight: FontWeight.bold),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
