@@ -18,7 +18,6 @@ class TeacherHomeScreen extends StatelessWidget {
           ),
           _Row(children: [
             {
-              'color': Colors.blue,
               'icon': Icons.create,
               'text': 'Create activity',
               'onTap': () {
@@ -26,7 +25,6 @@ class TeacherHomeScreen extends StatelessWidget {
               },
             },
             {
-              'color': Colors.orange,
               'icon': Icons.group_add,
               'text': 'Create group',
               'onTap': () {
@@ -66,14 +64,14 @@ class _Row extends StatelessWidget {
 }
 
 class _SingleCard extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final IconData icon;
   final String text;
   final Function onTap;
 
   const _SingleCard({
     Key? key,
-    required this.color,
+    this.color,
     required this.icon,
     required this.text,
     required this.onTap,
@@ -90,14 +88,16 @@ class _SingleCard extends StatelessWidget {
         width: UiConsts.smallCardHeight,
         padding: const EdgeInsets.all(UiConsts.smallPadding),
         decoration: BoxDecoration(
-            color: CustomColors.almostWhite,
-            borderRadius: BorderRadius.circular(UiConsts.borderRadius),
-            boxShadow: [UiConsts.boxShadow]),
+          border: Border.all(color: color ?? Colors.black, width: 1),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(UiConsts.borderRadius),
+          //boxShadow: [UiConsts.boxShadow],
+        ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: color,
+              color: color ?? CustomColors.secondary,
               size: UiConsts.extraLargeFontSize,
             ),
             const SizedBox(
@@ -110,8 +110,8 @@ class _SingleCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: CustomColors.almostBlack,
+                  style: TextStyle(
+                      color: color ?? CustomColors.secondary,
                       fontSize: UiConsts.smallFontSize,
                       fontWeight: FontWeight.bold),
                 ),

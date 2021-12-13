@@ -15,11 +15,8 @@ class ASortSentenceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sentenceService = Provider.of<SentenceService>(context);
 
-    if (sentenceService.isLoading) {
-      return const LoadingScreen();
-    }
-
     return ActivityFloatingLayoutLayout(
+      loading: sentenceService.isLoading,
       title: 'Sentence Sorting',
       child: Column(
         children: [
@@ -41,7 +38,6 @@ class ASortSentenceScreen extends StatelessWidget {
           ),
           CustomAcceptButton(
               onTap: () {
-                print(sentenceService.currentScreen);
                 sentenceService.nextScreen();
               },
               title: 'Okay! Let\'s check'),
@@ -62,23 +58,28 @@ class _ReordableList extends StatelessWidget {
     final sentenceService = Provider.of<SentenceService>(context);
     final sentence = sentenceService.currentSentence;
 
-    return ReorderableListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        for (int index = 0; index < sentence.words.length; index++)
-          _WordCard(
-            text: sentence.words[index],
-            key: Key('$index'),
-          ),
-      ],
-      onReorder: (oldIndex, newIndex) {
-        if (oldIndex < newIndex) {
-          newIndex -= 1;
-        }
+    return Theme(
+      data: ThemeData(
+        canvasColor: Colors.transparent,
+      ),
+      child: ReorderableListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (int index = 0; index < sentence.words.length; index++)
+            _WordCard(
+              text: sentence.words[index],
+              key: Key('$index'),
+            ),
+        ],
+        onReorder: (oldIndex, newIndex) {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
 
-        final word = sentenceService.removeWordAt(oldIndex);
-        sentenceService.insertWord(newIndex, word);
-      },
+          final word = sentenceService.removeWordAt(oldIndex);
+          sentenceService.insertWord(newIndex, word);
+        },
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/screens.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -7,14 +8,23 @@ class NotificationsAppBarLayout extends StatelessWidget {
   final Widget child;
   final String? title;
   final bool? topSeparation;
+  final bool? loading;
 
-  const NotificationsAppBarLayout(
-      {Key? key, required this.child, this.title, this.topSeparation = true})
-      : super(key: key);
+  const NotificationsAppBarLayout({
+    Key? key,
+    required this.child,
+    this.title,
+    this.topSeparation = true,
+    this.loading = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final String? routeName = ModalRoute.of(context)!.settings.name;
+
+    if (loading!) {
+      return const LoadingScreen();
+    }
 
     return Scaffold(
       drawer: const CustomDrawer(),
@@ -38,7 +48,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
           title ?? '',
         ),
       ),
-      body: GradientBackground(
+      body: Background(
         child: Column(
           children: [
             SizedBox(height: topSeparation! ? 10 : 0),

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'package:t_helper/utils/utils.dart';
 
-class GradientBackground extends StatelessWidget {
+class Background extends StatelessWidget {
   final Widget child;
   final bool? safeArea;
 
-  const GradientBackground(
-      {Key? key, required this.child, this.safeArea = true})
+  const Background({Key? key, required this.child, this.safeArea = true})
       : super(key: key);
 
   @override
@@ -17,18 +16,7 @@ class GradientBackground extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.decal,
-              stops: [0.2, 0.9],
-              colors: [
-                CustomColors.primary,
-                CustomColors.secondary,
-              ],
-            ),
-          ),
+          color: Colors.white,
         ),
         const _Bubble(size: 50, bottom: 100, left: 65),
         const _Bubble(size: 80, right: 100, top: 100),
@@ -73,7 +61,7 @@ class _Bubble extends StatelessWidget {
         height: size,
         width: size,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
+          color: CustomColors.secondary.withOpacity(0.04),
           borderRadius: BorderRadius.circular(size / 2),
         ),
       ),
