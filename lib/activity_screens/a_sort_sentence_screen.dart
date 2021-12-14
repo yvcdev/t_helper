@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/constants/ui.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/custom_colors.dart';
+import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class ASortSentenceScreen extends StatelessWidget {
@@ -22,10 +23,10 @@ class ASortSentenceScreen extends StatelessWidget {
         children: [
           const SizedBox(height: UiConsts.normalSpacing),
           const Text(
-            'Long press to order the sentence',
+            'Long press a card to order the sentence',
+            textAlign: TextAlign.center,
             style: TextStyle(
-                color: CustomColors.almostWhite,
-                fontSize: UiConsts.normalFontSize),
+                color: Colors.black, fontSize: UiConsts.normalFontSize),
           ),
           const SizedBox(
             height: UiConsts.largeSpacing,
@@ -38,7 +39,29 @@ class ASortSentenceScreen extends StatelessWidget {
           ),
           CustomAcceptButton(
               onTap: () {
-                sentenceService.nextScreen();
+                final currentSentece =
+                    sentenceService.currentSentence.getStringSentence();
+                final correctSentence = sentenceService
+                    .orderedSentences[sentenceService.currentScreen]
+                    .getStringSentence();
+
+                bool correct = correctSentence == currentSentece;
+
+                customPopup(
+                    context: context,
+                    correct: correct,
+                    onTap: () {
+                      if (correct &&
+                          sentenceService.currentScreen + 1 <
+                              sentenceService.shuffledSentences.length) {
+                        sentenceService.nextScreen();
+                        Navigator.pop(context);
+                      } else if (sentenceService.currentScreen + 1 >=
+                          sentenceService.shuffledSentences.length) {
+                        Navigator.pushReplacementNamed(
+                            context, Routes.FINISHED_SCREEN);
+                      }
+                    });
               },
               title: 'Okay! Let\'s check'),
           const SizedBox(
@@ -61,6 +84,7 @@ class _ReordableList extends StatelessWidget {
     return Theme(
       data: ThemeData(
         canvasColor: Colors.transparent,
+        shadowColor: Colors.transparent,
       ),
       child: ReorderableListView(
         scrollDirection: Axis.horizontal,
@@ -105,12 +129,14 @@ class _WordCard extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                  fontSize: UiConsts.normalFontSize,
-                  fontWeight: FontWeight.bold),
+                color: CustomColors.almostBlack,
+                fontSize: UiConsts.normalFontSize,
+              ),
             ),
-            width: 170,
             height: UiConsts.normalCardHeight,
             decoration: BoxDecoration(
+                border: Border.all(
+                    color: CustomColors.secondary.withOpacity(0.6), width: 1),
                 borderRadius: BorderRadius.circular(UiConsts.borderRadius),
                 color: CustomColors.almostWhite,
                 boxShadow: [UiConsts.boxShadow]),
@@ -140,13 +166,15 @@ class _SentenceCreatedContainer extends StatelessWidget {
         alignment: Alignment.center,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: CustomColors.almostWhite,
+            color: CustomColors.secondary.withOpacity(0.9),
             borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
         child: Text(
           sentenceService.stringifiedSentence,
           textAlign: TextAlign.center,
           style: const TextStyle(
-              fontSize: UiConsts.largeFontSize, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: UiConsts.largeFontSize,
+              fontWeight: FontWeight.bold),
         ),
       ),
     );

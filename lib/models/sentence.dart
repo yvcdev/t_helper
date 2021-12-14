@@ -16,6 +16,18 @@ class Sentence {
   }
 
   String getStringSentence() {
-    return words.join(" ");
+    List<String> withoutSpace = [',', '!', '.', ';', ':'];
+
+    String sentence = "";
+
+    for (var word in words) {
+      if (withoutSpace.contains(word)) {
+        sentence = '$sentence$word';
+      } else {
+        sentence = '$sentence $word';
+      }
+    }
+
+    return sentence;
   }
 }

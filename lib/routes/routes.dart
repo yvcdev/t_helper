@@ -8,6 +8,7 @@ class Routes {
   static String GROUP_MEMBERS = 'GROUP_MEMBERS';
   static String GROUP_ACTIVITIES = 'GROUP_ACTIVITIES';
   static String LOADING_SCREEN = 'LOADING_SCREEN';
+  static String FINISHED_SCREEN = 'FINISHED_SCREEN';
 
   //Teacher
   static String TEACHER_HOME = 'TEACHER_HOME';

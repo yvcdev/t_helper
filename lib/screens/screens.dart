@@ -9,3 +9,4 @@ export 'package:t_helper/screens/create_activity_screen.dart';
 export 'package:t_helper/screens/create_group_screen.dart';
 export 'package:t_helper/screens/group_activities.dart';
 export 'package:t_helper/screens/loading_screen.dart';
+export 'package:t_helper/screens/finished_screen.dart';

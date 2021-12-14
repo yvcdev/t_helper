@@ -7,13 +7,17 @@ class CustomAcceptButton extends StatelessWidget {
   final String title;
   final IconData? iconData;
   final Color? color;
+  final bool? shadow;
+  final double? fontSize;
 
   const CustomAcceptButton(
       {Key? key,
       required this.onTap,
       required this.title,
       this.iconData,
-      this.color})
+      this.color,
+      this.shadow = true,
+      this.fontSize})
       : super(key: key);
 
   @override
@@ -28,14 +32,14 @@ class CustomAcceptButton extends StatelessWidget {
             horizontal: UiConsts.extraLargePadding,
             vertical: UiConsts.normalPadding),
         child: Text(title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: UiConsts.largeFontSize,
+              fontSize: fontSize ?? UiConsts.largeFontSize,
             )),
         decoration: ShapeDecoration(
             shape: const StadiumBorder(),
             color: color ?? CustomColors.green,
-            shadows: [UiConsts.boxShadow]),
+            shadows: shadow! ? [UiConsts.boxShadow] : null),
       ),
     );
   }

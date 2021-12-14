@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         Routes.GROUP_MEMBERS: (_) => const GroupMembersScreen(),
         Routes.GROUP_ACTIVITIES: (_) => const GroupActivitiesScreen(),
         Routes.LOADING_SCREEN: (_) => const LoadingScreen(),
+        Routes.FINISHED_SCREEN: (_) => const FinishedScreen(),
 
         //Teacher
         Routes.TEACHER_HOME: (_) => const TeacherHomeScreen(),
