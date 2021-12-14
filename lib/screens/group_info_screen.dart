@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:t_helper/constants/constants.dart';
 
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/options_lists/options_lists.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class GroupInfoScreen extends StatelessWidget {
@@ -9,35 +10,27 @@ class GroupInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _cards = groupInfoList(context);
+
     return NotificationsAppBarLayout(
-        title: 'Group infomation',
-        child: Column(
-          children: [
-            Center(
-              child: Text(
-                'NaPower',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline3,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            GroupInfoListTile(
-              trailing: Icons.groups_rounded,
-              onTap: () {
-                Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
-              },
-              title: 'Group Members',
-            ),
-            GroupInfoListTile(
-              trailing: Icons.work,
-              onTap: () {
-                Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
-              },
-              title: 'Group Activities',
-            ),
-          ],
-        ));
+      title: 'Group infomation',
+      appBarBottomHeight: 50,
+      appBarBottom: Column(
+        children: const [
+          Text('NaPower',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: UiConsts.largeFontSize,
+                  fontWeight: FontWeight.bold)),
+          SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+      child: GridSingleCardTwo(
+        cards: _cards,
+      ),
+    );
   }
 }

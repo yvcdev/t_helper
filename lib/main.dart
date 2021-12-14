@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/activity_screens/activity_screens.dart';
+import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
@@ -62,8 +63,14 @@ class MyApp extends StatelessWidget {
   ThemeData _themeData(BuildContext context) {
     return ThemeData(
       appBarTheme: const AppBarTheme(
-          backgroundColor: CustomColors.appBar, centerTitle: true),
-      textTheme: GoogleFonts.robotoTextTheme(
+        backgroundColor: CustomColors.appBar,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: UiConsts.normalFontSize,
+        ),
+      ),
+      textTheme: GoogleFonts.openSansTextTheme(
         Theme.of(context).textTheme.copyWith(
               subtitle1: const TextStyle(
                   color: CustomColors.almostBlack,

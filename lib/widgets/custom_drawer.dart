@@ -11,15 +11,9 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
-        children: [
-          const _Header(),
-          SizedBox(
-            height: UiConsts.smallSpacing,
-            child: Container(
-              color: CustomColors.primary,
-            ),
-          ),
-          const _Body(),
+        children: const [
+          _Header(),
+          _Body(),
         ],
       ),
     );
@@ -73,7 +67,8 @@ class _ListTile extends StatelessWidget {
     return ListTile(
       trailing: Icon(
         iconData,
-        color: CustomColors.almostBlack,
+        color: CustomColors.primaryGradient,
+        size: UiConsts.largeFontSize,
       ),
       onTap: () {
         routeName == route
@@ -84,7 +79,10 @@ class _ListTile extends StatelessWidget {
         title,
         textAlign: TextAlign.end,
         style: const TextStyle(
-            color: CustomColors.almostBlack, fontSize: UiConsts.smallFontSize),
+          color: CustomColors.almostBlack,
+          fontSize: UiConsts.normalFontSize - 4,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -127,8 +125,14 @@ class _Header extends StatelessWidget {
           ],
         ),
       ),
-      decoration: BoxDecoration(
-        color: CustomColors.primary.withOpacity(0.95),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            colors: [
+              CustomColors.primary,
+              CustomColors.primaryGradient,
+            ]),
       ),
     );
   }

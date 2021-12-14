@@ -6,8 +6,12 @@ import 'package:t_helper/widgets/custom_accept_button.dart';
 Future customPopup({
   required BuildContext context,
   required bool correct,
-  required Function onTap,
+  required Function onAccept,
+  Function? onCancel,
   String label = 'Continue',
+  String cancelLabel = 'Cancel',
+  String correctText = 'You did a great job!',
+  String incorrectText = 'Ups, that was incorrect!',
 }) async {
   return showDialog(
       context: context,
@@ -21,18 +25,28 @@ Future customPopup({
           ),
           child: Container(
             color: Colors.transparent,
-            height: 265,
+            height: onCancel == null ? 268 : 271,
             child: Stack(
               alignment: Alignment.topCenter,
               children: [
                 _Container(
+                  correctText: correctText,
+                  incorrectText: incorrectText,
                   correct: correct,
                   label: label,
-                  onTap: () {
-                    onTap();
+                  cancelLabel: cancelLabel,
+                  onAccept: () {
+                    onAccept();
                   },
+                  onCancel: (onCancel == null)
+                      ? null
+                      : () {
+                          onCancel();
+                        },
                 ),
-                _Image(correct: correct)
+                (onCancel == null)
+                    ? _Image(correct: correct)
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -42,26 +56,30 @@ Future customPopup({
 
 class _Container extends StatelessWidget {
   final bool correct;
-  final String? correctText;
-  final String? incorrectText;
+  final String correctText;
+  final String incorrectText;
   final String label;
-  final Function onTap;
+  final String cancelLabel;
+  final Function onAccept;
+  final Function? onCancel;
 
   const _Container(
       {Key? key,
       required this.correct,
-      this.correctText = 'You did a great job!',
-      this.incorrectText = 'Ups, that was incorrect!',
+      required this.correctText,
+      required this.incorrectText,
       required this.label,
-      required this.onTap})
+      required this.onAccept,
+      this.onCancel,
+      required this.cancelLabel})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: UiConsts.largeImageRadius + 20),
-      padding: const EdgeInsets.only(
-        top: UiConsts.largeImageRadius + 40,
+      padding: EdgeInsets.only(
+        top: (onCancel == null) ? UiConsts.largeImageRadius + 40 : 20,
         left: 20,
         right: 20,
         bottom: 20,
@@ -75,7 +93,7 @@ class _Container extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            correct ? correctText! : incorrectText!,
+            correct ? correctText : incorrectText,
             style: const TextStyle(
               fontSize: UiConsts.normalFontSize,
               fontWeight: FontWeight.bold,
@@ -84,13 +102,24 @@ class _Container extends StatelessWidget {
           const SizedBox(height: 20),
           CustomAcceptButton(
             onTap: () {
-              onTap();
+              onAccept();
             },
             title: label,
             shadow: false,
             fontSize: UiConsts.smallFontSize,
             color: correct ? CustomColors.green : CustomColors.red,
-          )
+          ),
+          SizedBox(height: (onCancel == null) ? 0 : 20),
+          (onCancel == null)
+              ? const SizedBox()
+              : CustomAcceptButton(
+                  shadow: false,
+                  fontSize: UiConsts.smallFontSize,
+                  color: CustomColors.red,
+                  onTap: () {
+                    onCancel!();
+                  },
+                  title: cancelLabel)
         ],
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+const _duration = 900;
+
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     timer = Timer.periodic(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: _duration),
       (Timer t) => _cambiarForma(),
     );
   }
@@ -34,21 +36,40 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: _AnimatedContainer(
-        width: _width,
-        height: _height,
-        margin: _margin,
-      )),
+        child: Container(
+          alignment: Alignment.center,
+          height: 150,
+          width: 150,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const SizedBox(
+                height: 150,
+                width: 150,
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(188, 172, 22, 1),
+                  strokeWidth: 3,
+                ),
+              ),
+              _AnimatedContainer(
+                width: _width,
+                height: _height,
+                margin: _margin,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   void _cambiarForma() {
     setState(() {
       if (_width == 60.0) {
-        _width = 10.0;
-        _height = 10.0;
+        _width = 0.0;
+        _height = 0.0;
         _margin = 60.0;
-      } else if (_width == 10.0) {
+      } else if (_width == 0.0) {
         _width = 60.0;
         _height = 50.0;
         _margin = 0.0;
@@ -114,7 +135,7 @@ class _Left extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: _duration),
       curve: Curves.easeInSine,
       width: width,
       height: 40,
@@ -141,7 +162,7 @@ class _Right extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       margin: EdgeInsets.only(left: margin),
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: _duration),
       curve: Curves.easeInSine,
       width: width,
       height: 40,
@@ -165,7 +186,7 @@ class _Bottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: _duration),
       curve: Curves.easeInSine,
       width: 40,
       height: height,

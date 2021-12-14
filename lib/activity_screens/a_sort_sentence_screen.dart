@@ -23,10 +23,12 @@ class ASortSentenceScreen extends StatelessWidget {
         children: [
           const SizedBox(height: UiConsts.normalSpacing),
           const Text(
-            'Long press a card to order the sentence',
+            'Long-press a card to order the sentence',
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.black, fontSize: UiConsts.normalFontSize),
+              color: Colors.grey,
+              fontSize: UiConsts.smallFontSize,
+            ),
           ),
           const SizedBox(
             height: UiConsts.largeSpacing,
@@ -38,32 +40,45 @@ class ASortSentenceScreen extends StatelessWidget {
             height: UiConsts.normalSpacing,
           ),
           CustomAcceptButton(
-              onTap: () {
-                final currentSentece =
-                    sentenceService.currentSentence.getStringSentence();
-                final correctSentence = sentenceService
-                    .orderedSentences[sentenceService.currentScreen]
-                    .getStringSentence();
+            onTap: () {
+              final currentSentece =
+                  sentenceService.currentSentence.getStringSentence();
+              final correctSentence = sentenceService
+                  .orderedSentences[sentenceService.currentScreen]
+                  .getStringSentence();
 
-                bool correct = correctSentence == currentSentece;
+              bool correct = correctSentence == currentSentece;
 
+              if (correct &&
+                  sentenceService.currentScreen + 1 >=
+                      sentenceService.shuffledSentences.length) {
                 customPopup(
                     context: context,
                     correct: correct,
-                    onTap: () {
+                    label: 'Finish',
+                    onAccept: () {
+                      Navigator.pushReplacementNamed(
+                          context, Routes.FINISHED_SCREEN);
+                    });
+              } else {
+                customPopup(
+                    context: context,
+                    correct: correct,
+                    onAccept: () {
                       if (correct &&
                           sentenceService.currentScreen + 1 <
                               sentenceService.shuffledSentences.length) {
                         sentenceService.nextScreen();
                         Navigator.pop(context);
-                      } else if (sentenceService.currentScreen + 1 >=
-                          sentenceService.shuffledSentences.length) {
-                        Navigator.pushReplacementNamed(
-                            context, Routes.FINISHED_SCREEN);
+                      } else {
+                        Navigator.pop(context);
                       }
                     });
-              },
-              title: 'Okay! Let\'s check'),
+              }
+            },
+            title: 'Okay! Let\'s check',
+            shadow: false,
+          ),
           const SizedBox(
             height: UiConsts.normalSpacing,
           ),
@@ -129,17 +144,14 @@ class _WordCard extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                color: CustomColors.almostBlack,
+                color: Colors.white,
                 fontSize: UiConsts.normalFontSize,
               ),
             ),
             height: UiConsts.normalCardHeight,
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: CustomColors.secondary.withOpacity(0.6), width: 1),
                 borderRadius: BorderRadius.circular(UiConsts.borderRadius),
-                color: CustomColors.almostWhite,
-                boxShadow: [UiConsts.boxShadow]),
+                color: CustomColors.secondary),
           ),
         ),
         const SizedBox(
@@ -166,7 +178,7 @@ class _SentenceCreatedContainer extends StatelessWidget {
         alignment: Alignment.center,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: CustomColors.secondary.withOpacity(0.9),
+            color: CustomColors.primary,
             borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
         child: Text(
           sentenceService.stringifiedSentence,

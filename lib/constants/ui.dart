@@ -11,10 +11,10 @@ class UiConsts {
   static const smallCardHeight = 120.0;
   static const normalCardHeight = 150.0;
   static const largeCardHeight = 250.0;
-  static const tinyFontSize = 14.0;
-  static const smallFontSize = 16.0;
-  static const normalFontSize = 24.0;
-  static const largeFontSize = 32.0;
+  static const tinyFontSize = 13.5;
+  static const smallFontSize = 15.0;
+  static const normalFontSize = 22.0;
+  static const largeFontSize = 31.0;
   static const extraLargeFontSize = 45.0;
   static const smallPadding = 8.0;
   static const normalPadding = 14.0;

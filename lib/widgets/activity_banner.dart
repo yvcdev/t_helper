@@ -29,8 +29,7 @@ class ActivityBanner extends StatelessWidget {
         height: UiConsts.largeCardHeight,
         width: 150,
         decoration: BoxDecoration(
-          color: CustomColors.almostWhite,
-          boxShadow: [UiConsts.boxShadow],
+          color: CustomColors.secondaryDark,
           borderRadius: BorderRadius.circular(UiConsts.borderRadius),
         ),
         child: Column(
@@ -146,7 +145,8 @@ class _Description extends StatelessWidget {
           description,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: UiConsts.tinyFontSize),
+          style: const TextStyle(
+              fontSize: UiConsts.tinyFontSize, color: CustomColors.almostBlack),
         ),
       ),
     );
@@ -171,7 +171,9 @@ class _Title extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.start,
         style: const TextStyle(
-            fontSize: UiConsts.smallFontSize, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: UiConsts.smallFontSize,
+            fontWeight: FontWeight.bold),
       ),
     );
   }

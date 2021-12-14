@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/utils/custom_colors.dart';
 
 class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
@@ -26,7 +27,7 @@ class GroupInfoListTile extends StatelessWidget {
               top: UiConsts.smallPadding,
               bottom: UiConsts.smallPadding),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: CustomColors.secondaryDark,
             borderRadius: BorderRadius.circular(UiConsts.borderRadius),
           ),
           child: InkWell(
@@ -51,7 +52,8 @@ class GroupInfoListTile extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded),
+                const Icon(Icons.arrow_forward_ios_rounded,
+                    color: CustomColors.almostBlack),
               ]),
             ),
           )),
@@ -83,7 +85,8 @@ class _Trailing extends StatelessWidget {
       } else if (trailing is IconData) {
         return Icon(
           trailing,
-          size: UiConsts.extraLargeFontSize,
+          color: CustomColors.almostBlack,
+          size: UiConsts.extraLargeFontSize - 2,
         );
       }
     } else {
@@ -114,7 +117,9 @@ class _Center extends StatelessWidget {
       children: [
         Text(
           title,
-          style: textStyle.subtitle1,
+          style: textStyle.subtitle1!.copyWith(
+            color: CustomColors.almostBlack,
+          ),
         ),
         SizedBox(
           height: subtitle == null ? 0 : 6,

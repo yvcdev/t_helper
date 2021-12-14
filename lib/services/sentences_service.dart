@@ -22,7 +22,6 @@ class SentenceService extends ChangeNotifier {
     final res = await http.get(url);
 
     final List<dynamic> resSentence = jsonDecode(res.body);
-    print(jsonDecode(res.body));
 
     for (var sentence in resSentence) {
       List<String> stringList = List<String>.from(sentence);
