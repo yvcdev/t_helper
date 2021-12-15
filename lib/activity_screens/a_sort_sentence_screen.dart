@@ -57,8 +57,7 @@ class ASortSentenceScreen extends StatelessWidget {
                     correct: correct,
                     label: 'Finish',
                     onAccept: () {
-                      Navigator.pushReplacementNamed(
-                          context, Routes.FINISHED_SCREEN);
+                      Navigator.pushReplacementNamed(context, Routes.FINISHED);
                     });
               } else {
                 customPopup(

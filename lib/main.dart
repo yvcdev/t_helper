@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'package:t_helper/activity_screens/activity_screens.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const AppState());
 }
 
@@ -22,6 +29,8 @@ class AppState extends StatelessWidget {
       child: const MyApp(),
       providers: [
         ChangeNotifierProvider(create: (_) => SentenceService()),
+        ChangeNotifierProvider(create: (_) => FBAuthService()),
+        ChangeNotifierProvider(create: (_) => LoginFormProvider()),
       ],
     );
   }
@@ -46,8 +55,8 @@ class MyApp extends StatelessWidget {
         Routes.GROUP_INFO: (_) => const GroupInfoScreen(),
         Routes.GROUP_MEMBERS: (_) => const GroupMembersScreen(),
         Routes.GROUP_ACTIVITIES: (_) => const GroupActivitiesScreen(),
-        Routes.LOADING_SCREEN: (_) => const LoadingScreen(),
-        Routes.FINISHED_SCREEN: (_) => const FinishedScreen(),
+        Routes.LOADING: (_) => const LoadingScreen(),
+        Routes.FINISHED: (_) => const FinishedScreen(),
 
         //Teacher
         Routes.TEACHER_HOME: (_) => const TeacherHomeScreen(),

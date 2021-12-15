@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
 
 import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -55,10 +57,13 @@ class LoginScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, 'signup');
+                  final loginForm =
+                      Provider.of<LoginFormProvider>(context, listen: false);
+                  loginForm.reset();
+                  Navigator.pushReplacementNamed(context, Routes.SIGNUP);
                 },
                 child: const Text(
-                  'Signup',
+                  'Sign Up',
                   style: TextStyle(
                       color: CustomColors.primary,
                       fontSize: UiConsts.smallFontSize),
@@ -84,24 +89,25 @@ class _LoginForm extends StatelessWidget {
 
     //TODO: setup the request
     onTap() async {
-      /*FocusScope.of(context).unfocus();
-                    final authService =
-                        Provider.of<AuthService>(context, listen: false);
+      FocusScope.of(context).unfocus();
+      final authService = Provider.of<FBAuthService>(context, listen: false);
 
-                    if (!loginForm.isValidForm()) return;
+      if (!loginForm.isValidForm()) return;
 
-                    loginForm.isLoading = true;
+      loginForm.isLoading = true;
 
-                    final String? errorMessage = await authService.login(
-                        loginForm.email, loginForm.password);
+      await authService.login(loginForm.email, loginForm.password);
 
-                    if (errorMessage == null) {
-                      Navigator.pushReplacementNamed(context, 'home');
-                    } else {
-                      NotificationsService.showSnackBar(
-                          message: 'Credenciales incorrectas', success: false);
-                      loginForm.isLoading = false;
-                    }*/
+      if (authService.user['email'] != '') {
+        Navigator.pushReplacementNamed(context, Routes.TEACHER_HOME);
+        loginForm.reset();
+      } else {
+        //NotificationsService.showSnackBar(
+        //    message: 'Credenciales incorrectas', success: false);
+        //
+        print(authService.error);
+      }
+      loginForm.isLoading = false;
     }
 
     return Form(
@@ -149,8 +155,8 @@ class _LoginForm extends StatelessWidget {
             height: 45,
           ),
           RequestButton(
-              waitTitle: 'Please wait',
-              title: 'Please wait',
+              waitTitle: 'Please Wait',
+              title: 'Sign In',
               isLoading: loginForm.isLoading,
               onTap: loginForm.isLoading ? null : () => onTap()),
         ],
