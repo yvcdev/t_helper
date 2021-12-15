@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/routes/routes.dart';
-import 'package:t_helper/utils/custom_colors.dart';
+import 'package:t_helper/services/services.dart';
+import 'package:t_helper/utils/utils.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -11,9 +13,17 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
-        children: const [
-          _Header(),
-          _Body(),
+        children: [
+          const _Header(),
+          const _Body(),
+          _ListTile(
+              iconData: Icons.home,
+              onTap: () async {
+                final authService =
+                    Provider.of<FBAuthService>(context, listen: false);
+                await authService.signOut();
+              },
+              title: 'Sign Out'),
         ],
       ),
     );
@@ -51,13 +61,15 @@ class _Body extends StatelessWidget {
 class _ListTile extends StatelessWidget {
   final IconData iconData;
   final String title;
-  final String route;
+  final String? route;
+  final Function? onTap;
 
   const _ListTile({
     Key? key,
     required this.iconData,
     required this.title,
-    required this.route,
+    this.route,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -70,11 +82,15 @@ class _ListTile extends StatelessWidget {
         color: CustomColors.primaryGradient,
         size: UiConsts.largeFontSize,
       ),
-      onTap: () {
-        routeName == route
-            ? Navigator.pop(context)
-            : Navigator.pushReplacementNamed(context, route);
-      },
+      onTap: onTap != null
+          ? () {
+              onTap!();
+            }
+          : () {
+              routeName == route
+                  ? Navigator.pop(context)
+                  : Navigator.pushReplacementNamed(context, route!);
+            },
       title: Text(
         title,
         textAlign: TextAlign.end,

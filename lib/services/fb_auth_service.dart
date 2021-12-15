@@ -1,25 +1,31 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
-class FBAuthService extends ChangeNotifier {
-  FirebaseAuth auth = FirebaseAuth.instance;
+import 'package:t_helper/models/models.dart';
+
+class FBAuthService {
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+
   String? error;
 
-  final Map<String, dynamic> _user = {'email': '', 'uid': 0};
-  Map<String, dynamic> get user => _user;
+  User? _userFromFirebase(auth.User? user) {
+    if (user == null) return null;
 
-  Future<void> login(String email, String password) async {
+    return User(user.email!, user.uid);
+  }
+
+  Stream<User?>? get user {
+    return _auth.authStateChanges().map(_userFromFirebase);
+  }
+
+  Future<User?> login(String email, String password) async {
     try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      _user['email'] = userCredential.user!.email;
-      _user['uid'] = userCredential.user!.uid;
-      _user['token'] = userCredential.credential == null
-          ? 0
-          : userCredential.credential!.token;
       error = null;
-    } on FirebaseAuthException catch (e) {
+      return _userFromFirebase(credential.user);
+    } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         error = 'No user found for that email';
       } else if (e.code == 'wrong-password') {
@@ -28,18 +34,14 @@ class FBAuthService extends ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password) async {
+  Future<User?> signup(String email, String password) async {
     try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      final credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      _user['email'] = userCredential.user!.email;
-      _user['uid'] = userCredential.user!.uid;
-      _user['token'] = userCredential.credential == null
-          ? 0
-          : userCredential.credential!.token;
       error = null;
-    } on FirebaseAuthException catch (e) {
+      return _userFromFirebase(credential.user);
+    } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         error = 'The password provided is too weak';
       } else if (e.code == 'email-already-in-use') {
@@ -48,5 +50,9 @@ class FBAuthService extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

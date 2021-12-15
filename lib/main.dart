@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:t_helper/widgets/wrapper.dart';
 import 'package:t_helper/activity_screens/activity_screens.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/routes/routes.dart';
@@ -29,7 +30,7 @@ class AppState extends StatelessWidget {
       child: const MyApp(),
       providers: [
         ChangeNotifierProvider(create: (_) => SentenceService()),
-        ChangeNotifierProvider(create: (_) => FBAuthService()),
+        Provider<FBAuthService>(create: (_) => FBAuthService()),
         ChangeNotifierProvider(create: (_) => LoginFormProvider()),
       ],
     );
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: Routes.LOGIN,
+      initialRoute: Routes.TEACHER_HOME,
       routes: {
         //Both
         Routes.LOGIN: (_) => const LoginScreen(),
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
         Routes.FINISHED: (_) => const FinishedScreen(),
 
         //Teacher
-        Routes.TEACHER_HOME: (_) => const TeacherHomeScreen(),
+        Routes.TEACHER_HOME: (_) => const Wrapper(),
         Routes.CREATE_ACTIVITY: (_) => const CreateActivityScreen(),
         Routes.CREATE_GROUP: (_) => const CreateGroupScreen(),
 

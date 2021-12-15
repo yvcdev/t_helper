@@ -98,15 +98,11 @@ class _LoginForm extends StatelessWidget {
 
       await authService.signup(loginForm.email, loginForm.password);
 
-      if (authService.user['email'] != '') {
-        Navigator.pushReplacementNamed(context, Routes.TEACHER_HOME);
-
-        loginForm.reset();
+      if (authService.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackbar(message: authService.error!, success: false));
       } else {
-        //NotificationsService.showSnackBar(
-        //    message: 'Credenciales incorrectas', success: false);
-        //
-        print(authService.error);
+        loginForm.reset();
       }
       loginForm.isLoading = false;
     }

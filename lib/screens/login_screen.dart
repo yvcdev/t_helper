@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/models/models.dart';
 
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
@@ -98,14 +99,11 @@ class _LoginForm extends StatelessWidget {
 
       await authService.login(loginForm.email, loginForm.password);
 
-      if (authService.user['email'] != '') {
-        Navigator.pushReplacementNamed(context, Routes.TEACHER_HOME);
-        loginForm.reset();
+      if (authService.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackbar(message: authService.error!, success: false));
       } else {
-        //NotificationsService.showSnackBar(
-        //    message: 'Credenciales incorrectas', success: false);
-        //
-        print(authService.error);
+        loginForm.reset();
       }
       loginForm.isLoading = false;
     }
