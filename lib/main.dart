@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: Routes.GROUP_ACTIVITIES,
+      initialRoute: Routes.LOGIN,
       routes: {
         //Both
         Routes.LOGIN: (_) => const LoginScreen(),
