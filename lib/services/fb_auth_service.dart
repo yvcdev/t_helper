@@ -26,10 +26,10 @@ class FBAuthService {
       error = null;
       return _userFromFirebase(credential.user);
     } on auth.FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        error = 'No user found for that email';
-      } else if (e.code == 'wrong-password') {
-        error = 'Wrong password provided for that user';
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        error = 'Please check your credentials';
+      } else {
+        error = 'Please try again later';
       }
     }
   }
