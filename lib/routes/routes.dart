@@ -9,6 +9,7 @@ class Routes {
   static String GROUP_ACTIVITIES = 'GROUP_ACTIVITIES';
   static String LOADING = 'LOADING';
   static String FINISHED = 'FINISHED';
+  static String HOME = 'HOME';
 
   //Teacher
   static String TEACHER_HOME = 'TEACHER_HOME';
@@ -17,4 +18,5 @@ class Routes {
 
   //Students
   static String ACTIVITY_SORT_SENTENCE = 'ACTIVITY_SORT_SENTENCE';
+  static String STUDENT_HOME = 'STUDENT_HOME';
 }

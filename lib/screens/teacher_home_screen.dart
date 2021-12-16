@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
+import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
-  const TeacherHomeScreen({Key? key}) : super(key: key);
+  const TeacherHomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +35,24 @@ class _AppBarBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<FBUserService>(context);
+    final user = userService.user;
+
     return Column(
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Hello',
           style: TextStyle(
               color: Colors.white, fontSize: UiConsts.normalFontSize - 4),
         ),
         Text(
-          'Yeison Valencia',
-          style: TextStyle(
+          '${user.firstName!} ${user.lastName!}',
+          style: const TextStyle(
               color: Colors.white,
               fontSize: UiConsts.normalFontSize,
               fontWeight: FontWeight.bold),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         )
       ],

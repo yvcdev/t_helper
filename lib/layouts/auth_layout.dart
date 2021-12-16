@@ -111,10 +111,13 @@ class _AuthForm extends StatelessWidget {
       if (authService.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             snackbar(message: authService.error!, success: false));
+        authForm.isLoading = false;
       } else {
         authForm.reset();
+        if (login) {
+          Navigator.pushReplacementNamed(context, Routes.HOME);
+        }
       }
-      authForm.isLoading = false;
     }
 
     return Form(

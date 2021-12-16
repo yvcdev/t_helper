@@ -11,11 +11,13 @@ class FBAuthService {
   User? _userFromFirebase(auth.User? user) {
     if (user == null) return null;
 
-    return User(user.email!, user.uid);
+    return User(email: user.email!, uid: user.uid);
   }
 
   Stream<User?>? get user {
-    return _auth.authStateChanges().map(_userFromFirebase);
+    return _auth.authStateChanges().map((user) {
+      return _userFromFirebase(user);
+    });
   }
 
   Future<User?> login(String email, String password) async {
@@ -45,10 +47,12 @@ class FBAuthService {
       if (e.code == 'weak-password') {
         error = 'The password provided is too weak';
       } else if (e.code == 'email-already-in-use') {
-        error = 'The account already exists for that email';
+        error = 'An account already exists for that email';
+      } else {
+        error = 'Please try again later';
       }
-    } catch (e) {
-      print(e);
+    } catch (unknowError) {
+      return null;
     }
   }
 

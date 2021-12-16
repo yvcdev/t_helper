@@ -31,6 +31,7 @@ class AppState extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => SentenceService()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
+        Provider<FBUserService>(create: (_) => FBUserService()),
         ChangeNotifierProvider(create: (_) => AuthFormProvider()),
       ],
     );
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         Routes.GROUP_ACTIVITIES: (_) => const GroupActivitiesScreen(),
         Routes.LOADING: (_) => const LoadingScreen(),
         Routes.FINISHED: (_) => const FinishedScreen(),
+        Routes.HOME: (_) => const Wrapper(),
 
         //Teacher
         Routes.TEACHER_HOME: (_) => const Wrapper(),
@@ -66,6 +68,7 @@ class MyApp extends StatelessWidget {
 
         //Student
         Routes.ACTIVITY_SORT_SENTENCE: (_) => const ASortSentenceScreen(),
+        Routes.STUDENT_HOME: (_) => const Wrapper(),
       },
     );
   }
