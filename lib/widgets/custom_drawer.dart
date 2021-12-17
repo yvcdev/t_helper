@@ -17,7 +17,7 @@ class CustomDrawer extends StatelessWidget {
           const _Header(),
           const _Body(),
           _ListTile(
-              iconData: Icons.home,
+              iconData: Icons.logout,
               onTap: () async {
                 final authService =
                     Provider.of<FBAuthService>(context, listen: false);

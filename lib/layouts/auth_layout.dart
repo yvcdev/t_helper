@@ -39,11 +39,8 @@ class AuthLayout extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    ChangeNotifierProvider(
-                      create: (_) => AuthFormProvider(),
-                      child: _AuthForm(
-                        login: login,
-                      ),
+                    _AuthForm(
+                      login: login,
                     ),
                     const SizedBox(
                       height: 30,

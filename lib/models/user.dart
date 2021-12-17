@@ -45,4 +45,13 @@ class User {
         profilePic: json["profilePic"],
         preferredName: json["preferredName"],
       );
+
+  Map<String, dynamic> detailsToMap() => {
+        "firstName": firstName,
+        "middleName": middleName,
+        "lastName": lastName,
+        "role": role,
+        "profilePic": profilePic,
+        "preferredName": preferredName,
+      };
 }

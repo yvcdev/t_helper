@@ -31,9 +31,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.3.3
   firebase_core: ^1.10.5
+  firebase_storage: ^10.2.4
   flutter:
     sdk: flutter
   google_fonts: ^2.1.0
+  image_picker: ^0.8.4+4
   provider: ^6.0.1
   scrollable_positioned_list: ^0.2.3
 

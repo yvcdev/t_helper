@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/widgets/wrapper.dart';
 import 'package:t_helper/activity_screens/activity_screens.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
@@ -30,9 +30,10 @@ class AppState extends StatelessWidget {
       child: const MyApp(),
       providers: [
         ChangeNotifierProvider(create: (_) => SentenceService()),
+        ChangeNotifierProvider(create: (_) => AuthFormProvider()),
+        Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
         Provider<FBUserService>(create: (_) => FBUserService()),
-        ChangeNotifierProvider(create: (_) => AuthFormProvider()),
       ],
     );
   }

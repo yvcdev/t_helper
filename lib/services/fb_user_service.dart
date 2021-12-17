@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:t_helper/models/user.dart';
 
 class FBUserService {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   User? _user;
+  String? error;
 
   User get user {
     return _user!;
@@ -14,8 +16,6 @@ class FBUserService {
   }
 
   Future<User> getUser(User user) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     final documentSnapshot = await users.doc(user.uid).get();
 
     User partialUser = User(email: user.email, uid: user.uid);
@@ -35,5 +35,17 @@ class FBUserService {
     User completeUser = User.fromMap(userData);
 
     return completeUser;
+  }
+
+  Future createUpdateUserInfo(User user) async {
+    //print(user.detailsToMap());
+
+    users
+        .doc(user.uid)
+        .set(user.detailsToMap())
+        .then((value) => print('User added'))
+        .catchError((error) {
+      error = 'An error occurred, please try again later';
+    });
   }
 }
