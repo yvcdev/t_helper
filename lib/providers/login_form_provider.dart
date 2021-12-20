@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+class LoginFormProvider extends ChangeNotifier {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  String email = '';
+  String password = '';
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool isValidForm() {
+    return formKey.currentState?.validate() ?? false;
+  }
+
+  void reset() {
+    email = '';
+    password = '';
+    _isLoading = false;
+  }
+}

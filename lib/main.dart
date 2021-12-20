@@ -29,8 +29,9 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       child: const MyApp(),
       providers: [
+        ChangeNotifierProvider(create: (_) => LoginFormProvider()),
+        ChangeNotifierProvider(create: (_) => SignupFormProvider()),
         ChangeNotifierProvider(create: (_) => SentenceService()),
-        ChangeNotifierProvider(create: (_) => AuthFormProvider()),
         Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
         Provider<FBUserService>(create: (_) => FBUserService()),

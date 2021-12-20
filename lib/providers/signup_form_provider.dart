@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AuthFormProvider extends ChangeNotifier {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+class SignupFormProvider extends ChangeNotifier {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String email = '';
   String password = '';
