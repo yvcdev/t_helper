@@ -68,6 +68,8 @@ class _InfoForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> formKey =
+        GlobalKey<FormState>(debugLabel: 'personal_info_key');
     final personalInfoForm = Provider.of<PersonalInfoFormProvider>(context);
 
     List<String> roleValues = ['', 'teacher', 'student'];
@@ -85,7 +87,7 @@ class _InfoForm extends StatelessWidget {
             snackbar(message: 'A role needs to be selected', success: false));
         return;
       }
-      if (!personalInfoForm.isValidForm()) return;
+      if (!personalInfoForm.isValidForm(formKey)) return;
 
       if (personalInfoForm.selectedImage != null) {
         final userStorageService =
@@ -112,8 +114,6 @@ class _InfoForm extends StatelessWidget {
         profilePic: downloadUrl,
       );
 
-      print(userToSend.profilePic);
-
       personalInfoForm.isLoading = true;
 
       await userService.createUpdateUserInfo(userToSend);
@@ -129,7 +129,7 @@ class _InfoForm extends StatelessWidget {
     }
 
     return Form(
-      key: personalInfoForm.formKey,
+      key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [

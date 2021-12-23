@@ -82,13 +82,15 @@ class _SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> formKey =
+        GlobalKey<FormState>(debugLabel: 'signup_key');
     final authForm = Provider.of<SignupFormProvider>(context);
 
     onTap() async {
       FocusScope.of(context).unfocus();
       final authService = Provider.of<FBAuthService>(context, listen: false);
 
-      if (!authForm.isValidForm()) return;
+      if (!authForm.isValidForm(formKey)) return;
 
       authForm.isLoading = true;
 
@@ -105,7 +107,7 @@ class _SignupForm extends StatelessWidget {
     }
 
     return Form(
-      key: authForm.formKey,
+      key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [

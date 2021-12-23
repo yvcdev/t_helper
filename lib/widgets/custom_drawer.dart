@@ -22,6 +22,8 @@ class CustomDrawer extends StatelessWidget {
                 final authService =
                     Provider.of<FBAuthService>(context, listen: false);
                 await authService.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.HOME, (Route<dynamic> route) => false);
               },
               title: 'Sign Out'),
         ],
@@ -111,6 +113,9 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<FBUserService>(context);
+    final user = userService.user;
+
     return DrawerHeader(
       margin: EdgeInsets.zero,
       child: SizedBox(
@@ -126,12 +131,13 @@ class _Header extends StatelessWidget {
             const Expanded(child: SizedBox()),
             Container(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: const FadeInImage(
-                  image: NetworkImage(
-                      'https://www.whatsappprofiledpimages.com/wp-content/uploads/2021/08/Profile-Photo-Wallpaper.jpg'),
-                  placeholder: AssetImage('assets/no_image.jpg'),
-                  fit: BoxFit.cover,
-                ),
+                child: user.profilePic == null
+                    ? Image.asset('assets/no_image.jpg')
+                    : FadeInImage(
+                        image: NetworkImage(user.profilePic!),
+                        placeholder: const AssetImage('assets/no_profile.png'),
+                        fit: BoxFit.cover,
+                      ),
                 height: UiConsts.largeImageRadius * 2,
                 width: UiConsts.largeImageRadius * 2,
                 decoration: BoxDecoration(

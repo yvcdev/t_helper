@@ -28,47 +28,44 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
       return const LoadingScreen();
     }
 
-    return WillPopScope(
-      onWillPop: () => _onWillPop(context),
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [
-              CustomColors.primary,
-              CustomColors.primaryGradient,
-            ])),
-          ),
-          title: Text(title),
-          centerTitle: false,
-          actions: [
-            IconButton(
-              onPressed: () {
-                if (floatingAction == null) {
-                  customPopup(
-                    context: context,
-                    correctText: 'Do you want to go home?',
-                    label: 'Yes',
-                    cancelLabel: 'No',
-                    correct: true,
-                    onAccept: () => Navigator.pushReplacementNamed(
-                        context, Routes.TEACHER_HOME),
-                    onCancel: () => Navigator.of(context).pop(),
-                  );
-                } else {
-                  floatingAction!();
-                }
-              },
-              icon: Icon(
-                floatingIcon ?? Icons.home,
-                size: UiConsts.largeFontSize,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [
+            CustomColors.primary,
+            CustomColors.primaryGradient,
+          ])),
+        ),
+        title: Text(title),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (floatingAction == null) {
+                customPopup(
+                  context: context,
+                  correctText: 'Do you want to go home?',
+                  label: 'Yes',
+                  cancelLabel: 'No',
+                  correct: true,
+                  onAccept: () => Navigator.pushReplacementNamed(
+                      context, Routes.TEACHER_HOME),
+                  onCancel: () => Navigator.of(context).pop(),
+                );
+              } else {
+                floatingAction!();
+              }
+            },
+            icon: Icon(
+              floatingIcon ?? Icons.home,
+              size: UiConsts.largeFontSize,
             ),
-          ],
-        ),
-        body: Background(
-          child: child,
-        ),
+          ),
+        ],
+      ),
+      body: Background(
+        child: child,
       ),
     );
   }

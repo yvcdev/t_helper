@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class PersonalInfoFormProvider extends ChangeNotifier {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   String? selectedImage;
   File? newPictureFile;
   String firstName = '';
@@ -39,7 +37,7 @@ class PersonalInfoFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isValidForm() {
+  bool isValidForm(GlobalKey<FormState> formKey) {
     return formKey.currentState?.validate() ?? false;
   }
 

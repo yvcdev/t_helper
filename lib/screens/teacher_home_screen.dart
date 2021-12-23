@@ -46,7 +46,7 @@ class _AppBarBottom extends StatelessWidget {
               color: Colors.white, fontSize: UiConsts.normalFontSize - 4),
         ),
         Text(
-          '${user.firstName!} ${user.lastName!}',
+          '${user.preferredName == 'firstName' ? user.firstName! : user.middleName!} ${user.lastName!}',
           style: const TextStyle(
               color: Colors.white,
               fontSize: UiConsts.normalFontSize,
