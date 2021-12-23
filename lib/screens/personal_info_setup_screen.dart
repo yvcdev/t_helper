@@ -42,10 +42,7 @@ class PersonalInfoSetupScreen extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    ChangeNotifierProvider(
-                      create: (_) => PersonalInfoFormProvider(),
-                      child: const _InfoForm(),
-                    ),
+                    _InfoForm(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -64,12 +61,11 @@ class PersonalInfoSetupScreen extends StatelessWidget {
 }
 
 class _InfoForm extends StatelessWidget {
-  const _InfoForm({Key? key}) : super(key: key);
+  _InfoForm({Key? key}) : super(key: key);
+  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> formKey =
-        GlobalKey<FormState>(debugLabel: 'personal_info_key');
     final personalInfoForm = Provider.of<PersonalInfoFormProvider>(context);
 
     List<String> roleValues = ['', 'teacher', 'student'];
@@ -87,7 +83,7 @@ class _InfoForm extends StatelessWidget {
             snackbar(message: 'A role needs to be selected', success: false));
         return;
       }
-      if (!personalInfoForm.isValidForm(formKey)) return;
+      if (!personalInfoForm.isValidForm(signupFormKey)) return;
 
       if (personalInfoForm.selectedImage != null) {
         final userStorageService =
@@ -129,7 +125,7 @@ class _InfoForm extends StatelessWidget {
     }
 
     return Form(
-      key: formKey,
+      key: signupFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -162,7 +158,7 @@ class _InfoForm extends StatelessWidget {
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Jhon',
                 labelText: 'First Name',
-                prefixIcon: Icons.person),
+                prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
               String pattern = r'^[a-zA-Z]{3,20}$';
               RegExp regExp = RegExp(pattern);
@@ -182,7 +178,7 @@ class _InfoForm extends StatelessWidget {
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Anders',
                 labelText: 'Middle Name',
-                prefixIcon: Icons.person),
+                prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
               if (value != '') {
                 String pattern = r'^[a-zA-Z]{3,20}$';
@@ -231,7 +227,7 @@ class _InfoForm extends StatelessWidget {
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Doe',
                 labelText: 'Last Name',
-                prefixIcon: Icons.person),
+                prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
               String pattern = r'^[a-zA-Z]{3,20}$';
               RegExp regExp = RegExp(pattern);
@@ -272,10 +268,8 @@ class _ProfilePicturePicker extends StatelessWidget {
             borderRadius: BorderRadius.circular(50),
             color: Colors.grey,
             border: Border.all(
-              color: personalInfoForm.selectedImage == null
-                  ? Colors.transparent
-                  : CustomColors.primary,
-              width: personalInfoForm.selectedImage == null ? 0 : 3,
+              color: CustomColors.primary,
+              width: 3,
             ),
           ),
           height: 100,
@@ -297,41 +291,33 @@ class _ProfilePicturePicker extends StatelessWidget {
                 personalInfoForm.setSelectedImage(image.path);
               },
               borderRadius: BorderRadius.circular(50),
-              child: Stack(
-                children: [
-                  personalInfoForm.selectedImage == null
-                      ? const SizedBox(
+              child: personalInfoForm.selectedImage == null
+                  ? SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(
+                          'assets/no_profile.png',
                           height: 100,
                           width: 100,
-                          child: Icon(
-                            Icons.person,
-                            size: 90,
-                          ),
-                        )
-                      : SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.file(
-                              File(personalInfoForm.selectedImage!),
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                          fit: BoxFit.cover,
                         ),
-                  personalInfoForm.selectedImage == null
-                      ? const Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: Icon(
-                            Icons.add_rounded,
-                            size: 32,
-                          ))
-                      : const SizedBox()
-                ],
-              ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.file(
+                          File(personalInfoForm.selectedImage!),
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
             ),
           ),
         ),

@@ -12,6 +12,7 @@ class PersonalInfoFormProvider extends ChangeNotifier {
   String get middleName => _middleName;
   set middleName(String middleName) {
     _middleName = middleName;
+    print(firstName);
     notifyListeners();
   }
 
@@ -42,6 +43,7 @@ class PersonalInfoFormProvider extends ChangeNotifier {
   }
 
   void reset() {
+    print('Form reset');
     firstName = '';
     lastName = '';
     middleName = '';

@@ -45,10 +45,7 @@ class _Body extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            _ListTile(
-                iconData: Icons.home,
-                route: Routes.TEACHER_HOME,
-                title: 'Home'),
+            _ListTile(iconData: Icons.home, route: Routes.HOME, title: 'Home'),
             _ListTile(
                 iconData: Icons.group,
                 route: Routes.REGISTERED_GROUPS,

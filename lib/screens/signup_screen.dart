@@ -37,7 +37,7 @@ class SignupScreen extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    const _SignupForm(),
+                    _SignupForm(),
                     const SizedBox(
                       height: 30,
                     )
@@ -54,9 +54,9 @@ class SignupScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  final authForm =
+                  final signupForm =
                       Provider.of<SignupFormProvider>(context, listen: false);
-                  authForm.reset();
+                  signupForm.reset();
                   Navigator.pushReplacementNamed(context, Routes.LOGIN);
                 },
                 child: const Text(
@@ -78,30 +78,29 @@ class SignupScreen extends StatelessWidget {
 }
 
 class _SignupForm extends StatelessWidget {
-  const _SignupForm({Key? key}) : super(key: key);
+  _SignupForm({Key? key}) : super(key: key);
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> formKey =
-        GlobalKey<FormState>(debugLabel: 'signup_key');
-    final authForm = Provider.of<SignupFormProvider>(context);
+    final signupForm = Provider.of<SignupFormProvider>(context);
 
     onTap() async {
       FocusScope.of(context).unfocus();
       final authService = Provider.of<FBAuthService>(context, listen: false);
 
-      if (!authForm.isValidForm(formKey)) return;
+      if (!signupForm.isValidForm(formKey)) return;
 
-      authForm.isLoading = true;
+      signupForm.isLoading = true;
 
-      await authService.signup(authForm.email, authForm.password);
+      await authService.signup(signupForm.email, signupForm.password);
 
       if (authService.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             snackbar(message: authService.error!, success: false));
-        authForm.isLoading = false;
+        signupForm.isLoading = false;
       } else {
-        authForm.reset();
+        signupForm.reset();
         Navigator.pushReplacementNamed(context, Routes.HOME);
       }
     }
@@ -127,7 +126,7 @@ class _SignupForm extends StatelessWidget {
                   ? null
                   : 'This does not look like an email';
             },
-            onChanged: (value) => authForm.email = value,
+            onChanged: (value) => signupForm.email = value,
           ),
           const SizedBox(
             height: 30,
@@ -144,7 +143,7 @@ class _SignupForm extends StatelessWidget {
 
               return 'Password should have more than 6 characters';
             },
-            onChanged: (value) => authForm.password = value,
+            onChanged: (value) => signupForm.password = value,
           ),
           const SizedBox(
             height: 30,
@@ -157,11 +156,11 @@ class _SignupForm extends StatelessWidget {
                 labelText: 'Confirm Password',
                 prefixIcon: Icons.lock_outline),
             validator: (value) {
-              if (value == authForm.password) return null;
+              if (value == signupForm.password) return null;
 
               return 'Password fields must match';
             },
-            onChanged: (value) => authForm.confirmPassword = value,
+            onChanged: (value) => signupForm.confirmPassword = value,
           ),
           const SizedBox(
             height: 45,
@@ -169,8 +168,8 @@ class _SignupForm extends StatelessWidget {
           RequestButton(
               waitTitle: 'Please Wait',
               title: 'Register',
-              isLoading: authForm.isLoading,
-              onTap: authForm.isLoading ? null : () => onTap()),
+              isLoading: signupForm.isLoading,
+              onTap: signupForm.isLoading ? null : () => onTap()),
         ],
       ),
     );

@@ -38,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    const _LoginForm(),
+                    _LoginForm(),
                     const SizedBox(
                       height: 30,
                     )
@@ -55,9 +55,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  final authForm =
+                  final loginForm =
                       Provider.of<LoginFormProvider>(context, listen: false);
-                  authForm.reset();
+                  loginForm.reset();
                   Navigator.pushReplacementNamed(context, Routes.SIGNUP);
                 },
                 child: const Text(
@@ -79,12 +79,11 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginForm extends StatelessWidget {
-  const _LoginForm({Key? key}) : super(key: key);
+  _LoginForm({Key? key}) : super(key: key);
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> formKey =
-        GlobalKey<FormState>(debugLabel: 'login_key');
     final loginForm = Provider.of<LoginFormProvider>(context);
 
     onTap() async {
