@@ -102,9 +102,9 @@ class _InfoForm extends StatelessWidget {
       User userToSend = User(
         email: user.email,
         uid: user.uid,
-        firstName: personalInfoForm.firstName,
-        middleName: personalInfoForm.middleName,
-        lastName: personalInfoForm.lastName,
+        firstName: personalInfoForm.firstName.toCapitalized(),
+        middleName: personalInfoForm.middleName.toCapitalized(),
+        lastName: personalInfoForm.lastName.toCapitalized(),
         preferredName: personalInfoForm.preferredName,
         role: personalInfoForm.role,
         profilePic: downloadUrl,
