@@ -13,9 +13,9 @@ class UiConsts {
   static const largeCardHeight = 250.0;
   static const tinyFontSize = 13.5;
   static const smallFontSize = 15.0;
-  static const normalFontSize = 22.0;
-  static const largeFontSize = 31.0;
-  static const extraLargeFontSize = 45.0;
+  static const normalFontSize = 20.0;
+  static const largeFontSize = 28.0;
+  static const extraLargeFontSize = 42.0;
   static const smallPadding = 8.0;
   static const normalPadding = 14.0;
   static const largePadding = 20.0;

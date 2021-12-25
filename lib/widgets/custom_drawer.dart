@@ -129,7 +129,7 @@ class _Header extends StatelessWidget {
             Container(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: user.profilePic == null
-                    ? Image.asset('assets/no_image.jpg')
+                    ? Image.asset('assets/no_profile.png')
                     : FadeInImage(
                         image: NetworkImage(user.profilePic!),
                         placeholder: const AssetImage('assets/no_profile.png'),

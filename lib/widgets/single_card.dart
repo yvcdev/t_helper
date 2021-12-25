@@ -49,7 +49,7 @@ class SingleCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: Colors.white,
-                      fontSize: UiConsts.normalFontSize - 2,
+                      fontSize: UiConsts.normalFontSize - 4,
                       fontWeight: FontWeight.bold),
                 ),
               ),

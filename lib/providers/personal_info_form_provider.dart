@@ -12,12 +12,15 @@ class PersonalInfoFormProvider extends ChangeNotifier {
   String get middleName => _middleName;
   set middleName(String middleName) {
     _middleName = middleName;
-    print(firstName);
     notifyListeners();
   }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   String _role = '';
   String get role => _role;
@@ -28,13 +31,8 @@ class PersonalInfoFormProvider extends ChangeNotifier {
 
   String _preferredName = 'firstName';
   String get preferredName => _preferredName;
-  set preferredName(String role) {
-    _preferredName = role;
-    notifyListeners();
-  }
-
-  set isLoading(bool value) {
-    _isLoading = value;
+  set preferredName(String preferredName) {
+    _preferredName = preferredName;
     notifyListeners();
   }
 
@@ -43,7 +41,6 @@ class PersonalInfoFormProvider extends ChangeNotifier {
   }
 
   void reset() {
-    print('Form reset');
     firstName = '';
     lastName = '';
     middleName = '';

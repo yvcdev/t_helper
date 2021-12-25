@@ -239,13 +239,36 @@ class _InfoForm extends StatelessWidget {
             onChanged: (value) => personalInfoForm.lastName = value,
           ),
           const SizedBox(
-            height: 30,
+            height: 50,
           ),
           RequestButton(
               waitTitle: 'Please Wait',
               title: 'Finish',
               isLoading: personalInfoForm.isLoading,
               onTap: personalInfoForm.isLoading ? null : () => onTap()),
+          const SizedBox(
+            height: 20,
+          ),
+          TextButton(
+            style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(
+                  CustomColors.primary.withOpacity(0.1),
+                ),
+                shape: MaterialStateProperty.all(const StadiumBorder())),
+            onPressed: () async {
+              final authService =
+                  Provider.of<FBAuthService>(context, listen: false);
+              await authService.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.HOME, (Route<dynamic> route) => false);
+            },
+            child: const Text(
+              'Log Out',
+              style: TextStyle(
+                  color: CustomColors.primary,
+                  fontSize: UiConsts.smallFontSize),
+            ),
+          ),
         ],
       ),
     );

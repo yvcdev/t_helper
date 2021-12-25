@@ -99,7 +99,7 @@ class _Container extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           CustomAcceptButton(
             onTap: () {
               onAccept();

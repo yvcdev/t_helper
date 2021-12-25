@@ -38,13 +38,7 @@ class FBUserService {
   }
 
   Future createUpdateUserInfo(User user) async {
-    //print(user.detailsToMap());
-
-    users
-        .doc(user.uid)
-        .set(user.detailsToMap())
-        .then((value) => print('User added'))
-        .catchError((error) {
+    users.doc(user.uid).set(user.detailsToMap()).catchError((error) {
       error = 'An error occurred, please try again later';
     });
   }
