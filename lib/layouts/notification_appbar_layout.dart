@@ -12,6 +12,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
   final bool? loading;
   final Widget? appBarBottom;
   final double? appBarBottomHeight;
+  final double? elevation;
 
   const NotificationsAppBarLayout({
     Key? key,
@@ -21,6 +22,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
     this.loading = false,
     this.appBarBottom,
     this.appBarBottomHeight,
+    this.elevation,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
     return Scaffold(
       drawer: const CustomDrawer(),
       appBar: AppBar(
+        elevation: elevation,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [

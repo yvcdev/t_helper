@@ -7,13 +7,15 @@ class GroupInfoListTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final dynamic trailing;
+  final bool? useAssetImage;
 
   const GroupInfoListTile(
       {Key? key,
       required this.onTap,
       required this.title,
       this.subtitle,
-      this.trailing})
+      this.trailing,
+      this.useAssetImage = false})
       : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class GroupInfoListTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(UiConsts.smallPadding),
               child: Row(children: [
-                _Trailing(trailing: trailing),
+                _Trailing(trailing: trailing, useAssetImage: useAssetImage),
                 const SizedBox(
                   width: UiConsts.smallSpacing,
                 ),
@@ -63,20 +65,25 @@ class GroupInfoListTile extends StatelessWidget {
 
 class _Trailing extends StatelessWidget {
   final dynamic trailing;
+  final bool? useAssetImage;
 
-  const _Trailing({Key? key, this.trailing}) : super(key: key);
+  const _Trailing({Key? key, this.trailing, this.useAssetImage = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (trailing != null) {
-      if (trailing is String && trailing.toString().startsWith('http')) {
+    if (trailing != null || useAssetImage == true) {
+      if (trailing is String && trailing.toString().startsWith('http') ||
+          useAssetImage == true) {
         return Container(
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: FadeInImage(
-              image: NetworkImage(trailing!),
-              placeholder: const AssetImage('assets/no_image.jpg'),
-              fit: BoxFit.cover,
-            ),
+            child: useAssetImage!
+                ? Image.asset('assets/no_image.jpg')
+                : FadeInImage(
+                    image: NetworkImage(trailing!),
+                    placeholder: const AssetImage('assets/no_image.jpg'),
+                    fit: BoxFit.cover,
+                  ),
             height: UiConsts.normalImageRadius * 2,
             width: UiConsts.normalImageRadius * 2,
             decoration: BoxDecoration(
@@ -122,7 +129,7 @@ class _Center extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: subtitle == null ? 0 : 6,
+          height: subtitle == null ? 0 : 2,
         ),
         subtitle == null
             ? const SizedBox()

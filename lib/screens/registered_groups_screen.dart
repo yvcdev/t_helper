@@ -56,6 +56,8 @@ class RegisteredGroupScreen extends StatelessWidget {
                         subtitle: '${groups[index].subject.toCapitalized()} - '
                             '${groups[index].members.length == 1 ? "${groups[index].members.length} member" : "${groups[index].members.length} members"}',
                         trailing: groups[index].image,
+                        useAssetImage:
+                            groups[index].image == null ? true : false,
                         onTap: () {
                           Navigator.pushNamed(context, Routes.GROUP_INFO,
                               arguments: groups[index]);

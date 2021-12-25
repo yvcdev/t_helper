@@ -9,3 +9,4 @@ export 'package:t_helper/widgets/card_container.dart';
 export 'package:t_helper/widgets/auth_background.dart';
 export 'package:t_helper/widgets/request_button.dart';
 export 'package:t_helper/widgets/custom_text_button.dart';
+export 'package:t_helper/widgets/hero_info.dart';
