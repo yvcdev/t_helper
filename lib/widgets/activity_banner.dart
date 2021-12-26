@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/utils/custom_colors.dart';
 
 class ActivityBanner extends StatelessWidget {
   final String title;
@@ -8,6 +7,7 @@ class ActivityBanner extends StatelessWidget {
   final String image;
   final int status; // 0 not started - 1 started - 2 completed - 3 failed
   final Function onTap;
+  final int index;
 
   const ActivityBanner(
       {Key? key,
@@ -15,6 +15,7 @@ class ActivityBanner extends StatelessWidget {
       required this.image,
       required this.description,
       required this.status,
+      required this.index,
       required this.onTap})
       : super(key: key);
 
@@ -26,10 +27,10 @@ class ActivityBanner extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
-        height: UiConsts.largeCardHeight,
+        height: UiConsts.largeCardHeight + 35,
         width: 150,
         decoration: BoxDecoration(
-          color: CustomColors.secondaryDark,
+          color: UiConsts.colors[index % UiConsts.colors.length],
           borderRadius: BorderRadius.circular(UiConsts.borderRadius),
         ),
         child: Column(
@@ -110,18 +111,21 @@ class _Date extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
+      children: const [
+        Icon(
           Icons.access_time_filled_rounded,
           size: UiConsts.smallFontSize,
+          color: Colors.white,
         ),
-        const SizedBox(
+        SizedBox(
           width: UiConsts.tinySpacing,
         ),
         Text(
           'September 19',
-          style:
-              TextStyle(color: Colors.black.withOpacity(UiConsts.muchOpacity)),
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: UiConsts.tinyFontSize - 2,
+              fontWeight: FontWeight.bold),
         )
       ],
     );
@@ -145,8 +149,9 @@ class _Description extends StatelessWidget {
           description,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: const TextStyle(
-              fontSize: UiConsts.tinyFontSize, color: CustomColors.almostBlack),
+              fontSize: UiConsts.tinyFontSize - 1, color: Colors.white),
         ),
       ),
     );
@@ -169,7 +174,7 @@ class _Title extends StatelessWidget {
         title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.start,
+        textAlign: TextAlign.center,
         style: const TextStyle(
             color: Colors.white,
             fontSize: UiConsts.smallFontSize,

@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: Routes.TEACHER_HOME,
+      initialRoute: Routes.HOME,
       routes: {
         //Both
         Routes.LOGIN: (_) => const LoginScreen(),

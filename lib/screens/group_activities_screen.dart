@@ -26,6 +26,7 @@ class GroupActivitiesScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ActivityBanner(
+                        index: index,
                         onTap: () {
                           Navigator.pushNamed(
                               context, Routes.ACTIVITY_SORT_SENTENCE);
@@ -42,7 +43,7 @@ class GroupActivitiesScreen extends StatelessWidget {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: UiConsts.normalSpacing - 10,
-                mainAxisExtent: UiConsts.largeCardHeight,
+                mainAxisExtent: UiConsts.largeCardHeight + 35,
               )),
         ]);
   }

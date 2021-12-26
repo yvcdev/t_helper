@@ -49,8 +49,8 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
                   label: 'Yes',
                   cancelLabel: 'No',
                   correct: true,
-                  onAccept: () => Navigator.pushReplacementNamed(
-                      context, Routes.TEACHER_HOME),
+                  onAccept: () =>
+                      Navigator.pushReplacementNamed(context, Routes.HOME),
                   onCancel: () => Navigator.of(context).pop(),
                 );
               } else {

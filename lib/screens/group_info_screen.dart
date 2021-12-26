@@ -48,10 +48,10 @@ class GroupInfoScreen extends StatelessWidget {
                   onPressed: () {
                     print('TODO: delete group');
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_forever_rounded,
                     size: UiConsts.extraLargeFontSize,
-                    color: CustomColors.red,
+                    color: CustomColors.red.withOpacity(0.8),
                   )),
               const SizedBox(
                 height: 20,

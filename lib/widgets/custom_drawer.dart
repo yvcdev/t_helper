@@ -49,7 +49,7 @@ class _Body extends StatelessWidget {
             _ListTile(
                 iconData: Icons.group,
                 route: Routes.REGISTERED_GROUPS,
-                title: 'Your Groups'),
+                title: 'Groups'),
           ],
         ),
       ),
