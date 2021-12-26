@@ -19,58 +19,87 @@ class RegisteredGroupScreen extends StatelessWidget {
     final userService = Provider.of<FBUserService>(context);
 
     return NotificationsAppBarLayout(
-      title: 'Your Groups',
-      child: Expanded(
-        child: FutureBuilder(
-            future: groupService.getGroups(userService.user),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Group>?> snapshot) {
-              if (snapshot.hasData) {
-                if (groupService.groups!.isEmpty) {
-                  return Center(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'You haven\'t created any group yet',
-                        style: TextStyle(
-                          fontSize: UiConsts.normalFontSize,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      CustomTextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, Routes.CREATE_GROUP);
-                          },
-                          title: 'Create one?',
-                          fontSize: UiConsts.normalFontSize)
-                    ],
-                  ));
+        title: 'Your Groups',
+        topSeparation: false,
+        children: [
+          FutureBuilder(
+              future: groupService.getGroups(userService.user),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Group>?> snapshot) {
+                if (snapshot.hasData) {
+                  if (groupService.groups!.isEmpty) {
+                    return const _NoGroups();
+                  } else {
+                    return _GroupList(groupService: groupService);
+                  }
                 } else {
-                  return ListView.builder(
-                    itemCount: groupService.groups!.length,
-                    itemBuilder: (context, index) {
-                      List<Group> groups = groupService.groups!;
-                      return GroupInfoListTile(
-                        title: groups[index].name.toTitleCase(),
-                        subtitle: '${groups[index].subject.toCapitalized()} - '
-                            '${groups[index].members.length == 1 ? "${groups[index].members.length} member" : "${groups[index].members.length} members"}',
-                        trailing: groups[index].image,
-                        useAssetImage:
-                            groups[index].image == null ? true : false,
-                        onTap: () {
-                          Navigator.pushNamed(context, Routes.GROUP_INFO,
-                              arguments: groups[index]);
-                        },
-                      );
-                    },
+                  return const LoadingScreen(
+                    useScafold: false,
                   );
                 }
-              } else {
-                return const LoadingScreen();
-              }
-            }),
-      ),
+              }),
+        ]);
+  }
+}
+
+class _GroupList extends StatelessWidget {
+  const _GroupList({
+    Key? key,
+    required this.groupService,
+  }) : super(key: key);
+
+  final FBGroupService groupService;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const ScrollPhysics(),
+      itemCount: groupService.groups!.length,
+      itemBuilder: (context, index) {
+        List<Group> groups = groupService.groups!;
+        return GroupInfoListTile(
+          index: index,
+          title: groups[index].name.toTitleCase(),
+          subtitle: '${groups[index].subject.toCapitalized()} - '
+              '${groups[index].members.length == 1 ? "${groups[index].members.length} member" : "${groups[index].members.length} members"}',
+          trailing: groups[index].image,
+          useAssetImage: groups[index].image == null ? true : false,
+          onTap: () {
+            Navigator.pushNamed(context, Routes.GROUP_INFO,
+                arguments: groups[index]);
+          },
+        );
+      },
     );
+  }
+}
+
+class _NoGroups extends StatelessWidget {
+  const _NoGroups({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'You haven\'t created any group yet',
+          style: TextStyle(
+            fontSize: UiConsts.normalFontSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        CustomTextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.CREATE_GROUP);
+            },
+            title: 'Create one?',
+            fontSize: UiConsts.normalFontSize)
+      ],
+    ));
   }
 }

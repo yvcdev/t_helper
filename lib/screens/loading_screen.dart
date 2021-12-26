@@ -4,7 +4,9 @@ import 'dart:async';
 const _duration = 900;
 
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({Key? key}) : super(key: key);
+  final bool? useScafold;
+
+  const LoadingScreen({Key? key, this.useScafold = true}) : super(key: key);
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -34,33 +36,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          alignment: Alignment.center,
-          height: 150,
-          width: 150,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              const SizedBox(
-                height: 150,
-                width: 150,
-                child: CircularProgressIndicator(
-                  color: Color.fromRGBO(188, 172, 22, 1),
-                  strokeWidth: 3,
-                ),
-              ),
-              _AnimatedContainer(
-                width: _width,
-                height: _height,
-                margin: _margin,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    if (widget.useScafold!) {
+      return Scaffold(
+        body: _LoadingBody(width: _width, height: _height, margin: _margin),
+      );
+    }
+
+    return Container(
+        height: screenHeight - 130,
+        child: _LoadingBody(width: _width, height: _height, margin: _margin));
   }
 
   void _cambiarForma() {
@@ -75,6 +61,51 @@ class _LoadingScreenState extends State<LoadingScreen> {
         _margin = 0.0;
       }
     });
+  }
+}
+
+class _LoadingBody extends StatelessWidget {
+  const _LoadingBody({
+    Key? key,
+    required double width,
+    required double height,
+    required double margin,
+  })  : _width = width,
+        _height = height,
+        _margin = margin,
+        super(key: key);
+
+  final double _width;
+  final double _height;
+  final double _margin;
+
+  @override
+  Widget build(BuildContext context) {
+    return (Center(
+      child: Container(
+        alignment: Alignment.center,
+        height: 150,
+        width: 150,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const SizedBox(
+              height: 150,
+              width: 150,
+              child: CircularProgressIndicator(
+                color: Color.fromRGBO(188, 172, 22, 1),
+                strokeWidth: 3,
+              ),
+            ),
+            _AnimatedContainer(
+              width: _width,
+              height: _height,
+              margin: _margin,
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
 

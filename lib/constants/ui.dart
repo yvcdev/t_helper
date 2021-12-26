@@ -32,4 +32,11 @@ class UiConsts {
     offset: const Offset(-2, 2),
     blurRadius: 5,
   );
+
+  static const colors = [
+    Color.fromRGBO(69, 81, 249, 1),
+    Colors.teal,
+    Colors.deepPurpleAccent,
+    Color.fromRGBO(248, 182, 25, 1),
+  ];
 }

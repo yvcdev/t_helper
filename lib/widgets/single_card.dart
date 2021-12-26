@@ -7,6 +7,7 @@ class SingleCard extends StatelessWidget {
   final IconData icon;
   final String text;
   final Function onTap;
+  final int index;
 
   const SingleCard({
     Key? key,
@@ -14,6 +15,7 @@ class SingleCard extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class SingleCard extends StatelessWidget {
         width: UiConsts.smallCardHeight + 30,
         padding: const EdgeInsets.all(UiConsts.normalPadding),
         decoration: BoxDecoration(
-          color: color ?? CustomColors.secondaryDark,
+          color: UiConsts.colors[index % UiConsts.colors.length],
           borderRadius: BorderRadius.circular(UiConsts.borderRadius),
         ),
         child: Column(

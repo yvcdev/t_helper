@@ -17,34 +17,48 @@ class GroupInfoScreen extends StatelessWidget {
     final _cards = groupInfoList(context);
 
     return NotificationsAppBarLayout(
-      elevation: 0,
-      title: 'Group infomation',
-      topSeparation: false,
-      appBarBottomHeight: 50,
-      appBarBottom: Column(
-        children: [
-          Text(group.name.toTitleCase(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: UiConsts.largeFontSize,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-      child: Expanded(
-        child: Column(
+        elevation: 0,
+        title: 'Group infomation',
+        topSeparation: false,
+        appBarBottomHeight: 40,
+        appBarBottom: Column(
           children: [
-            _HeroInfo(group: group),
-            GridSingleCardTwo(
-              cards: _cards,
+            Text(group.name.toTitleCase(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: UiConsts.largeFontSize,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),
-      ),
-    );
+        children: [
+          Column(
+            children: [
+              _HeroInfo(group: group),
+              GridSingleCardTwo(
+                cards: _cards,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              IconButton(
+                  onPressed: () {
+                    print('TODO: delete group');
+                  },
+                  icon: const Icon(
+                    Icons.delete_forever_rounded,
+                    size: UiConsts.extraLargeFontSize,
+                    color: CustomColors.red,
+                  )),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        ]);
   }
 }
 

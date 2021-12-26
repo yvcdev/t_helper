@@ -18,13 +18,12 @@ class TeacherHomeScreen extends StatelessWidget {
     final _cards = teacherHomeInfoList(context);
 
     return NotificationsAppBarLayout(
-      title: 'Home',
-      appBarBottomHeight: 80,
-      appBarBottom: const _AppBarBottom(),
-      child: GridSingleCardTwo(
-        cards: _cards,
-      ),
-    );
+        title: 'Home',
+        appBarBottomHeight: 80,
+        appBarBottom: const _AppBarBottom(),
+        children: [
+          GridSingleCardTwo(cards: _cards),
+        ]);
   }
 }
 
@@ -75,12 +74,14 @@ class _Row extends StatelessWidget {
           icon: children[0]['icon'],
           text: children[0]['text'],
           onTap: children[0]['onTap'],
+          index: 0,
         ),
         SingleCard(
           color: children[1]['color'],
           icon: children[1]['icon'],
           text: children[1]['text'],
           onTap: children[1]['onTap'],
+          index: 1,
         ),
       ],
     );

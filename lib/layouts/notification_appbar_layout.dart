@@ -6,7 +6,7 @@ import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class NotificationsAppBarLayout extends StatelessWidget {
-  final Widget child;
+  final List<Widget> children;
   final String? title;
   final bool? topSeparation;
   final bool? loading;
@@ -16,7 +16,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
 
   const NotificationsAppBarLayout({
     Key? key,
-    required this.child,
+    required this.children,
     this.title,
     this.topSeparation = true,
     this.loading = false,
@@ -68,10 +68,11 @@ class NotificationsAppBarLayout extends StatelessWidget {
         ),
       ),
       body: Background(
-        child: Column(
+        child: ListView(
+          shrinkWrap: true,
           children: [
             SizedBox(height: topSeparation! ? 10 : 0),
-            child,
+            ...children,
           ],
         ),
       ),

@@ -10,30 +10,30 @@ class GridSingleCardTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-          itemCount: cards.length,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.only(top: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SingleCard(
-                    icon: cards[index]['icon'],
-                    text: cards[index]['text'],
-                    onTap: cards[index]['onTap'],
-                    color: cards[index]['color'],
-                  ),
-                ],
-              ),
-            );
-          },
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: UiConsts.normalSpacing,
-            mainAxisExtent: UiConsts.normalCardHeight,
-          )),
-    );
+    return GridView.builder(
+        shrinkWrap: true,
+        itemCount: cards.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SingleCard(
+                  icon: cards[index]['icon'],
+                  text: cards[index]['text'],
+                  onTap: cards[index]['onTap'],
+                  color: cards[index]['color'],
+                  index: index,
+                ),
+              ],
+            ),
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: UiConsts.normalSpacing,
+          mainAxisExtent: UiConsts.normalCardHeight,
+        ));
   }
 }

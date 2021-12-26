@@ -8,13 +8,13 @@ class GroupMembersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationsAppBarLayout(
-      title: 'Group Members',
-      child: Expanded(
+    return NotificationsAppBarLayout(title: 'Group Members', children: [
+      Expanded(
         child: ListView.builder(
           itemCount: 20,
           itemBuilder: (context, index) {
             return GroupInfoListTile(
+              index: index,
               title: 'Student Name',
               subtitle: 'Student ID',
               trailing:
@@ -26,6 +26,6 @@ class GroupMembersScreen extends StatelessWidget {
           },
         ),
       ),
-    );
+    ]);
   }
 }

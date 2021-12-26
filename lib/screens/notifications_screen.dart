@@ -9,7 +9,7 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return NotificationsAppBarLayout(
       title: 'Notifications',
-      child: Container(),
+      children: [Container()],
     );
   }
 }

@@ -20,19 +20,21 @@ class CreateGroupScreen extends StatelessWidget {
     return NotificationsAppBarLayout(
         topSeparation: false,
         title: 'Create Group',
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const _UpperPicturePicker(),
-                Padding(
-                  padding: const EdgeInsets.all(UiConsts.largePadding),
-                  child: _CreateGroupForm(),
-                )
-              ],
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const _UpperPicturePicker(),
+                  Padding(
+                    padding: const EdgeInsets.all(UiConsts.largePadding),
+                    child: _CreateGroupForm(),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          )
+        ]);
   }
 }
 

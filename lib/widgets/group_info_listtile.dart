@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/utils/custom_colors.dart';
 
 class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
@@ -8,40 +7,41 @@ class GroupInfoListTile extends StatelessWidget {
   final String? subtitle;
   final dynamic trailing;
   final bool? useAssetImage;
+  final int index;
 
-  const GroupInfoListTile(
-      {Key? key,
-      required this.onTap,
-      required this.title,
-      this.subtitle,
-      this.trailing,
-      this.useAssetImage = false})
-      : super(key: key);
+  const GroupInfoListTile({
+    Key? key,
+    required this.onTap,
+    required this.title,
+    required this.index,
+    this.subtitle,
+    this.trailing,
+    this.useAssetImage = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: Container(
-          margin: const EdgeInsets.only(
-              left: UiConsts.smallSpacing,
-              right: UiConsts.smallSpacing,
-              top: UiConsts.smallPadding,
-              bottom: UiConsts.smallPadding),
+          margin: const EdgeInsets.symmetric(
+              horizontal: UiConsts.smallPadding - 2,
+              vertical: UiConsts.normalPadding),
           decoration: BoxDecoration(
-            color: CustomColors.secondaryDark,
-            borderRadius: BorderRadius.circular(UiConsts.borderRadius),
-          ),
+              borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
+              gradient: LinearGradient(colors: [
+                UiConsts.colors[index % UiConsts.colors.length],
+                UiConsts.colors[index % UiConsts.colors.length].withOpacity(0.9)
+              ])),
           child: InkWell(
-            customBorder:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5)),
             onTap: () {
               onTap();
             },
             child: Padding(
-              padding: const EdgeInsets.all(UiConsts.smallPadding),
+              padding: const EdgeInsets.only(left: UiConsts.smallPadding),
               child: Row(children: [
-                _Trailing(trailing: trailing, useAssetImage: useAssetImage),
                 const SizedBox(
                   width: UiConsts.smallSpacing,
                 ),
@@ -54,8 +54,7 @@ class GroupInfoListTile extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded,
-                    color: CustomColors.almostBlack),
+                _Trailing(trailing: trailing, useAssetImage: useAssetImage),
               ]),
             ),
           )),
@@ -75,25 +74,30 @@ class _Trailing extends StatelessWidget {
     if (trailing != null || useAssetImage == true) {
       if (trailing is String && trailing.toString().startsWith('http') ||
           useAssetImage == true) {
-        return Container(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: useAssetImage!
-                ? Image.asset('assets/no_image.jpg')
-                : FadeInImage(
-                    image: NetworkImage(trailing!),
-                    placeholder: const AssetImage('assets/no_image.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-            height: UiConsts.normalImageRadius * 2,
-            width: UiConsts.normalImageRadius * 2,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UiConsts.normalImageRadius),
-            ));
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomRight: Radius.circular(UiConsts.smallPadding),
+            topRight: Radius.circular(UiConsts.smallPadding),
+          ),
+          child: Container(
+              child: useAssetImage!
+                  ? Image.asset('assets/no_image.jpg')
+                  : FadeInImage(
+                      image: NetworkImage(trailing!),
+                      placeholder: const AssetImage('assets/no_image.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+              height: UiConsts.largeImageRadius * 2,
+              width: UiConsts.largeImageRadius * 2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(UiConsts.largeImageRadius),
+              )),
+        );
       } else if (trailing is IconData) {
         return Icon(
           trailing,
-          color: CustomColors.almostBlack,
-          size: UiConsts.extraLargeFontSize - 2,
+          color: Colors.white,
+          size: UiConsts.extraLargeFontSize,
         );
       }
     } else {
@@ -124,8 +128,10 @@ class _Center extends StatelessWidget {
       children: [
         Text(
           title,
-          style: textStyle.subtitle1!.copyWith(
-            color: CustomColors.almostBlack,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: UiConsts.normalFontSize,
+            fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(
@@ -133,10 +139,11 @@ class _Center extends StatelessWidget {
         ),
         subtitle == null
             ? const SizedBox()
-            : Text(
-                subtitle!,
-                style: textStyle.subtitle2,
-              ),
+            : Text(subtitle!,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: UiConsts.smallFontSize,
+                )),
       ],
     );
   }

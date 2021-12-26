@@ -7,6 +7,6 @@ class CreateActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NotificationsAppBarLayout(
-        title: 'Create Activity', child: Container());
+        title: 'Create Activity', children: [Container()]);
   }
 }
