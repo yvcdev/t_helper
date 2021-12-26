@@ -12,6 +12,7 @@ class GridSingleCardTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: cards.length,
         itemBuilder: (context, index) {
           return Container(

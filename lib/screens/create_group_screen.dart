@@ -21,18 +21,14 @@ class CreateGroupScreen extends StatelessWidget {
         topSeparation: false,
         title: 'Create Group',
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const _UpperPicturePicker(),
-                  Padding(
-                    padding: const EdgeInsets.all(UiConsts.largePadding),
-                    child: _CreateGroupForm(),
-                  )
-                ],
-              ),
-            ),
+          Column(
+            children: [
+              const _UpperPicturePicker(),
+              Padding(
+                padding: const EdgeInsets.all(UiConsts.largePadding),
+                child: _CreateGroupForm(),
+              )
+            ],
           )
         ]);
   }
@@ -52,38 +48,63 @@ class _UpperPicturePicker extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(boxShadow: [UiConsts.boxShadow]),
       child: Stack(
-        alignment: Alignment.bottomRight,
         children: [
           createGroupForm.newPictureFile == null
               ? Image.asset(
                   'assets/no_image.jpg',
                   fit: BoxFit.cover,
                   width: double.infinity,
+                  height: 200,
                 )
               : Image.file(
                   createGroupForm.newPictureFile!,
+                  height: 200,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
-          IconButton(
-              onPressed: () async {
-                final ImagePicker _picker = ImagePicker();
-                final XFile? image =
-                    await _picker.pickImage(source: ImageSource.gallery);
-
-                if (image == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      snackbar(message: 'No image selected', success: false));
-                  return;
-                }
-
-                createGroupForm.setSelectedImage(image.path);
-              },
-              icon: const Icon(
-                Icons.camera_alt_outlined,
-                size: UiConsts.largeFontSize,
-              ))
+          _PickerButton(createGroupForm: createGroupForm)
         ],
+      ),
+    );
+  }
+}
+
+class _PickerButton extends StatelessWidget {
+  const _PickerButton({
+    Key? key,
+    required this.createGroupForm,
+  }) : super(key: key);
+
+  final CreateGroupFormProvider createGroupForm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: 5,
+      bottom: 5,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: CustomColors.primary,
+        ),
+        child: IconButton(
+            highlightColor: Colors.green,
+            padding: const EdgeInsets.all(5),
+            onPressed: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
+
+              if (image == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    snackbar(message: 'No image selected', success: false));
+                return;
+              }
+
+              createGroupForm.setSelectedImage(image.path);
+            },
+            icon: const Icon(Icons.camera_alt_outlined,
+                size: UiConsts.largeFontSize, color: Colors.white)),
       ),
     );
   }
@@ -120,8 +141,8 @@ class _CreateGroupForm extends StatelessWidget {
           owner: userService.user.uid,
           subject: createGroupForm.subject,
           level: createGroupForm.level,
-          members: ['x', 'y'],
-          activities: ['c', 'd']);
+          members: [],
+          activities: []);
 
       final groupId = await groupService.createGroup(group);
 
@@ -143,6 +164,7 @@ class _CreateGroupForm extends StatelessWidget {
             return;
           } else {
             await groupService.updateGroup(groupId, 'image', downloadUrl);
+            group.image = downloadUrl;
 
             if (groupService.error != null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -151,9 +173,10 @@ class _CreateGroupForm extends StatelessWidget {
             }
           }
         }
-        createGroupForm.reset();
+
         Navigator.pushReplacementNamed(context, Routes.GROUP_INFO,
             arguments: group);
+        createGroupForm.reset();
       }
     }
 

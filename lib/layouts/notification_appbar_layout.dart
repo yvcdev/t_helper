@@ -69,7 +69,6 @@ class NotificationsAppBarLayout extends StatelessWidget {
       ),
       body: Background(
         child: ListView(
-          shrinkWrap: true,
           children: [
             SizedBox(height: topSeparation! ? 10 : 0),
             ...children,

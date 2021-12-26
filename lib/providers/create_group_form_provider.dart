@@ -38,6 +38,7 @@ class CreateGroupFormProvider extends ChangeNotifier {
     name = '';
     subject = '';
     selectedImage = null;
+    newPictureFile = null;
     level = 'beginner';
     _isLoading = false;
   }

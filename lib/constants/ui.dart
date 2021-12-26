@@ -28,8 +28,8 @@ class UiConsts {
   static const muchOpacity = 0.8;
 
   static final boxShadow = BoxShadow(
-    color: Colors.black.withOpacity(0.7),
-    offset: const Offset(-2, 2),
+    color: Colors.black.withOpacity(0.3),
+    offset: const Offset(-1, 1),
     blurRadius: 5,
   );
 

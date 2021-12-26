@@ -45,11 +45,12 @@ class _Image extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Colors.red,
+      color: Colors.white,
       child: imageUrl == null
           ? Container()
-          : Image.network(
-              imageUrl!,
+          : FadeInImage(
+              image: NetworkImage(imageUrl!),
+              placeholder: const AssetImage('assets/no_image.jpg'),
               fit: BoxFit.cover,
               height: 200,
             ),

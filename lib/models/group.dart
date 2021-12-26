@@ -17,7 +17,7 @@ class Group {
   final String owner;
   final String subject;
   final String level;
-  final String? image;
+  String? image;
   final List<String> members;
   final List<String> activities;
 
