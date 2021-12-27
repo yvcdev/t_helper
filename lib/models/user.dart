@@ -11,10 +11,12 @@ class User {
   final String? role;
   final String? profilePic;
   final String? preferredName;
+  final List<String>? groups;
 
   User({
     required this.email,
     required this.uid,
+    this.groups,
     this.firstName,
     this.middleName,
     this.lastName,
@@ -32,33 +34,33 @@ class User {
         'lastName: $lastName, '
         'role: $role, '
         'profilePic: $profilePic, '
-        'preferredName: $preferredName, ';
+        'preferredName: $preferredName, '
+        'groups: ${groups != null ? groups!.length : "No groups"}';
   }
 
-  factory User.fromJson(String str) => User.fromMap(json.decode(str));
-
-  factory User.fromMap(Map<String, dynamic> json) => User(
+  factory User.fromMap(Map json, String uid) => User(
         email: json["email"],
-        uid: json["uid"],
+        uid: uid,
         firstName: json["firstName"],
         middleName: json["middleName"],
         lastName: json["lastName"],
         role: json["role"],
         profilePic: json["profilePic"],
         preferredName: json["preferredName"],
+        //groups: json["groups"],
       );
 
   factory User.fromSnapshot(QueryDocumentSnapshot<Object?> snapshot) => User(
         email: snapshot["email"],
         uid: '', // TODO: get the uid
         firstName: snapshot["firstName"],
-        //middleName: snapshot["middleName"],
-        middleName: '',
+        middleName:
+            snapshot["middleName"] == null ? '' : snapshot["middleName"],
         lastName: snapshot["lastName"],
         role: snapshot["role"],
-        profilePic: '',
-        //profilePic:snapshot["profilePic"],
+        profilePic: snapshot["profilePic"],
         preferredName: snapshot["preferredName"],
+        groups: snapshot["groups"],
       );
 
   Map<String, dynamic> detailsToMap() => {
@@ -69,5 +71,6 @@ class User {
         "role": role,
         "profilePic": profilePic,
         "preferredName": preferredName,
+        "groups": groups
       };
 }

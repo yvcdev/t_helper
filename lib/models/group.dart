@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Group {
   Group({
+    required this.id,
     required this.name,
     required this.owner,
     required this.subject,
@@ -13,6 +14,7 @@ class Group {
     this.image,
   });
 
+  final String id;
   final String name;
   final String owner;
   final String subject;
@@ -21,11 +23,10 @@ class Group {
   final List<String> members;
   final List<String> activities;
 
-  factory Group.fromJson(String str) => Group.fromMap(json.decode(str));
-
   String toJson() => json.encode(toMap());
 
-  factory Group.fromMap(Map<String, dynamic> json) => Group(
+  factory Group.fromMap(Map<String, dynamic> json, String id) => Group(
+        id: id,
         name: json["name"],
         owner: json["owner"],
         subject: json["subject"],
@@ -35,7 +36,10 @@ class Group {
         activities: List<String>.from(json["activities"].map((x) => x)),
       );
 
-  factory Group.fromSnapshot(QueryDocumentSnapshot<Object?> snapshot) => Group(
+  factory Group.fromSnapshot(
+          QueryDocumentSnapshot<Object?> snapshot, String id) =>
+      Group(
+        id: id,
         name: snapshot["name"],
         owner: snapshot["owner"],
         subject: snapshot["subject"],

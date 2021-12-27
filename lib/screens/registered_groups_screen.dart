@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
+import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/loading_screen.dart';
 import 'package:t_helper/services/services.dart';
@@ -66,6 +67,11 @@ class _GroupList extends StatelessWidget {
           trailing: groups[index].image,
           useAssetImage: groups[index].image == null ? true : false,
           onTap: () {
+            final currentGroupProvider =
+                Provider.of<CurrentGroupProvider>(context, listen: false);
+
+            currentGroupProvider.currentGroup = groups[index];
+
             Navigator.pushNamed(context, Routes.GROUP_INFO,
                 arguments: groups[index]);
           },
@@ -82,24 +88,29 @@ class _NoGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'You haven\'t created any group yet',
-          style: TextStyle(
-            fontSize: UiConsts.normalFontSize,
-            fontWeight: FontWeight.bold,
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return SizedBox(
+      height: screenHeight - 130,
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'You haven\'t created any group yet',
+            style: TextStyle(
+              fontSize: UiConsts.normalFontSize,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        CustomTextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.CREATE_GROUP);
-            },
-            title: 'Create one?',
-            fontSize: UiConsts.normalFontSize)
-      ],
-    ));
+          CustomTextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.CREATE_GROUP);
+              },
+              title: 'Create one?',
+              fontSize: UiConsts.normalFontSize)
+        ],
+      )),
+    );
   }
 }

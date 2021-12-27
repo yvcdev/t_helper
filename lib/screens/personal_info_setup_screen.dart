@@ -100,15 +100,15 @@ class _InfoForm extends StatelessWidget {
       }
 
       User userToSend = User(
-        email: user.email,
-        uid: user.uid,
-        firstName: personalInfoForm.firstName.toCapitalized(),
-        middleName: personalInfoForm.middleName.toCapitalized(),
-        lastName: personalInfoForm.lastName.toCapitalized(),
-        preferredName: personalInfoForm.preferredName,
-        role: personalInfoForm.role,
-        profilePic: downloadUrl,
-      );
+          email: user.email,
+          uid: user.uid,
+          firstName: personalInfoForm.firstName.toCapitalized(),
+          middleName: personalInfoForm.middleName.toCapitalized(),
+          lastName: personalInfoForm.lastName.toCapitalized(),
+          preferredName: personalInfoForm.preferredName,
+          role: personalInfoForm.role,
+          profilePic: downloadUrl,
+          groups: []);
 
       personalInfoForm.isLoading = true;
 

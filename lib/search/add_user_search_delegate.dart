@@ -54,23 +54,6 @@ class AddUserSearchDelegate extends SearchDelegate {
 
     final usersService = Provider.of<FBUsersService>(context, listen: false);
 
-    return FutureBuilder(
-      future: usersService.findUsersByEmail(query),
-      builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (snapshot.hasData) {
-          final users = snapshot.data;
-
-          print(users);
-          return ListView.builder(
-            itemCount: users!.length,
-            itemBuilder: (context, index) {
-              return Text(users[index].email);
-            },
-          );
-        } else {
-          return Text('Loading');
-        }
-      },
-    );
+    return Text('');
   }
 }

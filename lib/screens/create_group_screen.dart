@@ -137,6 +137,7 @@ class _CreateGroupForm extends StatelessWidget {
       createGroupForm.isLoading = true;
 
       final group = Group(
+          id: '',
           name: createGroupForm.name.trim(),
           owner: userService.user.uid,
           subject: createGroupForm.subject,
@@ -173,6 +174,11 @@ class _CreateGroupForm extends StatelessWidget {
             }
           }
         }
+
+        final currentGroupProvider =
+            Provider.of<CurrentGroupProvider>(context, listen: false);
+
+        currentGroupProvider.currentGroup = group;
 
         Navigator.pushReplacementNamed(context, Routes.GROUP_INFO,
             arguments: group);

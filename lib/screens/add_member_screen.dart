@@ -10,11 +10,7 @@ class AddMemberScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ActionAppBarLayout(
-      actionIcon: const Icon(Icons.person_add_alt_rounded),
-      onActionPressed: () {
-        _showAddUserSearch(context);
-      },
+    return const ActionAppBarLayout(
       title: 'Add Member',
       children: [],
     );

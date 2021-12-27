@@ -80,7 +80,7 @@ class LoginScreen extends StatelessWidget {
 
 class _LoginForm extends StatelessWidget {
   _LoginForm({Key? key}) : super(key: key);
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

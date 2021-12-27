@@ -13,6 +13,8 @@ class NotificationsAppBarLayout extends StatelessWidget {
   final Widget? appBarBottom;
   final double? appBarBottomHeight;
   final double? elevation;
+  final bool? scroll;
+  final bool? colunmLayout;
 
   const NotificationsAppBarLayout({
     Key? key,
@@ -23,6 +25,8 @@ class NotificationsAppBarLayout extends StatelessWidget {
     this.appBarBottom,
     this.appBarBottomHeight,
     this.elevation,
+    this.scroll = true,
+    this.colunmLayout = false,
   }) : super(key: key);
 
   @override
@@ -68,12 +72,22 @@ class NotificationsAppBarLayout extends StatelessWidget {
         ),
       ),
       body: Background(
-        child: ListView(
-          children: [
-            SizedBox(height: topSeparation! ? 10 : 0),
-            ...children,
-          ],
-        ),
+        child: colunmLayout!
+            ? Column(
+                children: [
+                  SizedBox(height: topSeparation! ? 10 : 0),
+                  ...children,
+                ],
+              )
+            : ListView(
+                physics: scroll!
+                    ? const ScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
+                children: [
+                  SizedBox(height: topSeparation! ? 10 : 0),
+                  ...children,
+                ],
+              ),
       ),
     );
   }

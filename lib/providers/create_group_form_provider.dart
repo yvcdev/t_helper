@@ -29,8 +29,6 @@ class CreateGroupFormProvider extends ChangeNotifier {
   }
 
   bool isValidForm(GlobalKey<FormState> formKey) {
-    print(selectedImage);
-    print(name);
     return formKey.currentState?.validate() ?? false;
   }
 

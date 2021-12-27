@@ -32,7 +32,6 @@ class FBAuthService {
         error = 'Please check your credentials';
       } else {
         error = 'Please try again later';
-        print(e);
       }
     }
   }

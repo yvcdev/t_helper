@@ -1,23 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/models/search_users_response.dart';
 
-class FBUsersService {
+class FBUsersService extends ChangeNotifier {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  List<Map<String, dynamic>> _matchedUsers = [];
+  User? student;
   String? error;
+  String? message;
+  bool loading = true;
 
-  Future<List<User>> findUsersByEmail(String query) async {
-    final querySnapshot = await users.where('email', isEqualTo: query).get();
+  Future<User?> findUsersByEmail(String query) async {
+    try {
+      final querySnapshot = await users
+          .where('email', isEqualTo: query)
+          .where('role', isEqualTo: 'student')
+          .get();
 
-    final usersResponse = SearchUsersResponse(users: []);
-    for (var doc in querySnapshot.docs) {
-      print(doc.data());
-      final user = User.fromSnapshot(doc);
-      usersResponse.users.add(user);
+      if (querySnapshot.docs.isEmpty) {
+        message = 'Student not found';
+        error = null;
+        notifyListeners();
+        return null;
+      }
+
+      final userMap = querySnapshot.docs[0].data() as Map;
+
+      final user = User.fromMap(userMap, querySnapshot.docs[0].id);
+
+      student = user;
+      error = null;
+      message = null;
+      notifyListeners();
+      return user;
+    } catch (e) {
+      error = "There was an error finding the student";
+      message = null;
+      notifyListeners();
     }
+  }
 
-    return usersResponse.users;
+  //Future<List<User?>>
+  getUsersInGroup(String groupId) async {
+    try {
+      loading = true;
+      notifyListeners();
+
+      //await users.where();
+
+      loading = false;
+      notifyListeners();
+    } catch (e) {}
+  }
+
+  reset() {
+    student = null;
+    error = null;
+    message = null;
+    notifyListeners();
   }
 }

@@ -32,7 +32,7 @@ class FBUserService {
       ...userData,
     });
 
-    User completeUser = User.fromMap(userData);
+    User completeUser = User.fromMap(userData, documentSnapshot.id);
 
     return completeUser;
   }

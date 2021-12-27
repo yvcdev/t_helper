@@ -44,7 +44,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       );
     }
 
-    return Container(
+    return SizedBox(
         height: screenHeight - 130,
         child: _LoadingBody(width: _width, height: _height, margin: _margin));
   }

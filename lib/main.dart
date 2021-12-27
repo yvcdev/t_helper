@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
+import 'firebase_options.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/widgets/wrapper.dart';
 import 'package:t_helper/activity_screens/activity_screens.dart';
@@ -33,13 +33,15 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SignupFormProvider()),
         ChangeNotifierProvider(create: (_) => PersonalInfoFormProvider()),
         ChangeNotifierProvider(create: (_) => CreateGroupFormProvider()),
+        ChangeNotifierProvider(create: (_) => AddMemberFormProvider()),
         ChangeNotifierProvider(create: (_) => SentenceService()),
+        ChangeNotifierProvider(create: (_) => FBUsersService()),
         Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBStorageGroup>(create: (_) => FBStorageGroup()),
         Provider<FBGroupService>(create: (_) => FBGroupService()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
         Provider<FBUserService>(create: (_) => FBUserService()),
-        Provider<FBUsersService>(create: (_) => FBUsersService()),
+        Provider<CurrentGroupProvider>(create: (_) => CurrentGroupProvider()),
       ],
     );
   }
@@ -62,7 +64,7 @@ class MyApp extends StatelessWidget {
         Routes.NOTIFICATIONS: (_) => const NotificationsScreen(),
         Routes.REGISTERED_GROUPS: (_) => const RegisteredGroupScreen(),
         Routes.GROUP_INFO: (_) => const GroupInfoScreen(),
-        Routes.GROUP_MEMBERS: (_) => const GroupMembersScreen(),
+        Routes.GROUP_MEMBERS: (_) => GroupMembersScreen(),
         Routes.GROUP_ACTIVITIES: (_) => const GroupActivitiesScreen(),
         Routes.LOADING: (_) => const LoadingScreen(),
         Routes.FINISHED: (_) => const FinishedScreen(),

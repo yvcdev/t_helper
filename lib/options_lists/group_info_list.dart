@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/services/fb_users_service.dart';
 
 List<Map<String, dynamic>> groupInfoList(BuildContext context) {
   return [
@@ -9,6 +12,12 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'text': 'Group members',
       'onTap': () {
         Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
+        final usersService =
+            Provider.of<FBUsersService>(context, listen: false);
+        final currentGroupProvider =
+            Provider.of<CurrentGroupProvider>(context, listen: false);
+
+        usersService.getUsersInGroup(currentGroupProvider.currentGroup!.id);
       },
     },
     {
