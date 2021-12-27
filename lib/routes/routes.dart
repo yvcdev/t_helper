@@ -15,6 +15,7 @@ class Routes {
   static String TEACHER_HOME = 'TEACHER_HOME';
   static String CREATE_ACTIVITY = 'CREATE_ACTIVITY';
   static String CREATE_GROUP = 'CREATE_GROUP';
+  static String ADD_MEMBER = 'ADD_MEMBER';
 
   //Students
   static String ACTIVITY_SORT_SENTENCE = 'ACTIVITY_SORT_SENTENCE';

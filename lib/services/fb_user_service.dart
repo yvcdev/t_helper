@@ -37,7 +37,7 @@ class FBUserService {
     return completeUser;
   }
 
-  Future createUpdateUserInfo(User user) async {
+  Future createUserInfo(User user) async {
     users.doc(user.uid).set(user.detailsToMap()).catchError((error) {
       error = 'An error occurred, please try again later';
     });

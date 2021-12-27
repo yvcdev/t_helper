@@ -93,7 +93,8 @@ class _SignupForm extends StatelessWidget {
 
       signupForm.isLoading = true;
 
-      await authService.signup(signupForm.email, signupForm.password);
+      await authService.signup(
+          signupForm.email.toLowerCase(), signupForm.password);
 
       if (authService.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(

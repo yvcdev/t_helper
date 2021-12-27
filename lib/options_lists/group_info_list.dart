@@ -32,7 +32,7 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'color': Colors.purple,
       'text': 'Add member',
       'onTap': () {
-        Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
+        Navigator.pushNamed(context, Routes.ADD_MEMBER);
       },
     },
   ];

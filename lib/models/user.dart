@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   final String email;
   final String uid;
@@ -46,7 +48,21 @@ class User {
         preferredName: json["preferredName"],
       );
 
+  factory User.fromSnapshot(QueryDocumentSnapshot<Object?> snapshot) => User(
+        email: snapshot["email"],
+        uid: '', // TODO: get the uid
+        firstName: snapshot["firstName"],
+        //middleName: snapshot["middleName"],
+        middleName: '',
+        lastName: snapshot["lastName"],
+        role: snapshot["role"],
+        profilePic: '',
+        //profilePic:snapshot["profilePic"],
+        preferredName: snapshot["preferredName"],
+      );
+
   Map<String, dynamic> detailsToMap() => {
+        "email": email,
         "firstName": firstName,
         "middleName": middleName,
         "lastName": lastName,

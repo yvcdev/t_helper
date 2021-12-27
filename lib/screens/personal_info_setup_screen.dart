@@ -112,7 +112,7 @@ class _InfoForm extends StatelessWidget {
 
       personalInfoForm.isLoading = true;
 
-      await userService.createUpdateUserInfo(userToSend);
+      await userService.createUserInfo(userToSend);
 
       if (userService.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(

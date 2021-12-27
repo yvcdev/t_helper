@@ -39,6 +39,7 @@ class AppState extends StatelessWidget {
         Provider<FBGroupService>(create: (_) => FBGroupService()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
         Provider<FBUserService>(create: (_) => FBUserService()),
+        Provider<FBUsersService>(create: (_) => FBUsersService()),
       ],
     );
   }
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         Routes.TEACHER_HOME: (_) => const Wrapper(),
         Routes.CREATE_ACTIVITY: (_) => const CreateActivityScreen(),
         Routes.CREATE_GROUP: (_) => const CreateGroupScreen(),
+        Routes.ADD_MEMBER: (_) => const AddMemberScreen(),
 
         //Student
         Routes.ACTIVITY_SORT_SENTENCE: (_) => const ASortSentenceScreen(),
