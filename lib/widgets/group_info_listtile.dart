@@ -8,6 +8,7 @@ class GroupInfoListTile extends StatelessWidget {
   final dynamic trailing;
   final bool? useAssetImage;
   final int index;
+  final String? assetImageName;
 
   const GroupInfoListTile({
     Key? key,
@@ -17,6 +18,7 @@ class GroupInfoListTile extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.useAssetImage = false,
+    this.assetImageName = 'no_image.jpg',
   }) : super(key: key);
 
   @override
@@ -54,7 +56,11 @@ class GroupInfoListTile extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                _Trailing(trailing: trailing, useAssetImage: useAssetImage),
+                _Trailing(
+                  trailing: trailing,
+                  useAssetImage: useAssetImage,
+                  assetImageName: assetImageName!,
+                ),
               ]),
             ),
           )),
@@ -65,8 +71,13 @@ class GroupInfoListTile extends StatelessWidget {
 class _Trailing extends StatelessWidget {
   final dynamic trailing;
   final bool? useAssetImage;
+  final String assetImageName;
 
-  const _Trailing({Key? key, this.trailing, this.useAssetImage = false})
+  const _Trailing(
+      {Key? key,
+      this.trailing,
+      this.useAssetImage = false,
+      required this.assetImageName})
       : super(key: key);
 
   @override
@@ -81,10 +92,10 @@ class _Trailing extends StatelessWidget {
           ),
           child: Container(
               child: useAssetImage!
-                  ? Image.asset('assets/no_image.jpg')
+                  ? Image.asset('assets/$assetImageName')
                   : FadeInImage(
                       image: NetworkImage(trailing!),
-                      placeholder: const AssetImage('assets/no_image.jpg'),
+                      placeholder: AssetImage('assets/$assetImageName'),
                       fit: BoxFit.cover,
                     ),
               height: UiConsts.largeImageRadius * 2,

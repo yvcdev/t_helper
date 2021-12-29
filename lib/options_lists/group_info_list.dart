@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/fb_users_service.dart';
+import 'package:t_helper/services/services.dart';
 
 List<Map<String, dynamic>> groupInfoList(BuildContext context) {
   return [
@@ -10,14 +11,15 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'icon': Icons.group,
       'color': Colors.orange,
       'text': 'Group members',
-      'onTap': () {
-        Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
-        final usersService =
-            Provider.of<FBUsersService>(context, listen: false);
+      'onTap': () async {
+        final groupUsersService =
+            Provider.of<FBGroupUsersService>(context, listen: false);
         final currentGroupProvider =
             Provider.of<CurrentGroupProvider>(context, listen: false);
+        Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
 
-        usersService.getUsersInGroup(currentGroupProvider.currentGroup!.id);
+        await groupUsersService
+            .getGroupUsers(currentGroupProvider.currentGroup!.id);
       },
     },
     {

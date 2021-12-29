@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/screens/loading_screen.dart';
-import 'package:t_helper/services/fb_users_service.dart';
+import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
@@ -14,19 +14,23 @@ class GroupMembersScreen extends StatelessWidget {
   GroupMembersScreen({Key? key}) : super(key: key);
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final addMemberForm = Provider.of<AddMemberFormProvider>(context);
-    final usersService = Provider.of<FBUsersService>(context);
+    final groupUsersService = Provider.of<FBGroupUsersService>(context);
 
-    if (usersService.loading) return const LoadingScreen();
+    Tween<Offset> _offset =
+        Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
 
     return NotificationsAppBarLayout(
         scroll: false,
         colunmLayout: true,
         topSeparation: false,
         title: 'Group Members',
+        loading: groupUsersService.loading,
         children: [
           Container(
             padding: const EdgeInsets.only(
@@ -48,6 +52,7 @@ class GroupMembersScreen extends StatelessWidget {
                   key: formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: TextFormField(
+                    controller: emailController,
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecorations.generalInputDecoration(
@@ -59,9 +64,11 @@ class GroupMembersScreen extends StatelessWidget {
                           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                       RegExp regExp = RegExp(pattern);
 
-                      return regExp.hasMatch(value ?? '')
-                          ? null
-                          : 'This does not look like an email';
+                      if (emailController.text != '') {
+                        return regExp.hasMatch(value ?? '')
+                            ? null
+                            : 'This does not look like an email';
+                      }
                     },
                     onChanged: (value) {
                       _onChanged(value, context, formKey);
@@ -71,21 +78,38 @@ class GroupMembersScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                _UserInfoSection(addMemberForm: addMemberForm)
+                _UserInfoSection(
+                  userInGroup: groupUsersService.userInGroup,
+                  addMemberForm: addMemberForm,
+                  globalKey: _listKey,
+                  formController: emailController,
+                )
               ],
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return GroupInfoListTile(
-                  index: index,
-                  title: 'Student Name',
-                  subtitle: 'Student Email',
-                  trailing:
-                      'https://img.freepik.com/free-photo/pleasant-looking-serious-man-stands-profile-has-confident-expression-wears-casual-white-t-shirt_273609-16959.jpg?size=626&ext=jpg',
-                  onTap: () {},
+            child: AnimatedList(
+              key: _listKey,
+              initialItemCount: groupUsersService.groupUsersList.length,
+              itemBuilder: (context, index, animation) {
+                final groupUsers = groupUsersService.groupUsersList[index];
+                String fullName = groupUsers.userMiddleName == ''
+                    ? '${groupUsers.userFirstName} ${groupUsers.userLastName}'
+                    : '${groupUsers.userFirstName} ${groupUsers.userMiddleName} ${groupUsers.userLastName}';
+                return SlideTransition(
+                  position: animation.drive(_offset),
+                  child: GroupInfoListTile(
+                    index: index,
+                    title: fullName,
+                    subtitle: groupUsers.userEmail,
+                    trailing: groupUsers.userProfilePic,
+                    useAssetImage:
+                        groupUsers.userProfilePic == null ? true : false,
+                    assetImageName: 'no_profile.png',
+                    onTap: () {
+                      _onTap(context);
+                    },
+                  ),
                 );
               },
             ),
@@ -98,24 +122,40 @@ class GroupMembersScreen extends StatelessWidget {
     final addMemberForm =
         Provider.of<AddMemberFormProvider>(context, listen: false);
     final usersService = Provider.of<FBUsersService>(context, listen: false);
+    final groupUsersService =
+        Provider.of<FBGroupUsersService>(context, listen: false);
+    final currentGroupProvider =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
 
-    addMemberForm.email = value;
+    addMemberForm.email = value.toLowerCase();
 
-    if (addMemberForm.isValidForm(formKey)) {
+    if (addMemberForm.isValidForm(formKey) && addMemberForm.email != '') {
+      await groupUsersService.checkUserInGroup(
+        currentGroupProvider.currentGroup!.id,
+        addMemberForm.email,
+      );
       await usersService.findUsersByEmail(addMemberForm.email);
     } else {
       usersService.reset();
     }
   }
+
+  _onTap(BuildContext context) {}
 }
 
 class _UserInfoSection extends StatelessWidget {
   const _UserInfoSection({
     Key? key,
     required this.addMemberForm,
+    required this.globalKey,
+    required this.userInGroup,
+    required this.formController,
   }) : super(key: key);
 
   final AddMemberFormProvider addMemberForm;
+  final GlobalKey<AnimatedListState> globalKey;
+  final bool userInGroup;
+  final TextEditingController formController;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +171,7 @@ class _UserInfoSection extends StatelessWidget {
         ),
       );
     }
-    ;
+
     if (usersService.message != null) {
       return Padding(
         padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
@@ -141,6 +181,7 @@ class _UserInfoSection extends StatelessWidget {
         ),
       );
     }
+
     if (usersService.student != null) {
       User student = usersService.student!;
       String fullName = student.middleName == ""
@@ -153,10 +194,11 @@ class _UserInfoSection extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Found student',
+                Text(
+                  userInGroup ? 'Student already in group' : 'Found student',
                   style: TextStyle(
-                      color: CustomColors.green,
+                      color:
+                          userInGroup ? CustomColors.red : CustomColors.green,
                       fontSize: UiConsts.tinyFontSize),
                 ),
                 SizedBox(
@@ -189,13 +231,21 @@ class _UserInfoSection extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            IconButton(
-                onPressed: () {
-                  usersService.reset();
-                },
-                icon: const Icon(Icons.person_add_alt_rounded,
-                    color: CustomColors.almostBlack,
-                    size: UiConsts.largeFontSize))
+            userInGroup
+                ? IconButton(
+                    onPressed: () async {
+                      await _onRemovePressed(context);
+                    },
+                    icon: const Icon(Icons.delete_forever,
+                        color: CustomColors.almostBlack,
+                        size: UiConsts.largeFontSize))
+                : IconButton(
+                    onPressed: () async {
+                      await _onAddPressed(context);
+                    },
+                    icon: const Icon(Icons.person_add_alt_rounded,
+                        color: CustomColors.almostBlack,
+                        size: UiConsts.largeFontSize))
           ],
         ),
       );
@@ -203,4 +253,30 @@ class _UserInfoSection extends StatelessWidget {
       return Container();
     }
   }
+
+  Future _onAddPressed(BuildContext context) async {
+    final usersService = Provider.of<FBUsersService>(context, listen: false);
+    final currentGroupProvider =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final groupUsersService =
+        Provider.of<FBGroupUsersService>(context, listen: false);
+
+    final group = currentGroupProvider.currentGroup;
+    final student = usersService.student!;
+
+    final _groupUsers = GroupUsers.fromGroupAndUser(group!, student);
+
+    await groupUsersService.addUserToGroup(_groupUsers);
+
+    if (groupUsersService.error == null) {
+      groupUsersService.groupUsersList.add(_groupUsers);
+    }
+
+    globalKey.currentState!.insertItem(0);
+    usersService.reset();
+    formController.text = '';
+    FocusScope.of(context).unfocus();
+  }
+
+  Future _onRemovePressed(BuildContext context) async {}
 }

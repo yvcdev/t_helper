@@ -42,4 +42,14 @@ class FBUserService {
       error = 'An error occurred, please try again later';
     });
   }
+
+  Future addStudentToGroup(String studentId, String groupId) async {
+    try {
+      await users.doc(studentId).set({
+        'groups': [groupId]
+      });
+    } catch (e) {
+      error = 'There was an error adding the student';
+    }
+  }
 }
