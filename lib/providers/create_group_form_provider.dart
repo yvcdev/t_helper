@@ -42,6 +42,7 @@ class CreateGroupFormProvider extends ChangeNotifier {
 
   void reset() {
     name = '';
+    groupId = null;
     subject = '';
     selectedImage = null;
     newPictureFile = null;
@@ -59,7 +60,6 @@ class CreateGroupFormProvider extends ChangeNotifier {
   String getGroupId() {
     List<String> _formattedNameList = name.split(' ');
     String _formattedName = _formattedNameList.join('').toLowerCase();
-    print(_formattedName.length);
     if (_formattedName.length > 25) {
       groupId = _formattedName.substring(0, 24);
     } else {

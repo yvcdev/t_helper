@@ -6,6 +6,7 @@ class Group {
   Group({
     required this.id,
     required this.name,
+    required this.namedId,
     required this.owner,
     required this.subject,
     required this.level,
@@ -16,6 +17,7 @@ class Group {
 
   final String id;
   final String name;
+  final String namedId;
   final String owner;
   final String subject;
   final String level;
@@ -28,6 +30,7 @@ class Group {
   factory Group.fromMap(Map<String, dynamic> json, String id) => Group(
         id: id,
         name: json["name"],
+        namedId: json["nameId"],
         owner: json["owner"],
         subject: json["subject"],
         level: json["level"],
@@ -41,6 +44,7 @@ class Group {
       Group(
         id: id,
         name: snapshot["name"],
+        namedId: snapshot["nameId"],
         owner: snapshot["owner"],
         subject: snapshot["subject"],
         level: snapshot["level"],
@@ -51,6 +55,7 @@ class Group {
 
   Map<String, dynamic> toMap() => {
         "name": name,
+        "namedId": namedId,
         "owner": owner,
         "subject": subject,
         "level": level,

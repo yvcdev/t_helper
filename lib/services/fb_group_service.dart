@@ -31,6 +31,16 @@ class FBGroupService {
 
   Future<String?> createGroup(Group group) async {
     try {
+      final existingGroupQuery = await groupsReference
+          .where('namedId', isEqualTo: group.namedId)
+          .get();
+
+      if (existingGroupQuery.docs.isNotEmpty) {
+        //TODO: VERIFY IT CAN BE CREATED
+        error = 'A group with this ID already exists';
+        return null;
+      }
+
       final documentReference = await groupsReference.add(group.toMap());
 
       error = null;

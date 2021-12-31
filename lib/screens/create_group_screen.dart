@@ -139,6 +139,7 @@ class _CreateGroupForm extends StatelessWidget {
       final group = Group(
           id: '',
           name: createGroupForm.name.trim(),
+          namedId: createGroupForm.groupId!,
           owner: userService.user.uid,
           subject: createGroupForm.subject,
           level: createGroupForm.level,
