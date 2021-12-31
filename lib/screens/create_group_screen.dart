@@ -217,6 +217,23 @@ class _CreateGroupForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
+                'Generated ID:',
+                style: TextStyle(fontSize: 17),
+              ),
+              Text(
+                createGroupForm.getGroupId(),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
                 'Group Level:',
                 style: TextStyle(fontSize: 17),
               ),
@@ -225,7 +242,10 @@ class _CreateGroupForm extends StatelessWidget {
                   items: levels.map((level) {
                     return DropdownMenuItem<String>(
                       value: level,
-                      child: Text(level.toCapitalized()),
+                      child: Text(
+                        level.toCapitalized(),
+                        style: const TextStyle(fontSize: 17),
+                      ),
                     );
                   }).toList(),
                   onChanged: (level) {
@@ -247,10 +267,11 @@ class _CreateGroupForm extends StatelessWidget {
                   value: createGroupForm.subject,
                   items: subjects.map((subject) {
                     return DropdownMenuItem<String>(
-                      value: subject,
-                      child: Text(
-                          subject == '' ? 'Select' : subject.toTitleCase()),
-                    );
+                        value: subject,
+                        child: Text(
+                          subject == '' ? 'Select' : subject.toTitleCase(),
+                          style: const TextStyle(fontSize: 17),
+                        ));
                   }).toList(),
                   onChanged: (subject) {
                     createGroupForm.subject = subject!;

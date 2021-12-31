@@ -3,7 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class CreateGroupFormProvider extends ChangeNotifier {
-  String name = '';
+  String _name = '';
+  String get name => _name;
+  set name(String name) {
+    _name = name;
+    notifyListeners();
+  }
+
+  String? groupId;
+
   String? selectedImage;
   File? newPictureFile;
 
@@ -46,5 +54,17 @@ class CreateGroupFormProvider extends ChangeNotifier {
     newPictureFile = File.fromUri(Uri(path: path));
 
     notifyListeners();
+  }
+
+  String getGroupId() {
+    List<String> _formattedNameList = name.split(' ');
+    String _formattedName = _formattedNameList.join('').toLowerCase();
+    print(_formattedName.length);
+    if (_formattedName.length > 25) {
+      groupId = _formattedName.substring(0, 24);
+    } else {
+      groupId = _formattedName;
+    }
+    return groupId ?? '';
   }
 }

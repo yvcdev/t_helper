@@ -47,6 +47,34 @@ class FBGroupUsersService extends ChangeNotifier {
     }
   }
 
+  Future<int?> removeUserFromGroup(String groupId, String userId) async {
+    try {
+      final querySnapshot = await groupUsers
+          .where('userId', isEqualTo: userId)
+          .where('groupId', isEqualTo: groupId)
+          .get();
+
+      final docRef = querySnapshot.docs[0].reference;
+
+      await docRef.delete();
+
+      final index = groupUsersList
+          .indexWhere((groupUsers) => groupUsers.userId == userId);
+      groupUsersList = groupUsersList
+          .where((groupUsers) => groupUsers.userId != userId)
+          .toList();
+
+      notifyListeners();
+      print('User deleted');
+
+      return index;
+    } catch (e) {
+      print('User not deleted');
+      error = 'There was an error removing the user to the group';
+      notifyListeners();
+    }
+  }
+
   Future<bool> checkUserInGroup(String groupId, String userEmail) async {
     final _userInGroup = await groupUsers
         .where('groupId', isEqualTo: groupId)
@@ -56,13 +84,11 @@ class FBGroupUsersService extends ChangeNotifier {
     if (_userInGroup.docs.isNotEmpty) {
       userInGroup = true;
       notifyListeners();
-      print('Info checked true');
       return true;
     }
 
     userInGroup = false;
     notifyListeners();
-    print('Info checked true');
     return false;
   }
 }

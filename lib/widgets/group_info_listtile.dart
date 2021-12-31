@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/utils/custom_colors.dart';
 
 class GroupInfoListTile extends StatelessWidget {
   final Function onTap;
@@ -9,12 +10,14 @@ class GroupInfoListTile extends StatelessWidget {
   final bool? useAssetImage;
   final int index;
   final String? assetImageName;
+  final Function onDeleteDismiss;
 
   const GroupInfoListTile({
     Key? key,
     required this.onTap,
     required this.title,
     required this.index,
+    required this.onDeleteDismiss,
     this.subtitle,
     this.trailing,
     this.useAssetImage = false,
@@ -23,47 +26,69 @@ class GroupInfoListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
+    return Dismissible(
+      direction: DismissDirection.endToStart,
+      background: Container(
           margin: const EdgeInsets.symmetric(
               horizontal: UiConsts.smallPadding - 2,
               vertical: UiConsts.normalPadding),
+          padding: const EdgeInsets.all(UiConsts.normalPadding),
+          alignment: Alignment.centerRight,
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
-              gradient: LinearGradient(colors: [
-                UiConsts.colors[index % UiConsts.colors.length],
-                UiConsts.colors[index % UiConsts.colors.length].withOpacity(0.9)
-              ])),
-          child: InkWell(
-            customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5)),
-            onTap: () {
-              onTap();
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: UiConsts.smallPadding),
-              child: Row(children: [
-                const SizedBox(
-                  width: UiConsts.smallSpacing,
-                ),
-                Expanded(
-                  child: _Center(
-                    title: title,
-                    subtitle: subtitle,
+              color: CustomColors.red)),
+      key: UniqueKey(),
+      onDismissed: (direction) {
+        onDeleteDismiss();
+      },
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+            margin: const EdgeInsets.symmetric(
+                horizontal: UiConsts.smallPadding - 2,
+                vertical: UiConsts.normalPadding),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
+                gradient: LinearGradient(colors: [
+                  UiConsts.colors[index % UiConsts.colors.length],
+                  UiConsts.colors[index % UiConsts.colors.length]
+                      .withOpacity(0.9)
+                ])),
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(UiConsts.borderRadius - 5)),
+              onTap: () {
+                onTap();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: UiConsts.smallPadding),
+                child: Row(children: [
+                  const SizedBox(
+                    width: UiConsts.smallSpacing,
                   ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                _Trailing(
-                  trailing: trailing,
-                  useAssetImage: useAssetImage,
-                  assetImageName: assetImageName!,
-                ),
-              ]),
-            ),
-          )),
+                  Expanded(
+                    child: _Center(
+                      title: title,
+                      subtitle: subtitle,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  _Trailing(
+                    trailing: trailing,
+                    useAssetImage: useAssetImage,
+                    assetImageName: assetImageName!,
+                  ),
+                ]),
+              ),
+            )),
+      ),
     );
   }
 }
@@ -131,8 +156,6 @@ class _Center extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,

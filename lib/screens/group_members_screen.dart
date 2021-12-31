@@ -83,6 +83,7 @@ class GroupMembersScreen extends StatelessWidget {
                   addMemberForm: addMemberForm,
                   globalKey: _listKey,
                   formController: emailController,
+                  offset: _offset,
                 )
               ],
             ),
@@ -99,6 +100,10 @@ class GroupMembersScreen extends StatelessWidget {
                 return SlideTransition(
                   position: animation.drive(_offset),
                   child: GroupInfoListTile(
+                    onDeleteDismiss: () async {
+                      _onDeleteDismiss(context, groupUsers.groupId,
+                          groupUsers.userId, _listKey, _offset);
+                    },
                     index: index,
                     title: fullName,
                     subtitle: groupUsers.userEmail,
@@ -141,6 +146,22 @@ class GroupMembersScreen extends StatelessWidget {
   }
 
   _onTap(BuildContext context) {}
+
+  void _onDeleteDismiss(BuildContext context, String groupId, String userId,
+      GlobalKey<AnimatedListState> globalKey, Tween<Offset> offset) async {
+    final groupUsersService =
+        Provider.of<FBGroupUsersService>(context, listen: false);
+
+    final index = await groupUsersService.removeUserFromGroup(groupId, userId);
+
+    if (index == null) return;
+
+    globalKey.currentState!.removeItem(
+        index,
+        (_, animation) => SlideTransition(
+              position: animation.drive(offset),
+            ));
+  }
 }
 
 class _UserInfoSection extends StatelessWidget {
@@ -150,12 +171,14 @@ class _UserInfoSection extends StatelessWidget {
     required this.globalKey,
     required this.userInGroup,
     required this.formController,
+    required this.offset,
   }) : super(key: key);
 
   final AddMemberFormProvider addMemberForm;
   final GlobalKey<AnimatedListState> globalKey;
   final bool userInGroup;
   final TextEditingController formController;
+  final Tween<Offset> offset;
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +257,7 @@ class _UserInfoSection extends StatelessWidget {
             userInGroup
                 ? IconButton(
                     onPressed: () async {
-                      await _onRemovePressed(context);
+                      await _onRemovePressed(context, student);
                     },
                     icon: const Icon(Icons.delete_forever,
                         color: CustomColors.almostBlack,
@@ -272,11 +295,32 @@ class _UserInfoSection extends StatelessWidget {
       groupUsersService.groupUsersList.add(_groupUsers);
     }
 
-    globalKey.currentState!.insertItem(0);
+    globalKey.currentState!
+        .insertItem(groupUsersService.groupUsersList.length - 1);
     usersService.reset();
     formController.text = '';
     FocusScope.of(context).unfocus();
   }
 
-  Future _onRemovePressed(BuildContext context) async {}
+  Future _onRemovePressed(BuildContext context, User student) async {
+    final currentGroupProvider =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final groupUsersService =
+        Provider.of<FBGroupUsersService>(context, listen: false);
+    final usersService = Provider.of<FBUsersService>(context, listen: false);
+
+    final index = await groupUsersService.removeUserFromGroup(
+        currentGroupProvider.currentGroup!.id, student.uid);
+
+    if (index == null) return;
+
+    globalKey.currentState!.removeItem(
+        index,
+        (_, animation) => SlideTransition(
+              position: animation.drive(offset),
+            ));
+    usersService.reset();
+    formController.text = '';
+    FocusScope.of(context).unfocus();
+  }
 }

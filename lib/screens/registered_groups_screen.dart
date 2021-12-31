@@ -60,6 +60,9 @@ class _GroupList extends StatelessWidget {
       itemBuilder: (context, index) {
         List<Group> groups = groupService.groups!;
         return GroupInfoListTile(
+          onDeleteDismiss: () {
+            print('TODO: on delete dismiss Registered Groups Screen');
+          },
           index: index,
           title: groups[index].name.toTitleCase(),
           subtitle: '${groups[index].subject.toCapitalized()} - '

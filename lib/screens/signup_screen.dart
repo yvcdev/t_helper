@@ -115,7 +115,7 @@ class _SignupForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecorations.generalInputDecoration(
-                hintText: 'johndoe@gmail.com',
+                hintText: 'johndoe@email.com',
                 labelText: 'Email',
                 prefixIcon: Icons.alternate_email_outlined),
             validator: (value) {
