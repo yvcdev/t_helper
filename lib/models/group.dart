@@ -30,7 +30,7 @@ class Group {
   factory Group.fromMap(Map<String, dynamic> json, String id) => Group(
         id: id,
         name: json["name"],
-        namedId: json["nameId"],
+        namedId: json["namedId"],
         owner: json["owner"],
         subject: json["subject"],
         level: json["level"],
@@ -44,7 +44,7 @@ class Group {
       Group(
         id: id,
         name: snapshot["name"],
-        namedId: snapshot["nameId"],
+        namedId: snapshot["namedId"],
         owner: snapshot["owner"],
         subject: snapshot["subject"],
         level: snapshot["level"],

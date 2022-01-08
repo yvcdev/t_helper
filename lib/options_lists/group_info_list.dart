@@ -38,13 +38,5 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
         Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
       },
     },
-    {
-      'icon': Icons.person_add_alt_1_rounded,
-      'color': Colors.purple,
-      'text': 'Add member',
-      'onTap': () {
-        Navigator.pushNamed(context, Routes.ADD_MEMBER);
-      },
-    },
   ];
 }

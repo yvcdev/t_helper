@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:t_helper/constants/constants.dart';
 
 import 'package:t_helper/layouts/layouts.dart';
@@ -75,6 +76,31 @@ class _HeroInfo extends StatelessWidget {
     return HeroInfo(
       imageUrl: group.image,
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: group.namedId));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackbar(message: "Copied!"));
+                },
+                icon: const Icon(
+                  Icons.copy,
+                  color: Colors.black87,
+                  size: UiConsts.tinyFontSize,
+                )),
+            Text(
+              'ID: ${group.namedId}',
+              style: const TextStyle(
+                  fontSize: UiConsts.tinyFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45),
+            ),
+          ],
+        ),
         Text(
           group.subject.toTitleCase(),
           style: const TextStyle(

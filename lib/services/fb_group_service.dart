@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:t_helper/models/group.dart';
 import 'package:t_helper/models/models.dart';
 
 class FBGroupService {
@@ -19,6 +18,7 @@ class FBGroupService {
       for (var doc in querySnapshot.docs) {
         doc.data();
         final group = Group.fromSnapshot(doc, doc.id);
+        print(group);
         groups!.add(group);
       }
 
