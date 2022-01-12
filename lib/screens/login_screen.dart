@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/providers/login_form_provider.dart';
+import 'package:t_helper/functions/login.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -86,26 +85,6 @@ class _LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginForm = Provider.of<LoginFormProvider>(context);
 
-    onTap() async {
-      FocusScope.of(context).unfocus();
-      final authService = Provider.of<FBAuthService>(context, listen: false);
-
-      if (!loginForm.isValidForm(formKey)) return;
-
-      loginForm.isLoading = true;
-
-      await authService.login(loginForm.email, loginForm.password);
-
-      if (authService.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            snackbar(message: authService.error!, success: false));
-        loginForm.isLoading = false;
-      } else {
-        loginForm.reset();
-        Navigator.pushReplacementNamed(context, Routes.HOME);
-      }
-    }
-
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -153,7 +132,9 @@ class _LoginForm extends StatelessWidget {
               waitTitle: 'Please Wait',
               title: 'Sign In',
               isLoading: loginForm.isLoading,
-              onTap: loginForm.isLoading ? null : () => onTap()),
+              onTap: loginForm.isLoading
+                  ? null
+                  : () => loginOnTap(context, formKey)),
         ],
       ),
     );

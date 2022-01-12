@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
@@ -79,32 +80,11 @@ class SignupScreen extends StatelessWidget {
 
 class _SignupForm extends StatelessWidget {
   _SignupForm({Key? key}) : super(key: key);
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final signupForm = Provider.of<SignupFormProvider>(context);
-
-    onTap() async {
-      FocusScope.of(context).unfocus();
-      final authService = Provider.of<FBAuthService>(context, listen: false);
-
-      if (!signupForm.isValidForm(formKey)) return;
-
-      signupForm.isLoading = true;
-
-      await authService.signup(
-          signupForm.email.toLowerCase(), signupForm.password);
-
-      if (authService.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            snackbar(message: authService.error!, success: false));
-        signupForm.isLoading = false;
-      } else {
-        signupForm.reset();
-        Navigator.pushReplacementNamed(context, Routes.HOME);
-      }
-    }
 
     return Form(
       key: formKey,
@@ -170,7 +150,9 @@ class _SignupForm extends StatelessWidget {
               waitTitle: 'Please Wait',
               title: 'Register',
               isLoading: signupForm.isLoading,
-              onTap: signupForm.isLoading ? null : () => onTap()),
+              onTap: signupForm.isLoading
+                  ? null
+                  : () => signupOnTap(context, formKey)),
         ],
       ),
     );

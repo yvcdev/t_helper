@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/models/models.dart';
+import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
@@ -62,7 +62,7 @@ class PersonalInfoSetupScreen extends StatelessWidget {
 
 class _InfoForm extends StatelessWidget {
   _InfoForm({Key? key}) : super(key: key);
-  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> personalInfoFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,61 +71,8 @@ class _InfoForm extends StatelessWidget {
     List<String> roleValues = ['', 'teacher', 'student'];
     List<String> preferredNameValues = ['firstName', 'middleName'];
 
-    onTap() async {
-      FocusScope.of(context).unfocus();
-
-      final userService = Provider.of<FBUserService>(context, listen: false);
-      final user = userService.user;
-      String? downloadUrl;
-
-      if (personalInfoForm.role == '') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            snackbar(message: 'A role needs to be selected', success: false));
-        return;
-      }
-      if (!personalInfoForm.isValidForm(signupFormKey)) return;
-
-      if (personalInfoForm.selectedImage != null) {
-        final userStorageService =
-            Provider.of<FBStorageUser>(context, listen: false);
-
-        downloadUrl = await userStorageService.uploadProfilePicture(
-            personalInfoForm.selectedImage!, user.uid);
-
-        if (downloadUrl == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              snackbar(message: userStorageService.error!, success: false));
-          return;
-        } else {}
-      }
-
-      User userToSend = User(
-          email: user.email,
-          uid: user.uid,
-          firstName: personalInfoForm.firstName.toCapitalized(),
-          middleName: personalInfoForm.middleName.toCapitalized(),
-          lastName: personalInfoForm.lastName.toCapitalized(),
-          preferredName: personalInfoForm.preferredName,
-          role: personalInfoForm.role,
-          profilePic: downloadUrl,
-          groups: []);
-
-      personalInfoForm.isLoading = true;
-
-      await userService.createUserInfo(userToSend);
-
-      if (userService.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            snackbar(message: userService.error!, success: false));
-        personalInfoForm.isLoading = false;
-      } else {
-        personalInfoForm.reset();
-        Navigator.pushReplacementNamed(context, Routes.HOME);
-      }
-    }
-
     return Form(
-      key: signupFormKey,
+      key: personalInfoFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -245,7 +192,9 @@ class _InfoForm extends StatelessWidget {
               waitTitle: 'Please Wait',
               title: 'Finish',
               isLoading: personalInfoForm.isLoading,
-              onTap: personalInfoForm.isLoading ? null : () => onTap()),
+              onTap: personalInfoForm.isLoading
+                  ? null
+                  : () => personalInfoOnTap(context, personalInfoFormKey)),
           const SizedBox(
             height: 20,
           ),
