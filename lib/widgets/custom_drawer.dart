@@ -122,7 +122,7 @@ class _Header extends StatelessWidget {
           children: [
             const Image(
               width: 100,
-              image: AssetImage('assets/logo.png'),
+              image: AssetImage('assets/logo/logo.png'),
               fit: BoxFit.contain,
             ),
             const Expanded(child: SizedBox()),
