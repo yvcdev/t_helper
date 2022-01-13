@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/providers/providers.dart';
@@ -71,7 +72,7 @@ class GroupMembersScreen extends StatelessWidget {
                       }
                     },
                     onChanged: (value) {
-                      _onChanged(value, context, formKey);
+                      groupMembersOnChanged(value, context, formKey);
                     },
                   ),
                 ),
@@ -101,7 +102,7 @@ class GroupMembersScreen extends StatelessWidget {
                   position: animation.drive(_offset),
                   child: GroupInfoListTile(
                     onDeleteDismiss: () async {
-                      _onDeleteDismiss(context, groupUsers.groupId,
+                      groupMembersOnDeleteDismiss(context, groupUsers.groupId,
                           groupUsers.userId, _listKey, _offset);
                     },
                     index: index,
@@ -112,7 +113,7 @@ class GroupMembersScreen extends StatelessWidget {
                         groupUsers.userProfilePic == null ? true : false,
                     assetImageName: 'no_profile.png',
                     onTap: () {
-                      _onTap(context);
+                      groupMembersOnTap(context);
                     },
                   ),
                 );
@@ -120,47 +121,6 @@ class GroupMembersScreen extends StatelessWidget {
             ),
           ),
         ]);
-  }
-
-  _onChanged(
-      String value, BuildContext context, GlobalKey<FormState> formkey) async {
-    final addMemberForm =
-        Provider.of<AddMemberFormProvider>(context, listen: false);
-    final usersService = Provider.of<FBUsersService>(context, listen: false);
-    final groupUsersService =
-        Provider.of<FBGroupUsersService>(context, listen: false);
-    final currentGroupProvider =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-
-    addMemberForm.email = value.toLowerCase();
-
-    if (addMemberForm.isValidForm(formKey) && addMemberForm.email != '') {
-      await groupUsersService.checkUserInGroup(
-        currentGroupProvider.currentGroup!.id,
-        addMemberForm.email,
-      );
-      await usersService.findUsersByEmail(addMemberForm.email);
-    } else {
-      usersService.reset();
-    }
-  }
-
-  _onTap(BuildContext context) {}
-
-  void _onDeleteDismiss(BuildContext context, String groupId, String userId,
-      GlobalKey<AnimatedListState> globalKey, Tween<Offset> offset) async {
-    final groupUsersService =
-        Provider.of<FBGroupUsersService>(context, listen: false);
-
-    final index = await groupUsersService.removeUserFromGroup(groupId, userId);
-
-    if (index == null) return;
-
-    globalKey.currentState!.removeItem(
-        index,
-        (_, animation) => SlideTransition(
-              position: animation.drive(offset),
-            ));
   }
 }
 
@@ -257,14 +217,16 @@ class _UserInfoSection extends StatelessWidget {
             userInGroup
                 ? IconButton(
                     onPressed: () async {
-                      await _onRemovePressed(context, student);
+                      await groupMembersOnRemovePressed(
+                          context, student, globalKey, formController, offset);
                     },
                     icon: const Icon(Icons.delete_forever,
                         color: CustomColors.almostBlack,
                         size: UiConsts.largeFontSize))
                 : IconButton(
                     onPressed: () async {
-                      await _onAddPressed(context);
+                      await groupMembersOnAddPressed(
+                          context, globalKey, formController);
                     },
                     icon: const Icon(Icons.person_add_alt_rounded,
                         color: CustomColors.almostBlack,
@@ -275,52 +237,5 @@ class _UserInfoSection extends StatelessWidget {
     } else {
       return Container();
     }
-  }
-
-  Future _onAddPressed(BuildContext context) async {
-    final usersService = Provider.of<FBUsersService>(context, listen: false);
-    final currentGroupProvider =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    final groupUsersService =
-        Provider.of<FBGroupUsersService>(context, listen: false);
-
-    final group = currentGroupProvider.currentGroup;
-    final student = usersService.student!;
-
-    final _groupUsers = GroupUsers.fromGroupAndUser(group!, student);
-
-    await groupUsersService.addUserToGroup(_groupUsers);
-
-    if (groupUsersService.error == null) {
-      groupUsersService.groupUsersList.add(_groupUsers);
-    }
-
-    globalKey.currentState!
-        .insertItem(groupUsersService.groupUsersList.length - 1);
-    usersService.reset();
-    formController.text = '';
-    FocusScope.of(context).unfocus();
-  }
-
-  Future _onRemovePressed(BuildContext context, User student) async {
-    final currentGroupProvider =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    final groupUsersService =
-        Provider.of<FBGroupUsersService>(context, listen: false);
-    final usersService = Provider.of<FBUsersService>(context, listen: false);
-
-    final index = await groupUsersService.removeUserFromGroup(
-        currentGroupProvider.currentGroup!.id, student.uid);
-
-    if (index == null) return;
-
-    globalKey.currentState!.removeItem(
-        index,
-        (_, animation) => SlideTransition(
-              position: animation.drive(offset),
-            ));
-    usersService.reset();
-    formController.text = '';
-    FocusScope.of(context).unfocus();
   }
 }

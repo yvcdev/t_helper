@@ -75,7 +75,6 @@ class MyApp extends StatelessWidget {
         Routes.TEACHER_HOME: (_) => const Wrapper(),
         Routes.CREATE_ACTIVITY: (_) => const CreateActivityScreen(),
         Routes.CREATE_GROUP: (_) => const CreateGroupScreen(),
-        Routes.ADD_MEMBER: (_) => const AddMemberScreen(),
 
         //Student
         Routes.ACTIVITY_SORT_SENTENCE: (_) => const ASortSentenceScreen(),

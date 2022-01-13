@@ -11,4 +11,3 @@ export 'package:t_helper/screens/group_activities_screen.dart';
 export 'package:t_helper/screens/loading_screen.dart';
 export 'package:t_helper/screens/finished_screen.dart';
 export 'package:t_helper/screens/student_home_screen.dart';
-export 'package:t_helper/screens/add_member_screen.dart';

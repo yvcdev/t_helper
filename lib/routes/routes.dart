@@ -17,7 +17,6 @@ class Routes {
   static const String TEACHER_HOME = 'TEACHER_HOME';
   static const String CREATE_ACTIVITY = 'CREATE_ACTIVITY';
   static const String CREATE_GROUP = 'CREATE_GROUP';
-  static const String ADD_MEMBER = 'ADD_MEMBER';
 
   //Students
   static const String ACTIVITY_SORT_SENTENCE = 'ACTIVITY_SORT_SENTENCE';

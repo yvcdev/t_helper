@@ -33,7 +33,8 @@ class GroupActivitiesScreen extends StatelessWidget {
                           sentenceService.getSentences();
                         },
                         status: 1,
-                        description: 'This is the description of the activity',
+                        description:
+                            'This is the description of the activity This is the description of the activity',
                         title: 'Sort the Sentence ',
                         image:
                             'https://blog.reallygoodstuff.com/wp-content/uploads/2012/06/Classroom-Games-for-Kids.jpg'),
@@ -43,7 +44,7 @@ class GroupActivitiesScreen extends StatelessWidget {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: UiConsts.normalSpacing - 10,
-                mainAxisExtent: UiConsts.largeCardHeight + 35,
+                mainAxisExtent: UiConsts.largeCardHeight,
               )),
         ]);
   }
