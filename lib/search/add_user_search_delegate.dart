@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/models/models.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 
 class AddUserSearchDelegate extends SearchDelegate {
@@ -26,12 +24,12 @@ class AddUserSearchDelegate extends SearchDelegate {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    return Text('BuildLeading');
+    return const Text('BuildLeading');
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text('BuildResults');
+    return const Text('BuildResults');
   }
 
   @override
@@ -52,8 +50,6 @@ class AddUserSearchDelegate extends SearchDelegate {
       );
     }
 
-    final usersService = Provider.of<FBUsersService>(context, listen: false);
-
-    return Text('');
+    return const Text('');
   }
 }

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:t_helper/constants/ui.dart';
-import 'package:t_helper/layouts/layouts.dart';
 
-import 'package:t_helper/search/search.dart';
-import 'package:t_helper/utils/custom_colors.dart';
+import 'package:t_helper/layouts/layouts.dart';
 
 class AddMemberScreen extends StatelessWidget {
   const AddMemberScreen({Key? key}) : super(key: key);
@@ -15,7 +12,4 @@ class AddMemberScreen extends StatelessWidget {
       children: [],
     );
   }
-
-  Future<dynamic> _showAddUserSearch(BuildContext context) =>
-      showSearch(context: context, delegate: AddUserSearchDelegate());
 }

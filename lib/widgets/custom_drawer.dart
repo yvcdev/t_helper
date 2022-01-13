@@ -44,7 +44,7 @@ class _Body extends StatelessWidget {
         color: CustomColors.almostWhite,
         child: ListView(
           padding: EdgeInsets.zero,
-          children: [
+          children: const [
             _ListTile(iconData: Icons.home, route: Routes.HOME, title: 'Home'),
             _ListTile(
                 iconData: Icons.group,

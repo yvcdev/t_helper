@@ -65,11 +65,9 @@ class FBGroupUsersService extends ChangeNotifier {
           .toList();
 
       notifyListeners();
-      print('User deleted');
 
       return index;
     } catch (e) {
-      print('User not deleted');
       error = 'There was an error removing the user to the group';
       notifyListeners();
     }

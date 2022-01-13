@@ -18,7 +18,6 @@ class FBGroupService {
       for (var doc in querySnapshot.docs) {
         doc.data();
         final group = Group.fromSnapshot(doc, doc.id);
-        print(group);
         groups!.add(group);
       }
 
@@ -36,6 +35,7 @@ class FBGroupService {
           .get();
 
       if (existingGroupQuery.docs.isNotEmpty) {
+        // ignore: todo
         //TODO: VERIFY IT CAN BE CREATED
         error = 'A group with this ID already exists';
         return null;

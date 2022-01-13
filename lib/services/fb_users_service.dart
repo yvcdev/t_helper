@@ -39,20 +39,6 @@ class FBUsersService extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  //Future<List<User?>>
-  getUsersInGroup(String groupId) async {
-    try {
-      loading = true;
-      notifyListeners();
-
-      //await users.where();
-
-      loading = false;
-      notifyListeners();
-    } catch (e) {}
-  }
-
   reset() {
     student = null;
     error = null;

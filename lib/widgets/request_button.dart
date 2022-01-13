@@ -6,7 +6,7 @@ class RequestButton extends StatelessWidget {
   final bool isLoading;
   final String waitTitle;
   final String title;
-  final onTap;
+  final Function? onTap;
 
   const RequestButton(
       {Key? key,
@@ -22,7 +22,7 @@ class RequestButton extends StatelessWidget {
       onPressed: isLoading
           ? null
           : () async {
-              onTap();
+              onTap!();
             },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UiConsts.borderRadius),

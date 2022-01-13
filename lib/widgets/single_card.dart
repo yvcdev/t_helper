@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/utils/utils.dart';
 
 class SingleCard extends StatelessWidget {
   final Color? color;

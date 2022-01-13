@@ -69,17 +69,4 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
       ),
     );
   }
-
-  Future<bool> _onWillPop(BuildContext context) async {
-    return await customPopup(
-          context: context,
-          correctText: 'Do you want to exit?',
-          label: 'Yes',
-          cancelLabel: 'No',
-          correct: true,
-          onAccept: () => Navigator.of(context).pop(true),
-          onCancel: () => Navigator.of(context).pop(false),
-        ) ??
-        false;
-  }
 }
