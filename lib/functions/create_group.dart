@@ -32,7 +32,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       owner: userService.user.uid,
       subject: createGroupForm.subject,
       level: createGroupForm.level,
-      members: [],
+      members: 0,
       activities: []);
 
   final groupId = await groupService.createGroup(group);

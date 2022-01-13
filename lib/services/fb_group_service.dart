@@ -16,9 +16,7 @@ class FBGroupService {
       groups = [];
 
       for (var doc in querySnapshot.docs) {
-        doc.data();
-        final group = Group.fromSnapshot(doc, doc.id);
-        groups!.add(group);
+        groups!.add(Group.fromMap(doc.data() as Map, doc.id));
       }
 
       error = null;

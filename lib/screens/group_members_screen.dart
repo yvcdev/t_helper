@@ -22,6 +22,8 @@ class GroupMembersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final addMemberForm = Provider.of<AddMemberFormProvider>(context);
     final groupUsersService = Provider.of<FBGroupUsersService>(context);
+    final currentGroupProvider = Provider.of<CurrentGroupProvider>(context);
+    final group = currentGroupProvider.currentGroup;
 
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
@@ -48,6 +50,17 @@ class GroupMembersScreen extends StatelessWidget {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: UiConsts.smallFontSize, color: Colors.black),
+                ),
+                Text(
+                  group!.members == 1
+                      ? '${group.members} student in the group'
+                      : '${group.members} students in the group',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: UiConsts.tinyFontSize,
+                      color: group.members == 0
+                          ? CustomColors.red
+                          : CustomColors.green),
                 ),
                 Form(
                   key: formKey,
@@ -114,6 +127,7 @@ class GroupMembersScreen extends StatelessWidget {
                     assetImageName: 'no_profile.png',
                     onTap: () {
                       groupMembersOnTap(context);
+                      print("TODO: go to individual student info");
                     },
                   ),
                 );

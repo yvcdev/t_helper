@@ -48,6 +48,12 @@ void groupMembersOnDeleteDismiss(
       (_, animation) => SlideTransition(
             position: animation.drive(offset),
           ));
+
+  await _updateMembersNumber(
+    context,
+    groupId,
+    increment: false,
+  );
 }
 
 Future groupMembersOnAddPressed(
@@ -76,6 +82,12 @@ Future groupMembersOnAddPressed(
   usersService.reset();
   formController.text = '';
   FocusScope.of(context).unfocus();
+
+  await _updateMembersNumber(
+    context,
+    group.id,
+    increment: true,
+  );
 }
 
 Future groupMembersOnRemovePressed(
@@ -103,4 +115,22 @@ Future groupMembersOnRemovePressed(
   usersService.reset();
   formController.text = '';
   FocusScope.of(context).unfocus();
+
+  await _updateMembersNumber(
+    context,
+    currentGroupProvider.currentGroup!.id,
+    increment: false,
+  );
+}
+
+Future _updateMembersNumber(BuildContext context, String groupId,
+    {required bool increment}) async {
+  final groupService = Provider.of<FBGroupService>(context, listen: false);
+
+  final currentGroupProvider =
+      Provider.of<CurrentGroupProvider>(context, listen: false);
+
+  int members = currentGroupProvider.updateMembers(increment: increment);
+
+  await groupService.updateGroup(groupId, "members", members);
 }

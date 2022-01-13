@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:t_helper/constants/constants.dart';
+import 'package:provider/provider.dart';
 
+import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/models/group.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
+import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -14,7 +15,8 @@ class GroupInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final group = ModalRoute.of(context)!.settings.arguments as Group;
+    final currentGroupProvider = Provider.of<CurrentGroupProvider>(context);
+    final group = currentGroupProvider.currentGroup;
     final _cards = groupInfoList(context);
 
     return NotificationsAppBarLayout(
@@ -24,7 +26,7 @@ class GroupInfoScreen extends StatelessWidget {
         appBarBottomHeight: 40,
         appBarBottom: Column(
           children: [
-            Text(group.name.toTitleCase(),
+            Text(group!.name.toTitleCase(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     color: Colors.white,
@@ -38,7 +40,7 @@ class GroupInfoScreen extends StatelessWidget {
         children: [
           Column(
             children: [
-              _HeroInfo(group: group),
+              const _HeroInfo(),
               GridSingleCardTwo(
                 cards: _cards,
               ),
@@ -66,15 +68,14 @@ class GroupInfoScreen extends StatelessWidget {
 class _HeroInfo extends StatelessWidget {
   const _HeroInfo({
     Key? key,
-    required this.group,
   }) : super(key: key);
-
-  final Group group;
 
   @override
   Widget build(BuildContext context) {
+    final currentGroupProvider = Provider.of<CurrentGroupProvider>(context);
+    final group = currentGroupProvider.currentGroup;
     return HeroInfo(
-      imageUrl: group.image,
+      imageUrl: group!.image,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,13 +121,13 @@ class _HeroInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Members: ${group.members.length}',
+              'Members: ${group.members}',
               style: const TextStyle(
                 fontSize: UiConsts.smallFontSize,
               ),
             ),
             Text(
-              'Activities: ${group.members.length}',
+              'Activities: ${group.activities.length}',
               style: const TextStyle(
                 fontSize: UiConsts.smallFontSize,
               ),

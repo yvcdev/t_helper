@@ -37,12 +37,12 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SentenceService()),
         ChangeNotifierProvider(create: (_) => FBUsersService()),
         ChangeNotifierProvider(create: (_) => FBGroupUsersService()),
+        ChangeNotifierProvider(create: (_) => CurrentGroupProvider()),
         Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBStorageGroup>(create: (_) => FBStorageGroup()),
         Provider<FBGroupService>(create: (_) => FBGroupService()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
         Provider<FBUserService>(create: (_) => FBUserService()),
-        Provider<CurrentGroupProvider>(create: (_) => CurrentGroupProvider()),
       ],
     );
   }
