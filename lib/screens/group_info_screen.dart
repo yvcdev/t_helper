@@ -6,6 +6,8 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
 import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/services/fb_group_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -16,6 +18,7 @@ class GroupInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentGroupProvider = Provider.of<CurrentGroupProvider>(context);
+    final groupService = Provider.of<FBGroupService>(context);
     final group = currentGroupProvider.currentGroup;
     final _cards = groupInfoList(context);
 
@@ -48,8 +51,25 @@ class GroupInfoScreen extends StatelessWidget {
                 height: 20,
               ),
               IconButton(
-                  onPressed: () {
-                    print('TODO: delete group');
+                  onPressed: () async {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) => MinimalPopUp(
+                              topImage: false,
+                              acceptButtonLabel: 'Yes',
+                              cancelButtonLabel: 'No',
+                              correctText: 'Do you want to delete this group?',
+                              onAccept: () async {
+                                await groupService.deleteGroup(group.id);
+                                Navigator.pushReplacementNamed(
+                                    context, Routes.REGISTERED_GROUPS);
+                              },
+                              acceptButtonColor: CustomColors.red,
+                              onCancel: () {
+                                Navigator.pop(context);
+                              },
+                            ));
                   },
                   icon: Icon(
                     Icons.delete_forever_rounded,
@@ -121,7 +141,7 @@ class _HeroInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Members: ${group.members}',
+              'Students: ${group.members}',
               style: const TextStyle(
                 fontSize: UiConsts.smallFontSize,
               ),

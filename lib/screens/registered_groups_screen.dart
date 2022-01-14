@@ -61,12 +61,12 @@ class _GroupList extends StatelessWidget {
         List<Group> groups = groupService.groups!;
         return GroupInfoListTile(
           onDeleteDismiss: () {
-            print('TODO: on delete dismiss Registered Groups Screen');
+            groupService.deleteGroup(groups[index].id);
           },
           index: index,
           title: groups[index].name.toTitleCase(),
           subtitle: '${groups[index].subject.toCapitalized()} - '
-              '${groups[index].members == 1 ? "${groups[index].members} member" : "${groups[index].members} members"}',
+              '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
           trailing: groups[index].image,
           useAssetImage: groups[index].image == null ? true : false,
           onTap: () {

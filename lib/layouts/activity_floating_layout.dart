@@ -43,16 +43,20 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
           IconButton(
             onPressed: () {
               if (floatingAction == null) {
-                customPopup(
-                  context: context,
-                  correctText: 'Do you want to go home?',
-                  label: 'Yes',
-                  cancelLabel: 'No',
-                  correct: true,
-                  onAccept: () =>
-                      Navigator.pushReplacementNamed(context, Routes.HOME),
-                  onCancel: () => Navigator.of(context).pop(),
-                );
+                showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => MinimalPopUp(
+                          topImage: false,
+                          correctText: 'Do you want to go to the home screen?',
+                          acceptButtonLabel: 'Yes',
+                          cancelButtonLabel: 'No',
+                          acceptButtonColor: CustomColors.red,
+                          cancelButtonColor: CustomColors.green,
+                          onAccept: () => Navigator.pushReplacementNamed(
+                              context, Routes.HOME),
+                          onCancel: () => Navigator.of(context).pop(),
+                        ));
               } else {
                 floatingAction!();
               }

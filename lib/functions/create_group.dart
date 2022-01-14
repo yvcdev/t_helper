@@ -42,12 +42,13 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
         .showSnackBar(snackbar(message: groupService.error!, success: false));
     createGroupForm.isLoading = false;
   } else {
+    group.id = groupId!;
     if (createGroupForm.selectedImage != null) {
       final groupStorageService =
           Provider.of<FBStorageGroup>(context, listen: false);
 
       downloadUrl = await groupStorageService.uploadGroupPicture(
-          createGroupForm.selectedImage!, groupId!);
+          createGroupForm.selectedImage!, groupId);
 
       if (downloadUrl == null) {
         ScaffoldMessenger.of(context).showSnackBar(

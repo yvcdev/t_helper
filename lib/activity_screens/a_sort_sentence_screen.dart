@@ -22,12 +22,15 @@ class ASortSentenceScreen extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: UiConsts.normalSpacing),
-          const Text(
-            'Long-press a card to order the sentence',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: UiConsts.smallFontSize,
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              'Long-press a word, then drag it left or right to order the sentence',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: UiConsts.smallFontSize,
+              ),
             ),
           ),
           const SizedBox(
@@ -52,27 +55,37 @@ class ASortSentenceScreen extends StatelessWidget {
               if (correct &&
                   sentenceService.currentScreen + 1 >=
                       sentenceService.shuffledSentences.length) {
-                customPopup(
+                showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    correct: correct,
-                    label: 'Finish',
-                    onAccept: () {
-                      Navigator.pushReplacementNamed(context, Routes.FINISHED);
-                    });
+                    builder: (context) => MinimalPopUp(
+                        topImage: true,
+                        correct: correct,
+                        correctText: 'Awesome! We\'ve finished',
+                        acceptButtonLabel: 'Finish',
+                        onAccept: () {
+                          Navigator.pushReplacementNamed(
+                              context, Routes.FINISHED);
+                        }));
               } else {
-                customPopup(
+                showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    correct: correct,
-                    onAccept: () {
-                      if (correct &&
-                          sentenceService.currentScreen + 1 <
-                              sentenceService.shuffledSentences.length) {
-                        sentenceService.nextScreen();
-                        Navigator.pop(context);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    });
+                    builder: (context) => MinimalPopUp(
+                        topImage: true,
+                        correct: correct,
+                        acceptButtonColor:
+                            correct ? CustomColors.green : CustomColors.red,
+                        onAccept: () {
+                          if (correct &&
+                              sentenceService.currentScreen + 1 <
+                                  sentenceService.shuffledSentences.length) {
+                            sentenceService.nextScreen();
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        }));
               }
             },
             title: 'Okay! Let\'s check',

@@ -13,7 +13,7 @@ class Group {
     this.image,
   });
 
-  final String id;
+  String id;
   final String name;
   final String namedId;
   final String owner;
