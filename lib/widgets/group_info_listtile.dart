@@ -11,6 +11,7 @@ class GroupInfoListTile extends StatelessWidget {
   final int index;
   final String? assetImageName;
   final Function onDeleteDismiss;
+  final bool? dismissible;
 
   const GroupInfoListTile({
     Key? key,
@@ -18,6 +19,7 @@ class GroupInfoListTile extends StatelessWidget {
     required this.title,
     required this.index,
     required this.onDeleteDismiss,
+    this.dismissible = true,
     this.subtitle,
     this.trailing,
     this.useAssetImage = false,
@@ -26,6 +28,17 @@ class GroupInfoListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (dismissible! == false) {
+      return _Content(
+          index: index,
+          onTap: onTap,
+          title: title,
+          subtitle: subtitle,
+          trailing: trailing,
+          useAssetImage: useAssetImage,
+          assetImageName: assetImageName);
+    }
+
     return Dismissible(
       direction: DismissDirection.endToStart,
       background: Container(
@@ -45,51 +58,79 @@ class GroupInfoListTile extends StatelessWidget {
       onDismissed: (direction) {
         onDeleteDismiss();
       },
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-            margin: const EdgeInsets.symmetric(
-                horizontal: UiConsts.smallPadding - 2,
-                vertical: UiConsts.normalPadding),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
-                gradient: LinearGradient(colors: [
-                  UiConsts.colors[index % UiConsts.colors.length],
-                  UiConsts.colors[index % UiConsts.colors.length]
-                      .withOpacity(0.9)
-                ])),
-            child: InkWell(
-              customBorder: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(UiConsts.borderRadius - 5)),
-              onTap: () {
-                onTap();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: UiConsts.smallPadding),
-                child: Row(children: [
-                  const SizedBox(
-                    width: UiConsts.smallSpacing,
-                  ),
-                  Expanded(
-                    child: _Center(
-                      title: title,
-                      subtitle: subtitle,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  _Trailing(
-                    trailing: trailing,
-                    useAssetImage: useAssetImage,
-                    assetImageName: assetImageName!,
-                  ),
-                ]),
-              ),
-            )),
-      ),
+      child: _Content(
+          index: index,
+          onTap: onTap,
+          title: title,
+          subtitle: subtitle,
+          trailing: trailing,
+          useAssetImage: useAssetImage,
+          assetImageName: assetImageName),
     );
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    Key? key,
+    required this.index,
+    required this.onTap,
+    required this.title,
+    required this.subtitle,
+    required this.trailing,
+    required this.useAssetImage,
+    required this.assetImageName,
+  }) : super(key: key);
+
+  final int index;
+  final Function onTap;
+  final String title;
+  final String? subtitle;
+  final dynamic trailing;
+  final bool? useAssetImage;
+  final String? assetImageName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.symmetric(
+            horizontal: UiConsts.smallPadding - 2,
+            vertical: UiConsts.normalPadding),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
+            gradient: LinearGradient(colors: [
+              UiConsts.colors[index % UiConsts.colors.length],
+              UiConsts.colors[index % UiConsts.colors.length].withOpacity(0.9)
+            ])),
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5)),
+          onTap: () {
+            onTap();
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: UiConsts.smallPadding),
+            child: Row(children: [
+              const SizedBox(
+                width: UiConsts.smallSpacing,
+              ),
+              Expanded(
+                child: _Center(
+                  title: title,
+                  subtitle: subtitle,
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              _Trailing(
+                trailing: trailing,
+                useAssetImage: useAssetImage,
+                assetImageName: assetImageName!,
+              ),
+            ]),
+          ),
+        ));
   }
 }
 
