@@ -113,8 +113,8 @@ class GroupMembersScreen extends StatelessWidget {
                     : '${groupUsers.userFirstName} ${groupUsers.userMiddleName} ${groupUsers.userLastName}';
                 return SlideTransition(
                   position: animation.drive(_offset),
-                  child: GroupInfoListTile(
-                    onDeleteDismiss: () async {
+                  child: CustomListTile(
+                    onDismissed: () async {
                       groupMembersOnDeleteDismiss(context, groupUsers.groupId,
                           groupUsers.userId, _listKey, _offset);
                     },

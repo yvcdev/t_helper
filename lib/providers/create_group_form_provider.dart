@@ -58,7 +58,7 @@ class CreateGroupFormProvider extends ChangeNotifier {
   }
 
   String getGroupId() {
-    List<String> _formattedNameList = name.split(' ');
+    List<String> _formattedNameList = name.trim().split(' ');
     String _formattedName = _formattedNameList.join('-').toLowerCase();
     if (_formattedName.length > 25) {
       groupId = _formattedName.substring(0, 24);

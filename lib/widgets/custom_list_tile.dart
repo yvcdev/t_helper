@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 
-class GroupInfoListTile extends StatelessWidget {
+class CustomListTile extends StatelessWidget {
   final Function onTap;
   final String title;
   final String? subtitle;
@@ -10,62 +10,81 @@ class GroupInfoListTile extends StatelessWidget {
   final bool? useAssetImage;
   final int index;
   final String? assetImageName;
-  final Function onDeleteDismiss;
+  final Function onDismissed;
   final bool? dismissible;
+  final bool? centerText;
+  final bool? addPadding;
+  final Icon? dismissIcon;
+  final Color? dismissBackgroundColor;
+  final Function? onLongPress;
 
-  const GroupInfoListTile({
+  const CustomListTile({
     Key? key,
     required this.onTap,
     required this.title,
     required this.index,
-    required this.onDeleteDismiss,
+    required this.onDismissed,
+    this.centerText = false,
     this.dismissible = true,
     this.subtitle,
     this.trailing,
     this.useAssetImage = false,
     this.assetImageName = 'no_image.jpg',
+    this.addPadding = false,
+    this.dismissIcon,
+    this.dismissBackgroundColor,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (dismissible! == false) {
       return _Content(
-          index: index,
-          onTap: onTap,
-          title: title,
-          subtitle: subtitle,
-          trailing: trailing,
-          useAssetImage: useAssetImage,
-          assetImageName: assetImageName);
+        index: index,
+        onTap: onTap,
+        onLongPress: onLongPress,
+        title: title,
+        subtitle: subtitle,
+        trailing: trailing,
+        useAssetImage: useAssetImage,
+        assetImageName: assetImageName,
+        centerText: centerText!,
+        addPadding: addPadding!,
+      );
     }
 
     return Dismissible(
       direction: DismissDirection.endToStart,
       background: Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: UiConsts.smallPadding - 2,
-              vertical: UiConsts.normalPadding),
+              horizontal: UiConsts.smallPadding,
+              vertical: UiConsts.smallPadding),
           padding: const EdgeInsets.all(UiConsts.normalPadding),
           alignment: Alignment.centerRight,
-          child: const Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
+          child: dismissIcon ??
+              const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
-              color: CustomColors.red)),
+              color: dismissBackgroundColor ?? CustomColors.red)),
       key: UniqueKey(),
       onDismissed: (direction) {
-        onDeleteDismiss();
+        onDismissed();
       },
       child: _Content(
-          index: index,
-          onTap: onTap,
-          title: title,
-          subtitle: subtitle,
-          trailing: trailing,
-          useAssetImage: useAssetImage,
-          assetImageName: assetImageName),
+        index: index,
+        onTap: onTap,
+        onLongPress: onLongPress,
+        title: title,
+        subtitle: subtitle,
+        trailing: trailing,
+        useAssetImage: useAssetImage,
+        assetImageName: assetImageName,
+        centerText: centerText!,
+        addPadding: addPadding!,
+      ),
     );
   }
 }
@@ -80,22 +99,30 @@ class _Content extends StatelessWidget {
     required this.trailing,
     required this.useAssetImage,
     required this.assetImageName,
+    required this.centerText,
+    required this.addPadding,
+    this.onLongPress,
   }) : super(key: key);
 
   final int index;
   final Function onTap;
+  final Function? onLongPress;
   final String title;
   final String? subtitle;
   final dynamic trailing;
   final bool? useAssetImage;
   final String? assetImageName;
+  final bool centerText;
+  final bool addPadding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(
-            horizontal: UiConsts.smallPadding - 2,
-            vertical: UiConsts.normalPadding),
+            horizontal: UiConsts.smallPadding, vertical: UiConsts.smallPadding),
+        padding: addPadding
+            ? const EdgeInsets.all(UiConsts.normalPadding)
+            : EdgeInsets.zero,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(UiConsts.borderRadius - 5),
             gradient: LinearGradient(colors: [
@@ -108,6 +135,11 @@ class _Content extends StatelessWidget {
           onTap: () {
             onTap();
           },
+          onLongPress: onLongPress == null
+              ? null
+              : () {
+                  onLongPress!();
+                },
           child: Padding(
             padding: const EdgeInsets.only(left: UiConsts.smallPadding),
             child: Row(children: [
@@ -118,6 +150,7 @@ class _Content extends StatelessWidget {
                 child: _Center(
                   title: title,
                   subtitle: subtitle,
+                  centerText: centerText,
                 ),
               ),
               const SizedBox(
@@ -188,21 +221,25 @@ class _Trailing extends StatelessWidget {
 class _Center extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final bool centerText;
 
   const _Center({
     Key? key,
     required this.title,
     this.subtitle,
+    required this.centerText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          centerText ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           title,
+          textAlign: centerText ? TextAlign.center : TextAlign.right,
           style: const TextStyle(
             color: Colors.white,
             fontSize: UiConsts.normalFontSize,
@@ -215,6 +252,7 @@ class _Center extends StatelessWidget {
         subtitle == null
             ? const SizedBox()
             : Text(subtitle!,
+                textAlign: centerText ? TextAlign.center : TextAlign.right,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: UiConsts.smallFontSize,

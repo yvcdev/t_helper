@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -125,12 +126,13 @@ class _CreateGroupForm extends StatelessWidget {
         children: [
           TextFormField(
             autocorrect: false,
+            inputFormatters: [LengthLimitingTextInputFormatter(25)],
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'The Backyardigans',
                 labelText: 'Group Name',
                 prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
-              String pattern = r'^[a-zA-Z\s]*$';
+              String pattern = r'^[a-zA-Z1-9ñÑ\s]*$';
               RegExp regExp = RegExp(pattern);
 
               if (value!.length < 3) {
@@ -138,7 +140,7 @@ class _CreateGroupForm extends StatelessWidget {
               }
               return regExp.hasMatch(value)
                   ? null
-                  : 'Only alphabets and spaces are accepted';
+                  : 'Only alphanumerics and spaces are accepted';
             },
             onChanged: (value) => createGroupForm.name = value,
           ),

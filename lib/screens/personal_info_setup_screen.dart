@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -102,12 +103,13 @@ class _InfoForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Jhon',
                 labelText: 'First Name',
                 prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
-              String pattern = r'^[a-zA-Z]{3,20}$';
+              String pattern = r'^[a-zA-ZñÑ]{3,20}$';
               RegExp regExp = RegExp(pattern);
               return regExp.hasMatch(value ?? '')
                   ? null
@@ -122,13 +124,14 @@ class _InfoForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Anders',
                 labelText: 'Middle Name',
                 prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
               if (value != '') {
-                String pattern = r'^[a-zA-Z]{3,20}$';
+                String pattern = r'^[a-zA-ZñÑ]{3,20}$';
                 RegExp regExp = RegExp(pattern);
                 return regExp.hasMatch(value ?? '')
                     ? null
@@ -171,12 +174,13 @@ class _InfoForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             decoration: InputDecorations.generalInputDecoration(
                 hintText: 'Doe',
                 labelText: 'Last Name',
                 prefixIcon: Icons.text_fields_rounded),
             validator: (value) {
-              String pattern = r'^[a-zA-Z]{3,20}$';
+              String pattern = r'^[a-zA-ZñÑ]{3,20}$';
               RegExp regExp = RegExp(pattern);
 
               return regExp.hasMatch(value ?? '')

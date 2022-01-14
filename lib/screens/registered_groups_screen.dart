@@ -59,8 +59,8 @@ class _GroupList extends StatelessWidget {
       itemCount: groupService.groups!.length,
       itemBuilder: (context, index) {
         List<Group> groups = groupService.groups!;
-        return GroupInfoListTile(
-          onDeleteDismiss: () {},
+        return CustomListTile(
+          onDismissed: () {},
           dismissible: false,
           index: index,
           title: groups[index].name.toTitleCase(),

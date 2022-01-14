@@ -82,6 +82,7 @@ class FBGroupService extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       error = 'There was an error deleting the group';
+      notifyListeners();
     }
   }
 }
