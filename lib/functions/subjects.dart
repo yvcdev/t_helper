@@ -28,7 +28,10 @@ Future subjectsOnPressed(
   if (!addSubjectForm.isValidForm(formKey)) return;
 
   final newSubject = Subject(
-      name: addSubjectForm.subject, owner: userService.user.uid, active: true);
+      name: addSubjectForm.subject,
+      namedId: addSubjectForm.subject.toLowerCase(),
+      owner: userService.user.uid,
+      active: true);
 
   await subjectService.addSubject(newSubject);
 

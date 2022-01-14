@@ -41,7 +41,15 @@ class FBSubjectService extends ChangeNotifier {
 
   Future addSubject(Subject subjectAdd) async {
     try {
+      if (await checkSubjectExists(subjectAdd.namedId)) {
+        error = "Subject already exists";
+        return;
+      }
+      //CONTINUE OVER HERE. ARREGLAR FUNCION ACTIVAR Y DESACTIVAR SUBJECT COLOCAR EL ID EN CADA INSTANCIA DEL MODELO
+      //CUANDO SE CREAR Y CUANDO SE MANDA A TRAER TODOS LAS SUBJECTS
+
       await subjectsReference.add(subjectAdd.toMap());
+      error = null;
       //TODO: add the subject to the group info - do it in functions file
 
       notifyListeners();
@@ -82,9 +90,9 @@ class FBSubjectService extends ChangeNotifier {
     }
   }
 
-  Future<bool> checkUserInGroup(String userId) async {
+  Future<bool> checkSubjectExists(String namedId) async {
     final _existingSubjects =
-        await subjectsReference.where('groupId', isEqualTo: userId).get();
+        await subjectsReference.where('namedId', isEqualTo: namedId).get();
 
     if (_existingSubjects.docs.isNotEmpty) {
       subjectExists = true;

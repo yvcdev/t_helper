@@ -116,7 +116,30 @@ class _CreateGroupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
-    final subjects = ['', 'english', 'spanish', 'math three'];
+    final subjects = [
+      '',
+      'english',
+      'spanish',
+      'math three',
+      'math threed',
+      'beginner',
+      'intermediate',
+      'advanced',
+      'fafas',
+      'uh',
+      'iii ',
+      'dsfs',
+      'esnglish',
+      'spdansh',
+      'matfh ree',
+      'matdsed',
+      'beginssner',
+      'interdiate',
+      'advanced',
+      'faffsas',
+      'uhfs',
+      'ifsii ',
+    ];
     final levels = ['beginner', 'intermediate', 'advanced'];
 
     return Form(
