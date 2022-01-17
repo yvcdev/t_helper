@@ -15,7 +15,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   final userService = Provider.of<FBUserService>(context, listen: false);
   String? downloadUrl;
 
-  if (createGroupForm.subject == '') {
+  if (createGroupForm.subject['name'] == '') {
     ScaffoldMessenger.of(context).showSnackBar(
         snackbar(message: 'A subject needs to be selected', success: false));
     return;
@@ -30,7 +30,10 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       name: createGroupForm.name.trim(),
       namedId: createGroupForm.groupId!,
       owner: userService.user.uid,
-      subject: createGroupForm.subject,
+      subject: {
+        'name': createGroupForm.subject['name']!,
+        'id': createGroupForm.subject['id']!
+      },
       level: createGroupForm.level,
       members: 0,
       activities: []);

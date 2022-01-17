@@ -15,10 +15,11 @@ class CreateGroupFormProvider extends ChangeNotifier {
   String? selectedImage;
   File? newPictureFile;
 
-  String _subject = '';
-  String get subject => _subject;
-  set subject(String subject) {
-    _subject = subject;
+  final Map<String, String> _subject = {'name': '', 'id': ''};
+  Map<String, String> get subject => _subject;
+  set subject(Map<String, String> subject) {
+    _subject['name'] = subject['name']!;
+    _subject['id'] = subject['id']!;
     notifyListeners();
   }
 
@@ -43,7 +44,7 @@ class CreateGroupFormProvider extends ChangeNotifier {
   void reset() {
     name = '';
     groupId = null;
-    subject = '';
+    subject = {'name': '', 'id': ''};
     selectedImage = null;
     newPictureFile = null;
     level = 'beginner';

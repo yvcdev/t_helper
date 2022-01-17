@@ -123,7 +123,7 @@ class _HeroInfo extends StatelessWidget {
           ],
         ),
         Text(
-          group.subject.toTitleCase(),
+          group.subject['name']!.toTitleCase(),
           style: const TextStyle(
             fontSize: UiConsts.largeFontSize,
             fontWeight: FontWeight.bold,

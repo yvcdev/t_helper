@@ -64,7 +64,7 @@ class _GroupList extends StatelessWidget {
           dismissible: false,
           index: index,
           title: groups[index].name.toTitleCase(),
-          subtitle: '${groups[index].subject.toCapitalized()} - '
+          subtitle: '${groups[index].subject['name']!.toCapitalized()} - '
               '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
           trailing: groups[index].image,
           useAssetImage: groups[index].image == null ? true : false,

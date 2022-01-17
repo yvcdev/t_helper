@@ -119,11 +119,14 @@ class _CreateGroupForm extends StatelessWidget {
     final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
     final subjectsService = Provider.of<FBSubjectService>(context);
     final subjects = [
-      '',
+      {
+        "name": '',
+        "id": '',
+      }
     ];
 
     for (var subject in subjectsService.subjectList) {
-      subjects.add(subject.name);
+      subjects.add({"name": subject.name, "id": subject.id!});
     }
 
     final levels = ['beginner', 'intermediate', 'advanced'];
@@ -207,17 +210,21 @@ class _CreateGroupForm extends StatelessWidget {
                 style: TextStyle(fontSize: 17),
               ),
               DropdownButton<String>(
-                  value: createGroupForm.subject,
+                  value: createGroupForm.subject['id'],
                   items: subjects.map((subject) {
                     return DropdownMenuItem<String>(
-                        value: subject,
+                        value: subject['id'],
                         child: Text(
-                          subject == '' ? 'Select' : subject.toTitleCase(),
+                          subject['name']! == ''
+                              ? 'Select'
+                              : subject['name']!.toTitleCase(),
                           style: const TextStyle(fontSize: 17),
                         ));
                   }).toList(),
-                  onChanged: (subject) {
-                    createGroupForm.subject = subject!;
+                  onChanged: (subjectId) {
+                    createGroupForm.subject = subjects
+                        .where((subject) => subject['id'] == subjectId)
+                        .toList()[0];
                   }),
             ],
           ),

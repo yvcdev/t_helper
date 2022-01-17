@@ -17,11 +17,11 @@ class Group {
   final String name;
   final String namedId;
   final String owner;
-  final String subject;
   final String level;
   String? image;
-  int members;
+  final Map<String, String> subject;
   final List<String> activities;
+  int members;
 
   String toJson() => json.encode(toMap());
 
@@ -30,7 +30,7 @@ class Group {
         name: json["name"],
         namedId: json["namedId"],
         owner: json["owner"],
-        subject: json["subject"],
+        subject: Map.from(json["subject"]),
         level: json["level"],
         image: json["image"],
         members: json["members"],
