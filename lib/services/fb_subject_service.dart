@@ -12,18 +12,30 @@ class FBSubjectService extends ChangeNotifier {
   bool loading = true;
   bool subjectExists = false;
 
-  Future<List<Subject>> getSubjects(String userId) async {
+  Future<List<Subject>> getSubjects(String userId,
+      {bool onlyActive = false}) async {
     loading = true;
     notifyListeners();
 
     try {
       if (subjectList.isNotEmpty) subjectList = [];
 
-      final querySnapshot =
-          await subjectsReference.where('owner', isEqualTo: userId).get();
+      final querySnapshot = onlyActive
+          ? await subjectsReference
+              .where('owner', isEqualTo: userId)
+              .where('active', isEqualTo: true)
+              .orderBy('name', descending: false)
+              .get()
+          : await subjectsReference
+              .where('owner', isEqualTo: userId)
+              .orderBy('active', descending: true)
+              .orderBy('name', descending: false)
+              .get();
 
       for (var doc in querySnapshot.docs) {
-        subjectList.add(Subject.fromMap(doc.data() as Map));
+        final _subject = Subject.fromMap(doc.data() as Map);
+        _subject.id = doc.id;
+        subjectList.add(_subject);
       }
 
       subjectNumber = subjectList.length;
@@ -34,27 +46,30 @@ class FBSubjectService extends ChangeNotifier {
     } catch (e) {
       error = 'There was an error getting your subjects';
       loading = false;
+      print(e);
       notifyListeners();
       return [];
     }
   }
 
-  Future addSubject(Subject subjectAdd) async {
+  Future<String?> addSubject(Subject subjectAdd) async {
     try {
       if (await checkSubjectExists(subjectAdd.namedId)) {
         error = "Subject already exists";
-        return;
+        return null;
       }
-      //CONTINUE OVER HERE. ARREGLAR FUNCION ACTIVAR Y DESACTIVAR SUBJECT COLOCAR EL ID EN CADA INSTANCIA DEL MODELO
-      //CUANDO SE CREAR Y CUANDO SE MANDA A TRAER TODOS LAS SUBJECTS
 
-      await subjectsReference.add(subjectAdd.toMap());
+      final subject = await subjectsReference.add(subjectAdd.toMap());
       error = null;
       //TODO: add the subject to the group info - do it in functions file
 
+      subjectNumber = subjectNumber + 1;
       notifyListeners();
+      return subject.id;
     } catch (e) {
       error = 'There was an error adding the user to the group';
+      notifyListeners();
+      return null;
     }
   }
 

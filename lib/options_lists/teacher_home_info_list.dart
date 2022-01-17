@@ -31,7 +31,13 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
     {
       'icon': Icons.group_add,
       'text': 'Create group',
-      'onTap': () {
+      'onTap': () async {
+        final subjectService =
+            Provider.of<FBSubjectService>(context, listen: false);
+        final userService = Provider.of<FBUserService>(context, listen: false);
+
+        final userId = userService.user.uid;
+        await subjectService.getSubjects(userId, onlyActive: true);
         Navigator.pushNamed(context, Routes.CREATE_GROUP);
       },
     },

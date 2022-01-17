@@ -7,6 +7,7 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/services/fb_subject_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -116,30 +117,15 @@ class _CreateGroupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
+    final subjectsService = Provider.of<FBSubjectService>(context);
     final subjects = [
       '',
-      'english',
-      'spanish',
-      'math three',
-      'math threed',
-      'beginner',
-      'intermediate',
-      'advanced',
-      'fafas',
-      'uh',
-      'iii ',
-      'dsfs',
-      'esnglish',
-      'spdansh',
-      'matfh ree',
-      'matdsed',
-      'beginssner',
-      'interdiate',
-      'advanced',
-      'faffsas',
-      'uhfs',
-      'ifsii ',
     ];
+
+    for (var subject in subjectsService.subjectList) {
+      subjects.add(subject.name);
+    }
+
     final levels = ['beginner', 'intermediate', 'advanced'];
 
     return Form(

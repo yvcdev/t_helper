@@ -54,7 +54,6 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                       fontSize: UiConsts.smallFontSize, color: Colors.black),
                 ),
                 Text(
-                  //subjectService.subjectNumber
                   subjectService.subjectNumber == 1
                       ? 'You have ${subjectService.subjectNumber} subject'
                       : 'You have ${subjectService.subjectNumber} subjects',
@@ -100,7 +99,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                         top: 10,
                         child: IconButton(
                             onPressed: () async {
-                              await subjectsOnPressed(
+                              await subjectsOnAddPressed(
                                   context, formKey, listKey, subjectController);
                             },
                             icon: const Icon(
@@ -141,8 +140,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                     child: SwitchListTile(
                       value: subject.active,
                       onChanged: (value) async {
-                        await subjectsOnChanged(
-                            context, '9KJAUtDQLETDMFyJm7uq', value);
+                        await subjectsOnSwitchChanged(
+                            context, subject.id!, value);
 
                         if (subjectService.error == null) {
                           subject.active = value;
