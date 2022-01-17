@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 
 import 'package:t_helper/models/models.dart';
@@ -8,6 +9,8 @@ class FBGroupService extends ChangeNotifier {
       FirebaseFirestore.instance.collection('groups');
   CollectionReference groupUsersReference =
       FirebaseFirestore.instance.collection('groupUsers');
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
   List<Group>? groups;
   String? error;
@@ -66,7 +69,7 @@ class FBGroupService extends ChangeNotifier {
     }
   }
 
-  Future deleteGroup(String groupId) async {
+  Future deleteGroup(String groupId, String imageUrl) async {
     try {
       final groupUsers =
           await groupUsersReference.where('groupId', isEqualTo: groupId).get();
@@ -76,6 +79,10 @@ class FBGroupService extends ChangeNotifier {
       }
 
       await groupsReference.doc(groupId).delete();
+
+      if (imageUrl != '') {
+        await storage.refFromURL(imageUrl).delete();
+      }
 
       groups = groups!.where((group) => group.id != groupId).toList();
 

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     // ignore: missing_enum_constant_in_switch
     switch (defaultTargetPlatform) {
@@ -40,6 +37,17 @@ class DefaultFirebaseOptions {
     );
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAhIcvUeOyZhx396b68gES0MsKMjzgrRtA',
+    appId: '1:945197358965:web:c3f87c2d8f71c1d354fd3c',
+    messagingSenderId: '945197358965',
+    projectId: 't-helper-a0132',
+    authDomain: 't-helper-a0132.firebaseapp.com',
+    databaseURL: 'https://t-helper-a0132-default-rtdb.firebaseio.com',
+    storageBucket: 't-helper-a0132.appspot.com',
+    measurementId: 'G-HQKZ6M7Q54',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB7I2lrLZ28tZaOgXUvz-kwXO9aRgD7WB0',
     appId: '1:945197358965:android:c10bc1b68d0fbce354fd3c',
@@ -51,12 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBcRcCknghsAQzfzNnDQlMx1Zw6a9HSqLE',
-    appId: '1:945197358965:ios:2b0f890f9a11712f54fd3c',
+    appId: '1:945197358965:ios:af0147ca2f8e859254fd3c',
     messagingSenderId: '945197358965',
     projectId: 't-helper-a0132',
     databaseURL: 'https://t-helper-a0132-default-rtdb.firebaseio.com',
     storageBucket: 't-helper-a0132.appspot.com',
-    iosClientId: '945197358965-itrf7aveo05glqhqpjb86i9r8b9fj2sl.apps.googleusercontent.com',
-    iosBundleId: 'com.yvcdev.app',
+    iosClientId: '945197358965-7jj4u8unclb1t4vdui3p5sl9jg1hpdj9.apps.googleusercontent.com',
+    iosBundleId: 'com.yvcdev.com',
   );
 }

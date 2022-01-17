@@ -117,6 +117,7 @@ class _CreateGroupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
+    final levels = ['beginner', 'intermediate', 'advanced'];
     final subjectsService = Provider.of<FBSubjectService>(context);
     final subjects = [
       {
@@ -126,10 +127,10 @@ class _CreateGroupForm extends StatelessWidget {
     ];
 
     for (var subject in subjectsService.subjectList) {
-      subjects.add({"name": subject.name, "id": subject.id!});
+      if (subject.active) {
+        subjects.add({"name": subject.name, "id": subject.id!});
+      }
     }
-
-    final levels = ['beginner', 'intermediate', 'advanced'];
 
     return Form(
       key: formKey,
@@ -205,9 +206,15 @@ class _CreateGroupForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Subject:',
-                style: TextStyle(fontSize: 17),
+              TextButton(
+                style: ButtonStyle(
+                    padding:
+                        MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero)),
+                onPressed: () => createGroupOnSubjectTextTap(context),
+                child: const Text(
+                  'Subject:',
+                  style: TextStyle(fontSize: 17, color: CustomColors.primary),
+                ),
               ),
               DropdownButton<String>(
                   value: createGroupForm.subject['id'],

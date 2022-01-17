@@ -46,7 +46,6 @@ class FBSubjectService extends ChangeNotifier {
     } catch (e) {
       error = 'There was an error getting your subjects';
       loading = false;
-      print(e);
       notifyListeners();
       return [];
     }
@@ -100,6 +99,11 @@ class FBSubjectService extends ChangeNotifier {
   Future updateSubject(String subjectId, String field, dynamic value) async {
     try {
       await subjectsReference.doc(subjectId).update({field: value});
+      int subjectIndex =
+          subjectList.indexWhere((subject) => subject.id == subjectId);
+
+      subjectList[subjectIndex].active = value;
+      notifyListeners();
     } catch (e) {
       error = "There was an error updating the subject";
     }

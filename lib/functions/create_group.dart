@@ -79,3 +79,18 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
     createGroupForm.reset();
   }
 }
+
+createGroupOnSubjectTextTap(BuildContext context) async {
+  final subjectService = Provider.of<FBSubjectService>(context, listen: false);
+  final userService = Provider.of<FBUserService>(context, listen: false);
+  final createGroupForm =
+      Provider.of<CreateGroupFormProvider>(context, listen: false);
+
+  final userId = userService.user.uid;
+
+  createGroupForm.subject = {'name': '', 'id': ''};
+
+  Navigator.pushNamed(context, Routes.CREATE_SUBJECT);
+
+  await subjectService.getSubjects(userId);
+}

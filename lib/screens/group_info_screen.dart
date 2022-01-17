@@ -59,9 +59,12 @@ class GroupInfoScreen extends StatelessWidget {
                               topImage: false,
                               acceptButtonLabel: 'Yes',
                               cancelButtonLabel: 'No',
-                              correctText: 'Do you want to delete this group?',
+                              correctText: 'Delete group?',
+                              description:
+                                  'Deleting the group will remove all of its information. This action cannot be undone.',
                               onAccept: () async {
-                                await groupService.deleteGroup(group.id);
+                                await groupService.deleteGroup(
+                                    group.id, group.image ?? '');
                                 Navigator.pushReplacementNamed(
                                     context, Routes.REGISTERED_GROUPS);
                               },
@@ -98,6 +101,28 @@ class _HeroInfo extends StatelessWidget {
       imageUrl: group!.image,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Students: ${group.members}',
+              style: TextStyle(
+                color:
+                    group.members == 0 ? CustomColors.red : CustomColors.green,
+                fontSize: UiConsts.smallFontSize,
+              ),
+            ),
+            Text(
+              'Activities: ${group.activities.length}',
+              style: TextStyle(
+                color: group.activities.isEmpty
+                    ? CustomColors.red
+                    : CustomColors.green,
+                fontSize: UiConsts.smallFontSize,
+              ),
+            ),
+          ],
+        ),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
@@ -125,7 +150,7 @@ class _HeroInfo extends StatelessWidget {
         Text(
           group.subject['name']!.toTitleCase(),
           style: const TextStyle(
-            fontSize: UiConsts.largeFontSize,
+            fontSize: UiConsts.normalFontSize,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -133,26 +158,6 @@ class _HeroInfo extends StatelessWidget {
           group.level.toCapitalized(),
           style: const TextStyle(
               fontSize: UiConsts.smallFontSize - 2, color: CustomColors.green),
-        ),
-        const SizedBox(
-          height: UiConsts.smallSpacing,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Students: ${group.members}',
-              style: const TextStyle(
-                fontSize: UiConsts.smallFontSize,
-              ),
-            ),
-            Text(
-              'Activities: ${group.activities.length}',
-              style: const TextStyle(
-                fontSize: UiConsts.smallFontSize,
-              ),
-            ),
-          ],
         ),
       ],
     );

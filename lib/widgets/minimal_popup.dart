@@ -8,12 +8,14 @@ class MinimalPopUp extends StatelessWidget {
   final bool? correct;
   final String correctText;
   final String incorrectText;
+  final String? description;
   final Function onAccept;
   final Function? onCancel;
   final String? acceptButtonLabel;
   final String? cancelButtonLabel;
   final Color? acceptButtonColor;
   final Color? cancelButtonColor;
+  final Color? descriptionColor;
 
   const MinimalPopUp({
     Key? key,
@@ -27,6 +29,8 @@ class MinimalPopUp extends StatelessWidget {
     this.cancelButtonLabel,
     this.acceptButtonColor,
     this.cancelButtonColor,
+    this.description,
+    this.descriptionColor,
   }) : super(key: key);
 
   @override
@@ -37,6 +41,8 @@ class MinimalPopUp extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: [
           _Content(
+            description: description,
+            descriptionColor: descriptionColor,
             topImage: topImage,
             correct: correct!,
             incorrectText: incorrectText,
@@ -108,6 +114,8 @@ class _Content extends StatelessWidget {
   final String? cancelButtonLabel;
   final Color? acceptButtonColor;
   final Color? cancelButtonColor;
+  final String? description;
+  final Color? descriptionColor;
 
   final String correctText;
   final String incorrectText;
@@ -123,6 +131,8 @@ class _Content extends StatelessWidget {
     this.cancelButtonLabel = 'Cancel',
     this.acceptButtonColor,
     this.cancelButtonColor,
+    required this.description,
+    required this.descriptionColor,
   }) : super(key: key);
 
   @override
@@ -152,6 +162,17 @@ class _Content extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: description == null ? 0 : 20),
+            description == null
+                ? const SizedBox(height: 0)
+                : Text(
+                    description!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: descriptionColor ?? Colors.black,
+                      fontSize: UiConsts.smallFontSize,
+                    ),
+                  ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
