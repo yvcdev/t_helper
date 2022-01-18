@@ -18,6 +18,8 @@ class Routes {
   static const String CREATE_ACTIVITY = 'CREATE_ACTIVITY';
   static const String CREATE_GROUP = 'CREATE_GROUP';
   static const String CREATE_SUBJECT = 'CREATE_SUBJECT';
+  //Activity creators
+  static const String C_SORT_SENTENCE_SCREEN = 'C_SORT_SENTENCE_SCREEN';
 
   //Students
   static const String ACTIVITY_SORT_SENTENCE = 'ACTIVITY_SORT_SENTENCE';

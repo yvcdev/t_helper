@@ -5,7 +5,7 @@ export 'package:t_helper/screens/registered_groups_screen.dart';
 export 'package:t_helper/screens/signup_screen.dart';
 export 'package:t_helper/screens/group_info_screen.dart';
 export 'package:t_helper/screens/notifications_screen.dart';
-export 'package:t_helper/screens/create_activity_screen.dart';
+export 'package:t_helper/screens/set_up_activity_screen.dart';
 export 'package:t_helper/screens/create_group_screen.dart';
 export 'package:t_helper/screens/group_activities_screen.dart';
 export 'package:t_helper/screens/loading_screen.dart';

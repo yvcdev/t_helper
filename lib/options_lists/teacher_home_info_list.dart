@@ -23,10 +23,20 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
     },
     {
       'icon': Icons.add_box_rounded,
-      'text': 'Create activity',
-      'onTap': () {
+      'text': 'Set up activity',
+      'onTap': () async {
+        final activitiesService =
+            Provider.of<FBActivitiesService>(context, listen: false);
+
         Navigator.pushNamed(context, Routes.CREATE_ACTIVITY);
+
+        await activitiesService.getActivities();
       },
+    },
+    {
+      'icon': Icons.group_add,
+      'text': 'Your activities',
+      'onTap': () {},
     },
     {
       'icon': Icons.group_add,

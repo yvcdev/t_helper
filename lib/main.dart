@@ -41,6 +41,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CurrentGroupProvider()),
         ChangeNotifierProvider(create: (_) => FBGroupService()),
         ChangeNotifierProvider(create: (_) => FBSubjectService()),
+        ChangeNotifierProvider(create: (_) => FBActivitiesService()),
         Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBStorageGroup>(create: (_) => FBStorageGroup()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
@@ -75,9 +76,11 @@ class MyApp extends StatelessWidget {
 
         //Teacher
         Routes.TEACHER_HOME: (_) => const Wrapper(),
-        Routes.CREATE_ACTIVITY: (_) => const CreateActivityScreen(),
+        Routes.CREATE_ACTIVITY: (_) => const SetUpActivityScreen(),
         Routes.CREATE_GROUP: (_) => const CreateGroupScreen(),
         Routes.CREATE_SUBJECT: (_) => const SubjectsScreen(),
+        //Activity creators
+        Routes.C_SORT_SENTENCE_SCREEN: (_) => const CSortSentenceScreen(),
 
         //Student
         Routes.ACTIVITY_SORT_SENTENCE: (_) => const ASortSentenceScreen(),

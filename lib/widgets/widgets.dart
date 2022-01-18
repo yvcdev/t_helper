@@ -10,3 +10,5 @@ export 'package:t_helper/widgets/request_button.dart';
 export 'package:t_helper/widgets/custom_text_button.dart';
 export 'package:t_helper/widgets/hero_info.dart';
 export 'package:t_helper/widgets/minimal_popup.dart';
+export 'package:t_helper/widgets/activity_banner.dart';
+export 'package:t_helper/widgets/image_description_card.dart';
