@@ -34,6 +34,14 @@ Future subjectsOnAddPressed(
       owner: userService.user.uid,
       active: true);
 
+  if (newSubject.namedId == 'createSubject' ||
+      newSubject.name == 'Create Subject') {
+    ScaffoldMessenger.of(context).showSnackBar(snackbar(
+        message: 'A subject with this name cannot be created', success: false));
+    addSubjectForm.isLoading = false;
+    return;
+  }
+
   final subjectId = await subjectService.addSubject(newSubject);
 
   if (subjectService.error != null) {

@@ -14,9 +14,10 @@ class SetUpActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final activitiesService = Provider.of<FBActivitiesService>(context);
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         loading: activitiesService.isLoading,
         topSeparation: false,
+        drawer: false,
         title: 'Set Up Activity',
         children: [
           activitiesService.activities == null

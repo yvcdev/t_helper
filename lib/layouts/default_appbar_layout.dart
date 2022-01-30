@@ -5,7 +5,7 @@ import 'package:t_helper/utils/custom_colors.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
 
-class NotificationsAppBarLayout extends StatelessWidget {
+class DefaultAppBarLayout extends StatelessWidget {
   final List<Widget> children;
   final String? title;
   final bool? topSeparation;
@@ -15,8 +15,9 @@ class NotificationsAppBarLayout extends StatelessWidget {
   final double? elevation;
   final bool? scroll;
   final bool? colunmLayout;
+  final bool? drawer;
 
-  const NotificationsAppBarLayout({
+  const DefaultAppBarLayout({
     Key? key,
     required this.children,
     this.title,
@@ -27,6 +28,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
     this.elevation,
     this.scroll = true,
     this.colunmLayout = false,
+    this.drawer = true,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class NotificationsAppBarLayout extends StatelessWidget {
     }
 
     return Scaffold(
-      drawer: const CustomDrawer(),
+      drawer: drawer! ? const CustomDrawer() : null,
       appBar: AppBar(
         elevation: elevation,
         flexibleSpace: Container(

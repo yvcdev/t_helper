@@ -16,7 +16,7 @@ class TeacherHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _cards = teacherHomeInfoList(context);
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         title: 'Home',
         appBarBottomHeight: 80,
         appBarBottom: const _AppBarBottom(),

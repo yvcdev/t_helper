@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/constants/ui.dart';
@@ -7,6 +8,7 @@ import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class ASortSentenceScreen extends StatelessWidget {
@@ -64,8 +66,7 @@ class ASortSentenceScreen extends StatelessWidget {
                         correctText: 'Awesome! We\'ve finished',
                         acceptButtonLabel: 'Finish',
                         onAccept: () {
-                          Navigator.pushReplacementNamed(
-                              context, Routes.FINISHED);
+                          Get.offAll(() => const HomeWrapper());
                         }));
               } else {
                 showDialog(
@@ -81,9 +82,9 @@ class ASortSentenceScreen extends StatelessWidget {
                               sentenceService.currentScreen + 1 <
                                   sentenceService.shuffledSentences.length) {
                             sentenceService.nextScreen();
-                            Navigator.pop(context);
+                            Get.back();
                           } else {
-                            Navigator.pop(context);
+                            Get.back();
                           }
                         }));
               }

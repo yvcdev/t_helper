@@ -28,10 +28,11 @@ class GroupMembersScreen extends StatelessWidget {
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         scroll: false,
         colunmLayout: true,
         topSeparation: false,
+        drawer: false,
         title: 'Group Members',
         loading: groupUsersService.loading,
         children: [

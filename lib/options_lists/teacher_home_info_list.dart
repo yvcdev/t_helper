@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 
 List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
@@ -16,7 +17,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
 
         final userId = userService.user.uid;
 
-        Navigator.pushNamed(context, Routes.CREATE_SUBJECT);
+        Get.to(() => const SubjectsScreen());
 
         await subjectService.getSubjects(userId);
       },
@@ -28,7 +29,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
         final activitiesService =
             Provider.of<FBActivitiesService>(context, listen: false);
 
-        Navigator.pushNamed(context, Routes.CREATE_ACTIVITY);
+        Get.to(() => const SetUpActivityScreen());
 
         await activitiesService.getActivities();
       },
@@ -48,7 +49,8 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
 
         final userId = userService.user.uid;
         await subjectService.getSubjects(userId, onlyActive: true);
-        Navigator.pushNamed(context, Routes.CREATE_GROUP);
+
+        Get.to(() => const CreateGroupScreen());
       },
     },
   ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/screens/subjects_screen.dart';
 import 'package:t_helper/services/fb_subject_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -17,9 +19,10 @@ class CreateGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         topSeparation: false,
         title: 'Create Group',
+        drawer: false,
         children: [
           Column(
             children: [
@@ -123,7 +126,11 @@ class _CreateGroupForm extends StatelessWidget {
       {
         "name": '',
         "id": '',
-      }
+      },
+      {
+        "name": 'Create Subject',
+        "id": 'createSubject',
+      },
     ];
 
     for (var subject in subjectsService.subjectList) {
@@ -164,23 +171,6 @@ class _CreateGroupForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Generated ID:',
-                style: TextStyle(fontSize: 17),
-              ),
-              Text(
-                createGroupForm.getGroupId(),
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
                 'Group Level:',
                 style: TextStyle(fontSize: 17),
               ),
@@ -206,15 +196,9 @@ class _CreateGroupForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(
-                style: ButtonStyle(
-                    padding:
-                        MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero)),
-                onPressed: () => createGroupOnSubjectTextTap(context),
-                child: const Text(
-                  'Subject:',
-                  style: TextStyle(fontSize: 17, color: CustomColors.primary),
-                ),
+              const Text(
+                'Subject:',
+                style: TextStyle(fontSize: 17),
               ),
               DropdownButton<String>(
                   value: createGroupForm.subject['id'],
@@ -225,13 +209,25 @@ class _CreateGroupForm extends StatelessWidget {
                           subject['name']! == ''
                               ? 'Select'
                               : subject['name']!.toTitleCase(),
-                          style: const TextStyle(fontSize: 17),
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: subject['id'] == 'createSubject'
+                                  ? CustomColors.primary
+                                  : null),
                         ));
                   }).toList(),
                   onChanged: (subjectId) {
-                    createGroupForm.subject = subjects
-                        .where((subject) => subject['id'] == subjectId)
-                        .toList()[0];
+                    if (subjectId == 'createSubject') {
+                      Get.to(() => const SubjectsScreen());
+                      createGroupForm.subject = {
+                        "name": '',
+                        "id": '',
+                      };
+                    } else {
+                      createGroupForm.subject = subjects
+                          .where((subject) => subject['id'] == subjectId)
+                          .toList()[0];
+                    }
                   }),
             ],
           ),

@@ -30,10 +30,11 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         scroll: false,
         colunmLayout: true,
         topSeparation: false,
+        drawer: false,
         title: 'Subjects',
         loading: subjectService.loading,
         children: [

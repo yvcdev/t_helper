@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
@@ -13,6 +15,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       Provider.of<CreateGroupFormProvider>(context, listen: false);
   final groupService = Provider.of<FBGroupService>(context, listen: false);
   final userService = Provider.of<FBUserService>(context, listen: false);
+  final now = DateTime.now();
   String? downloadUrl;
 
   if (createGroupForm.subject['name'] == '') {
@@ -24,11 +27,16 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   if (!createGroupForm.isValidForm(formKey)) return;
 
   createGroupForm.isLoading = true;
+  createGroupForm.getGroupId();
 
   final group = Group(
       id: '',
       name: createGroupForm.name.trim(),
-      namedId: createGroupForm.groupId!,
+      namedId: createGroupForm.groupId! +
+          '${now.year}' +
+          '${now.month}' +
+          '${now.day}' +
+          '${now.hour}',
       owner: userService.user.uid,
       subject: {
         'name': createGroupForm.subject['name']!,
@@ -74,8 +82,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
 
     currentGroupProvider.currentGroup = group;
 
-    Navigator.pushReplacementNamed(context, Routes.GROUP_INFO,
-        arguments: group);
+    Get.off(() => const GroupInfoScreen());
     createGroupForm.reset();
   }
 }
@@ -90,7 +97,7 @@ createGroupOnSubjectTextTap(BuildContext context) async {
 
   createGroupForm.subject = {'name': '', 'id': ''};
 
-  Navigator.pushNamed(context, Routes.CREATE_SUBJECT);
+  Get.to(() => const SubjectsScreen());
 
   await subjectService.getSubjects(userId);
 }

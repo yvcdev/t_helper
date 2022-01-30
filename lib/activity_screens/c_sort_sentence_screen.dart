@@ -7,7 +7,8 @@ class CSortSentenceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationsAppBarLayout(
+    return const DefaultAppBarLayout(
+      drawer: false,
       title: 'Sort The Sentence',
       children: [Text('Sort the sentence Creator')],
     );

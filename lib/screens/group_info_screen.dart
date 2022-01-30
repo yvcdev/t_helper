@@ -22,24 +22,11 @@ class GroupInfoScreen extends StatelessWidget {
     final group = currentGroupProvider.currentGroup;
     final _cards = groupInfoList(context);
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         elevation: 0,
         title: 'Group infomation',
+        drawer: false,
         topSeparation: false,
-        appBarBottomHeight: 40,
-        appBarBottom: Column(
-          children: [
-            Text(group!.name.toTitleCase(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: UiConsts.largeFontSize,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
         children: [
           Column(
             children: [
@@ -64,7 +51,7 @@ class GroupInfoScreen extends StatelessWidget {
                                   'Deleting the group will remove all of its information. This action cannot be undone.',
                               onAccept: () async {
                                 await groupService.deleteGroup(
-                                    group.id, group.image ?? '');
+                                    group!.id, group.image ?? '');
                                 Navigator.pushReplacementNamed(
                                     context, Routes.REGISTERED_GROUPS);
                               },
@@ -122,6 +109,13 @@ class _HeroInfo extends StatelessWidget {
             ),
           ],
         ),
+        Text(
+          group.name.toTitleCase(),
+          style: const TextStyle(
+            fontSize: UiConsts.largeFontSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -140,18 +134,19 @@ class _HeroInfo extends StatelessWidget {
                 )),
             Text(
               'ID: ${group.namedId}',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: UiConsts.tinyFontSize,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black45),
+                  color: Colors.black.withOpacity(0.7)),
             ),
           ],
         ),
         Text(
           group.subject['name']!.toTitleCase(),
-          style: const TextStyle(
-            fontSize: UiConsts.normalFontSize,
+          style: TextStyle(
+            fontSize: UiConsts.smallFontSize,
             fontWeight: FontWeight.bold,
+            color: Colors.black.withOpacity(0.7),
           ),
         ),
         Text(

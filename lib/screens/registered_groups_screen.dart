@@ -19,7 +19,7 @@ class RegisteredGroupScreen extends StatelessWidget {
     final groupService = Provider.of<FBGroupService>(context);
     final userService = Provider.of<FBUserService>(context);
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         title: 'Your Groups',
         topSeparation: false,
         children: [

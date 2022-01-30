@@ -14,9 +14,10 @@ class GroupActivitiesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sentenceService = Provider.of<SentenceService>(context);
 
-    return NotificationsAppBarLayout(
+    return DefaultAppBarLayout(
         topSeparation: false,
         title: 'Group Activities',
+        drawer: false,
         children: [
           GridView.builder(
               shrinkWrap: true,
