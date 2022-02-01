@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 
 personalInfoOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   FocusScope.of(context).unfocus();
@@ -61,6 +62,6 @@ personalInfoOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
     personalInfoForm.isLoading = false;
   } else {
     personalInfoForm.reset();
-    Navigator.pushReplacementNamed(context, Routes.HOME);
+    Get.offAll(() => const HomeWrapper());
   }
 }

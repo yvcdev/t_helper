@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:t_helper/controllers/user_controller.dart';
 
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
@@ -9,8 +11,7 @@ class HomeWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<FBUserService>(context);
-    final user = userService.user;
+    final user = UserController.instance.user.value;
 
     switch (user.role) {
       case 'teacher':
@@ -19,25 +20,26 @@ class HomeWrapper extends StatelessWidget {
         return const StudentHomeScreen();
       default:
         return Scaffold(
-            body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Invalid role'),
-              const SizedBox(
-                height: 20,
-              ),
-              TextButton(
-                  onPressed: () {
-                    final authService =
-                        Provider.of<FBAuthService>(context, listen: false);
-                    authService.signOut();
-                  },
-                  child: const Text('Sign Out'))
-            ],
+          body: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Invalid role'),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextButton(
+                    onPressed: () {
+                      final authService =
+                          Provider.of<FBAuthService>(context, listen: false);
+                      authService.signOut();
+                    },
+                    child: const Text('Sign Out'))
+              ],
+            ),
           ),
-        ));
+        );
     }
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -22,8 +24,7 @@ class CustomDrawer extends StatelessWidget {
                 final authService =
                     Provider.of<FBAuthService>(context, listen: false);
                 await authService.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.HOME, (Route<dynamic> route) => false);
+                Get.offAll(() => const LoginScreen());
               },
               title: 'Sign Out'),
         ],
@@ -45,10 +46,11 @@ class _Body extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: const [
-            _ListTile(iconData: Icons.home, route: Routes.HOME, title: 'Home'),
+            _ListTile(
+                iconData: Icons.home, route: HomeWrapper(), title: 'Home'),
             _ListTile(
                 iconData: Icons.group,
-                route: Routes.REGISTERED_GROUPS,
+                route: RegisteredGroupScreen(),
                 title: 'Groups'),
           ],
         ),
@@ -60,7 +62,7 @@ class _Body extends StatelessWidget {
 class _ListTile extends StatelessWidget {
   final IconData iconData;
   final String title;
-  final String? route;
+  final dynamic route;
   final Function? onTap;
 
   const _ListTile({
@@ -86,9 +88,7 @@ class _ListTile extends StatelessWidget {
               onTap!();
             }
           : () {
-              routeName == route
-                  ? Navigator.pop(context)
-                  : Navigator.pushReplacementNamed(context, route!);
+              routeName == route ? Get.back() : Get.off(() => route);
             },
       title: Text(
         title,

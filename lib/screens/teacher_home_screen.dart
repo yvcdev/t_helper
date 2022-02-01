@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/user_controller.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
@@ -33,8 +33,7 @@ class _AppBarBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<FBUserService>(context);
-    final user = userService.user;
+    final user = UserController.instance.user;
 
     return Column(
       children: [
@@ -43,13 +42,15 @@ class _AppBarBottom extends StatelessWidget {
           style: TextStyle(
               color: Colors.white, fontSize: UiConsts.normalFontSize - 4),
         ),
-        Text(
-          '${user.preferredName == 'firstName' ? user.firstName! : user.middleName!} ${user.lastName!}',
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: UiConsts.normalFontSize,
-              fontWeight: FontWeight.bold),
-        ),
+        Obx(() => Text(
+              user.value.preferredName == 'firstName'
+                  ? '${user.value.firstName!} ${user.value.lastName!}'
+                  : '${user.value.middleName!} ${user.value.lastName!}',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: UiConsts.normalFontSize,
+                  fontWeight: FontWeight.bold),
+            )),
         const SizedBox(
           height: 20,
         )

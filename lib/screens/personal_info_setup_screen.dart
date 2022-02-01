@@ -2,16 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/helpers/capitalize.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class PersonalInfoSetupScreen extends StatelessWidget {
@@ -212,8 +213,7 @@ class _InfoForm extends StatelessWidget {
               final authService =
                   Provider.of<FBAuthService>(context, listen: false);
               await authService.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.HOME, (Route<dynamic> route) => false);
+              Get.offAll(() => const HomeWrapper());
             },
             child: const Text(
               'Log Out',

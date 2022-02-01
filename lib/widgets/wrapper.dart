@@ -15,7 +15,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = Provider.of<FBAuthService>(context);
 
-    return StreamBuilder<User?>(
+    return /*StreamBuilder<User?>(
         stream: authService.user,
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
@@ -41,6 +41,7 @@ class Wrapper extends StatelessWidget {
           } else {
             return const LoadingScreen();
           }
-        });
+        });*/
+        Container();
   }
 }

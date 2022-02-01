@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/routes/routes.dart';
-import 'package:t_helper/screens/loading_screen.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/helpers/capitalize.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -74,8 +74,7 @@ class _GroupList extends StatelessWidget {
 
             currentGroupProvider.currentGroup = groups[index];
 
-            Navigator.pushNamed(context, Routes.GROUP_INFO,
-                arguments: groups[index]);
+            Get.to(() => const GroupInfoScreen());
           },
         );
       },
@@ -107,7 +106,7 @@ class _NoGroups extends StatelessWidget {
           ),
           CustomTextButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.CREATE_GROUP);
+                Get.to(() => const CreateGroupScreen());
               },
               title: 'Create one?',
               fontSize: UiConsts.normalFontSize)

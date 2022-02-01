@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
@@ -40,8 +41,8 @@ class SetUpActivityScreen extends StatelessWidget {
                             ImageDescriptionCard(
                                 index: index,
                                 onTap: () {
-                                  Navigator.pushNamed(context,
-                                      routeConverter[activity.namedId]!);
+                                  Get.to(
+                                      () => routeConverter[activity.namedId]!);
                                 },
                                 status: 1,
                                 description: activity.description,

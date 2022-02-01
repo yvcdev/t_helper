@@ -8,6 +8,7 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultAppBarLayout(
+      drawer: false,
       title: 'Notifications',
       children: [Container()],
     );

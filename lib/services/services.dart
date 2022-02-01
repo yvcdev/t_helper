@@ -8,3 +8,4 @@ export 'package:t_helper/services/fb_users_service.dart';
 export 'package:t_helper/services/fb_group_users_service.dart';
 export 'package:t_helper/services/fb_subject_service.dart';
 export 'package:t_helper/services/fb_activities_service.dart';
+export 'package:t_helper/services/user_service.dart';

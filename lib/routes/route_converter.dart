@@ -1,5 +1,5 @@
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/activity_screens/c_sort_sentence_screen.dart';
 
 final routeConverter = {
-  "sort-the-sentence": Routes.C_SORT_SENTENCE_SCREEN,
+  "sort-the-sentence": const CSortSentenceScreen(),
 };

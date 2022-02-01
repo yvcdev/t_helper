@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 
 List<Map<String, dynamic>> groupInfoList(BuildContext context) {
@@ -15,7 +17,7 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
             Provider.of<FBGroupUsersService>(context, listen: false);
         final currentGroupProvider =
             Provider.of<CurrentGroupProvider>(context, listen: false);
-        Navigator.pushNamed(context, Routes.GROUP_MEMBERS);
+        Get.to(() => GroupMembersScreen());
 
         await groupUsersService
             .getGroupUsers(currentGroupProvider.currentGroup!.id);
@@ -26,7 +28,7 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'color': Colors.cyan,
       'text': 'Group activities',
       'onTap': () {
-        Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
+        Get.to(() => const GroupActivitiesScreen());
       },
     },
     {
@@ -34,7 +36,7 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'color': Colors.green,
       'text': 'Add activity',
       'onTap': () {
-        Navigator.pushNamed(context, Routes.GROUP_ACTIVITIES);
+        Get.to(() => const GroupActivitiesScreen());
       },
     },
   ];

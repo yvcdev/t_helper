@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:t_helper/activity_screens/activity_screens.dart';
 
 import 'package:t_helper/constants/ui.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/services/sentences_service.dart';
 import 'package:t_helper/widgets/activity_banner.dart';
 
@@ -30,8 +31,7 @@ class GroupActivitiesScreen extends StatelessWidget {
                     ActivityBanner(
                         index: index,
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, Routes.ACTIVITY_SORT_SENTENCE);
+                          Get.offAll(() => const ASortSentenceScreen());
                           sentenceService.getSentences();
                         },
                         status: 1,

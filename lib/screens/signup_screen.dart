@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
-import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/routes/routes.dart';
+import 'package:t_helper/screens/login_screen.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -13,6 +13,8 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(SignupFormController());
+
     return Scaffold(
       body: AuthBg(
         child: SingleChildScrollView(
@@ -54,10 +56,8 @@ class SignupScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  final signupForm =
-                      Provider.of<SignupFormProvider>(context, listen: false);
-                  signupForm.reset();
-                  Navigator.pushReplacementNamed(context, Routes.LOGIN);
+                  SignupFormController.instance.reset();
+                  Get.offAll(() => const LoginScreen());
                 },
                 child: const Text(
                   'Log In?',
@@ -83,8 +83,6 @@ class _SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signupForm = Provider.of<SignupFormProvider>(context);
-
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -106,7 +104,7 @@ class _SignupForm extends StatelessWidget {
                   ? null
                   : 'This does not look like an email';
             },
-            onChanged: (value) => signupForm.email = value,
+            onChanged: (value) => SignupFormController.instance.email = value,
           ),
           const SizedBox(
             height: 30,
@@ -123,7 +121,8 @@ class _SignupForm extends StatelessWidget {
 
               return 'Password should have more than 6 characters';
             },
-            onChanged: (value) => signupForm.password = value,
+            onChanged: (value) =>
+                SignupFormController.instance.password = value,
           ),
           const SizedBox(
             height: 30,
@@ -136,22 +135,25 @@ class _SignupForm extends StatelessWidget {
                 labelText: 'Confirm Password',
                 prefixIcon: Icons.lock_outline),
             validator: (value) {
-              if (value == signupForm.password) return null;
+              if (value == SignupFormController.instance.password) return null;
 
               return 'Password fields must match';
             },
-            onChanged: (value) => signupForm.confirmPassword = value,
+            onChanged: (value) =>
+                SignupFormController.instance.confirmPassword = value,
           ),
           const SizedBox(
             height: 45,
           ),
-          RequestButton(
-              waitTitle: 'Please Wait',
-              title: 'Register',
-              isLoading: signupForm.isLoading,
-              onTap: signupForm.isLoading
-                  ? null
-                  : () => signupOnTap(context, formKey)),
+          Obx(
+            () => RequestButton(
+                waitTitle: 'Please Wait',
+                title: 'Register',
+                isLoading: SignupFormController.instance.isLoading.value,
+                onTap: SignupFormController.instance.isLoading.value
+                    ? null
+                    : () => signupOnTap(context, formKey)),
+          )
         ],
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:t_helper/constants/constants.dart';
 
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class ActivityFloatingLayoutLayout extends StatelessWidget {
@@ -53,9 +54,8 @@ class ActivityFloatingLayoutLayout extends StatelessWidget {
                           cancelButtonLabel: 'No',
                           acceptButtonColor: CustomColors.red,
                           cancelButtonColor: CustomColors.green,
-                          onAccept: () => Navigator.pushReplacementNamed(
-                              context, Routes.HOME),
-                          onCancel: () => Navigator.of(context).pop(),
+                          onAccept: () => Get.offAll(() => const HomeWrapper()),
+                          onCancel: () => Get.back(),
                         ));
               } else {
                 floatingAction!();

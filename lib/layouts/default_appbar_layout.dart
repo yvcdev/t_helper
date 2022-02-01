@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/custom_colors.dart';
@@ -59,7 +60,7 @@ class DefaultAppBarLayout extends StatelessWidget {
             onPressed: routeName == Routes.NOTIFICATIONS
                 ? null
                 : () {
-                    Navigator.pushNamed(context, Routes.NOTIFICATIONS);
+                    Get.to(() => const NotificationsScreen());
                   },
             iconSize: 30,
             splashRadius: 20,
