@@ -5,10 +5,9 @@ import 'package:t_helper/utils/custom_colors.dart';
 class CustomTextButton extends StatelessWidget {
   final Function onPressed;
   final String title;
-  final double? fontSize;
 
   const CustomTextButton(
-      {Key? key, required this.onPressed, this.fontSize, required this.title})
+      {Key? key, required this.onPressed, required this.title})
       : super(key: key);
 
   @override
@@ -24,9 +23,8 @@ class CustomTextButton extends StatelessWidget {
       },
       child: Text(
         title,
-        style: TextStyle(
-            color: CustomColors.primary,
-            fontSize: fontSize ?? UiConsts.smallFontSize),
+        style: const TextStyle(
+            color: CustomColors.primary, fontSize: UiConsts.smallFontSize),
       ),
     );
   }

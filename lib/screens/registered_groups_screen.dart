@@ -103,11 +103,11 @@ class _NoGroups extends StatelessWidget {
             ),
           ),
           CustomTextButton(
-              onPressed: () {
-                Get.to(() => const CreateGroupScreen());
-              },
-              title: 'Create one?',
-              fontSize: UiConsts.normalFontSize)
+            onPressed: () {
+              Get.to(() => const CreateGroupScreen());
+            },
+            title: 'Create one?',
+          )
         ],
       )),
     );

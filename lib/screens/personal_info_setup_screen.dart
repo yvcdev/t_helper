@@ -207,25 +207,14 @@ class _InfoForm extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          TextButton(
-            style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(
-                  CustomColors.primary.withOpacity(0.1),
-                ),
-                shape: MaterialStateProperty.all(const StadiumBorder())),
-            onPressed: () async {
-              AuthController authController = Get.find();
-              await authController.signOut();
-              personalInfoForm.reset();
-              Get.offAll(() => const HomeWrapper());
-            },
-            child: const Text(
-              'Log Out',
-              style: TextStyle(
-                  color: CustomColors.primary,
-                  fontSize: UiConsts.smallFontSize),
-            ),
-          ),
+          CustomTextButton(
+              onPressed: () async {
+                AuthController authController = Get.find();
+                await authController.signOut();
+                personalInfoForm.reset();
+                Get.offAll(() => const HomeWrapper());
+              },
+              title: 'Log Out')
         ],
       ),
     );
@@ -240,6 +229,18 @@ class _ProfilePicturePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PersonalInfoFormController personalInfoForm = Get.find();
+
+    _openPicker() async {
+      final ImagePicker _picker = ImagePicker();
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (image == null) {
+        Snackbar.error('Image selection', 'No image selected');
+        return;
+      }
+
+      personalInfoForm.setSelectedImage(image.path);
+    }
 
     return Obx(() => Column(
           children: [
@@ -258,16 +259,7 @@ class _ProfilePicturePicker extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () async {
-                    final ImagePicker _picker = ImagePicker();
-                    final XFile? image =
-                        await _picker.pickImage(source: ImageSource.gallery);
-
-                    if (image == null) {
-                      Snackbar.error('Image selection', 'No image selected');
-                      return;
-                    }
-
-                    personalInfoForm.setSelectedImage(image.path);
+                    await _openPicker();
                   },
                   borderRadius: BorderRadius.circular(50),
                   child: personalInfoForm.selectedImage.value == ''
@@ -301,16 +293,17 @@ class _ProfilePicturePicker extends StatelessWidget {
               ),
             ),
             personalInfoForm.selectedImage.value == ''
-                ? const SizedBox()
-                : IconButton(
+                ? CustomTextButton(
+                    onPressed: () async {
+                      await _openPicker();
+                    },
+                    title: 'Add Profile Picture')
+                : CustomTextButton(
                     onPressed: () {
                       personalInfoForm.setSelectedImage('');
                     },
-                    icon: const Icon(
-                      Icons.close,
-                      size: 32,
-                      color: CustomColors.primary,
-                    ))
+                    title: 'Remove Profile Picture',
+                  )
           ],
         ));
   }
