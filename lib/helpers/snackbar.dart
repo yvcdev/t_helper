@@ -6,7 +6,7 @@ import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/utils/utils.dart';
 
 class Snackbar {
-  static const _duration = Duration(seconds: 1);
+  static const _duration = Duration(seconds: 2);
 
   static void error(
     String title,

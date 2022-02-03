@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/instance_manager.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/user_controller.dart';
@@ -33,7 +34,8 @@ class _AppBarBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserController.instance.user;
+    UserController userController = Get.find();
+    final user = userController.user;
 
     return Column(
       children: [

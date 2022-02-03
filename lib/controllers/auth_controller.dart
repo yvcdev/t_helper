@@ -4,19 +4,19 @@ import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/helpers/helpers.dart';
 
 import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/services/user_service.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
 class AuthController extends GetxController {
-  static AuthController instance = Get.find();
-  late Rx<User?> fbUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late Rx<User?> fbUser;
 
   @override
   onReady() {
     super.onReady();
     fbUser = Rx<User?>(_auth.currentUser);
     fbUser.bindStream(_auth.userChanges());
-    Get.put(UserController());
+    Get.put(UserController(), permanent: true);
     ever(fbUser, _initialScreen);
   }
 
@@ -28,9 +28,16 @@ class AuthController extends GetxController {
     }
   }
 
-  login(String email, String password) {
+  Future login(String email, String password) async {
     try {
-      _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserController userController = Get.find();
+
+      final authUser = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      final _user = await UserService().getUserMAnually(authUser.user!.uid);
+
+      userController.onLogin();
+      userController.user.value = _user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         Snackbar.error(
@@ -43,9 +50,10 @@ class AuthController extends GetxController {
     }
   }
 
-  signup(String email, String password) {
+  Future signup(String email, String password) async {
     try {
-      _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Snackbar.error('Weak password', 'The password provided is too weak');
@@ -60,5 +68,11 @@ class AuthController extends GetxController {
       Snackbar.error(
           'Account creation failed', 'Your account could not be created');
     }
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+    UserController userController = Get.find();
+    userController.reset();
   }
 }

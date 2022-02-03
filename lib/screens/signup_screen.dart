@@ -13,7 +13,7 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SignupFormController());
+    final signupForm = Get.put(SignupFormController());
 
     return Scaffold(
       body: AuthBg(
@@ -56,8 +56,8 @@ class SignupScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  SignupFormController.instance.reset();
                   Get.offAll(() => const LoginScreen());
+                  signupForm.reset();
                 },
                 child: const Text(
                   'Log In?',
@@ -83,6 +83,7 @@ class _SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SignupFormController signupForm = Get.find();
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -104,7 +105,7 @@ class _SignupForm extends StatelessWidget {
                   ? null
                   : 'This does not look like an email';
             },
-            onChanged: (value) => SignupFormController.instance.email = value,
+            onChanged: (value) => signupForm.email = value,
           ),
           const SizedBox(
             height: 30,
@@ -121,8 +122,7 @@ class _SignupForm extends StatelessWidget {
 
               return 'Password should have more than 6 characters';
             },
-            onChanged: (value) =>
-                SignupFormController.instance.password = value,
+            onChanged: (value) => signupForm.password = value,
           ),
           const SizedBox(
             height: 30,
@@ -135,12 +135,11 @@ class _SignupForm extends StatelessWidget {
                 labelText: 'Confirm Password',
                 prefixIcon: Icons.lock_outline),
             validator: (value) {
-              if (value == SignupFormController.instance.password) return null;
+              if (value == signupForm.password) return null;
 
               return 'Password fields must match';
             },
-            onChanged: (value) =>
-                SignupFormController.instance.confirmPassword = value,
+            onChanged: (value) => signupForm.confirmPassword = value,
           ),
           const SizedBox(
             height: 45,
@@ -149,8 +148,8 @@ class _SignupForm extends StatelessWidget {
             () => RequestButton(
                 waitTitle: 'Please Wait',
                 title: 'Register',
-                isLoading: SignupFormController.instance.isLoading.value,
-                onTap: SignupFormController.instance.isLoading.value
+                isLoading: signupForm.isLoading.value,
+                onTap: signupForm.isLoading.value
                     ? null
                     : () => signupOnTap(context, formKey)),
           )

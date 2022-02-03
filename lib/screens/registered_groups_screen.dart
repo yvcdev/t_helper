@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
 import 'package:t_helper/providers/providers.dart';
@@ -17,14 +18,15 @@ class RegisteredGroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groupService = Provider.of<FBGroupService>(context);
-    final userService = Provider.of<FBUserService>(context);
+    UserController userController = Get.find();
+    final user = userController.user;
 
     return DefaultAppBarLayout(
         title: 'Your Groups',
         topSeparation: false,
         children: [
           FutureBuilder(
-              future: groupService.getGroups(userService.user),
+              future: groupService.getGroups(user.value),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Group>?> snapshot) {
                 if (snapshot.hasData) {

@@ -4,13 +4,24 @@ import 'package:t_helper/models/user.dart';
 import 'package:t_helper/services/services.dart';
 
 class UserController extends GetxController {
-  static UserController instance = Get.find();
-  final _authUser = AuthController.instance.fbUser.value;
+  AuthController authController = Get.find();
   Rx<User> user = User(email: '', uid: '').obs;
 
   @override
   void onInit() {
-    user.bindStream(UserService().getUser(_authUser!.uid));
+    final authUser = authController.fbUser;
+    user.bindStream(
+        UserService().getUser(authUser.value!.uid, authUser.value!.email!));
     super.onInit();
+  }
+
+  void onLogin() {
+    final authUser = authController.fbUser;
+    user.bindStream(
+        UserService().getUser(authUser.value!.uid, authUser.value!.email!));
+  }
+
+  reset() {
+    user.value = User(email: '', uid: '');
   }
 }

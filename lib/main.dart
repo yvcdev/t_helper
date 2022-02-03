@@ -7,10 +7,7 @@ import 'firebase_options.dart';
 
 import 'package:t_helper/controllers/auth_controller.dart';
 import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/widgets/wrapper.dart';
-import 'package:t_helper/activity_screens/activity_screens.dart';
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
@@ -19,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) => Get.put(AuthController()));
+  ).then((value) => Get.put(AuthController(), permanent: true));
   runApp(const AppState());
 }
 
@@ -47,7 +44,6 @@ class AppState extends StatelessWidget {
         Provider<FBStorageUser>(create: (_) => FBStorageUser()),
         Provider<FBStorageGroup>(create: (_) => FBStorageGroup()),
         Provider<FBAuthService>(create: (_) => FBAuthService()),
-        Provider<FBUserService>(create: (_) => FBUserService()),
       ],
     );
   }
@@ -62,32 +58,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: Routes.HOME,
-      routes: {
-        //Both
-        Routes.LOGIN: (_) => const LoginScreen(),
-        Routes.SIGNUP: (_) => const SignupScreen(),
-        Routes.NOTIFICATIONS: (_) => const NotificationsScreen(),
-        Routes.REGISTERED_GROUPS: (_) => const RegisteredGroupScreen(),
-        Routes.GROUP_INFO: (_) => const GroupInfoScreen(),
-        Routes.GROUP_MEMBERS: (_) => GroupMembersScreen(),
-        Routes.GROUP_ACTIVITIES: (_) => const GroupActivitiesScreen(),
-        Routes.LOADING: (_) => const LoadingScreen(),
-        Routes.FINISHED: (_) => const FinishedScreen(),
-        Routes.HOME: (_) => const Wrapper(),
-
-        //Teacher
-        Routes.TEACHER_HOME: (_) => const Wrapper(),
-        Routes.CREATE_ACTIVITY: (_) => const SetUpActivityScreen(),
-        Routes.CREATE_GROUP: (_) => const CreateGroupScreen(),
-        Routes.CREATE_SUBJECT: (_) => const SubjectsScreen(),
-        //Activity creators
-        Routes.C_SORT_SENTENCE_SCREEN: (_) => const CSortSentenceScreen(),
-
-        //Student
-        Routes.ACTIVITY_SORT_SENTENCE: (_) => const ASortSentenceScreen(),
-        Routes.STUDENT_HOME: (_) => const Wrapper(),
-      },
+      home: const LoginScreen(),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:t_helper/controllers/user_controller.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
@@ -24,14 +26,15 @@ Future subjectsOnAddPressed(
   final addSubjectForm =
       Provider.of<AddSubjectFormProvider>(context, listen: false);
   final subjectService = Provider.of<FBSubjectService>(context, listen: false);
-  final userService = Provider.of<FBUserService>(context, listen: false);
+  UserController userController = Get.find();
+  final user = userController.user;
 
   if (!addSubjectForm.isValidForm(formKey)) return;
 
   final newSubject = Subject(
       name: addSubjectForm.subject.trim().toTitleCase(),
       namedId: addSubjectForm.subject.trim().toLowerCase(),
-      owner: userService.user.uid,
+      owner: user.value.uid,
       active: true);
 
   if (newSubject.namedId == 'createSubject' ||

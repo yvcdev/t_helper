@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LoginFormController());
+    final loginFormController = Get.put(LoginFormController());
 
     return Scaffold(
       body: AuthBg(
@@ -57,8 +57,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
                 onPressed: () {
-                  LoginFormController.instance.reset();
                   Get.off(() => const SignupScreen());
+                  loginFormController.reset();
                 },
                 child: const Text(
                   'Sign Up?',
@@ -84,6 +84,8 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LoginFormController loginFormController = Get.find();
+
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -105,7 +107,7 @@ class _LoginForm extends StatelessWidget {
                   ? null
                   : 'This does not look like an email';
             },
-            onChanged: (value) => LoginFormController.instance.email = value,
+            onChanged: (value) => loginFormController.email = value,
           ),
           const SizedBox(
             height: 30,
@@ -122,7 +124,7 @@ class _LoginForm extends StatelessWidget {
 
               return 'Password should have more than 6 characters';
             },
-            onChanged: (value) => LoginFormController.instance.password = value,
+            onChanged: (value) => loginFormController.password = value,
           ),
           const SizedBox(
             height: 45,
@@ -131,8 +133,8 @@ class _LoginForm extends StatelessWidget {
             () => RequestButton(
                 waitTitle: 'Please Wait',
                 title: 'Sign In',
-                isLoading: LoginFormController.instance.isLoading.value,
-                onTap: LoginFormController.instance.isLoading.value
+                isLoading: loginFormController.isLoading.value,
+                onTap: loginFormController.isLoading.value
                     ? null
                     : () => loginOnTap(context, formKey)),
           )

@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
-import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/services/services.dart';
-import 'package:t_helper/helpers/capitalize.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -68,7 +68,8 @@ class _InfoForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final personalInfoForm = Provider.of<PersonalInfoFormProvider>(context);
+    Get.put(PersonalInfoFormController());
+    PersonalInfoFormController personalInfoForm = Get.find();
 
     List<String> roleValues = ['', 'teacher', 'student'];
     List<String> preferredNameValues = ['firstName', 'middleName'];
@@ -85,8 +86,8 @@ class _InfoForm extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          DropdownButton<String>(
-              value: personalInfoForm.role,
+          Obx(() => DropdownButton<String>(
+              value: personalInfoForm.role.value,
               items: roleValues.map((role) {
                 return DropdownMenuItem<String>(
                   value: role,
@@ -95,8 +96,8 @@ class _InfoForm extends StatelessWidget {
                 );
               }).toList(),
               onChanged: (role) {
-                personalInfoForm.role = role!;
-              }),
+                personalInfoForm.role.value = role!;
+              })),
           const SizedBox(
             height: 20,
           ),
@@ -139,7 +140,12 @@ class _InfoForm extends StatelessWidget {
                     : 'Your middle name can only have letters (3-20)';
               }
             },
-            onChanged: (value) => personalInfoForm.middleName = value,
+            onChanged: (value) {
+              personalInfoForm.middleName.value = value;
+              if (value.length < 3) {
+                personalInfoForm.preferredName.value = 'firstName';
+              }
+            },
           ),
           const SizedBox(
             height: 35,
@@ -151,8 +157,8 @@ class _InfoForm extends StatelessWidget {
                 'Preferred name:',
                 style: TextStyle(fontSize: 17),
               ),
-              DropdownButton<String>(
-                  value: personalInfoForm.preferredName,
+              Obx(() => DropdownButton<String>(
+                  value: personalInfoForm.preferredName.value,
                   items: preferredNameValues.map((preferredName) {
                     return DropdownMenuItem<String>(
                       value: preferredName,
@@ -161,11 +167,11 @@ class _InfoForm extends StatelessWidget {
                           : 'middle name'),
                     );
                   }).toList(),
-                  onChanged: personalInfoForm.middleName.length < 3
+                  onChanged: personalInfoForm.middleName.value.length < 3
                       ? null
                       : (preferredName) {
-                          personalInfoForm.preferredName = preferredName!;
-                        }),
+                          personalInfoForm.preferredName.value = preferredName!;
+                        })),
             ],
           ),
           const SizedBox(
@@ -193,13 +199,13 @@ class _InfoForm extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          RequestButton(
+          Obx(() => RequestButton(
               waitTitle: 'Please Wait',
               title: 'Finish',
-              isLoading: personalInfoForm.isLoading,
-              onTap: personalInfoForm.isLoading
+              isLoading: personalInfoForm.isLoading.value,
+              onTap: personalInfoForm.isLoading.value
                   ? null
-                  : () => personalInfoOnTap(context, personalInfoFormKey)),
+                  : () => personalInfoOnTap(context, personalInfoFormKey))),
           const SizedBox(
             height: 20,
           ),
@@ -213,6 +219,7 @@ class _InfoForm extends StatelessWidget {
               final authService =
                   Provider.of<FBAuthService>(context, listen: false);
               await authService.signOut();
+              personalInfoForm.reset();
               Get.offAll(() => const HomeWrapper());
             },
             child: const Text(
@@ -235,80 +242,79 @@ class _ProfilePicturePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final personalInfoForm = Provider.of<PersonalInfoFormProvider>(context);
+    PersonalInfoFormController personalInfoForm = Get.find();
 
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: Colors.grey,
-            border: Border.all(
-              color: CustomColors.primary,
-              width: 3,
-            ),
-          ),
-          height: 100,
-          width: 100,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () async {
-                final ImagePicker _picker = ImagePicker();
-                final XFile? image =
-                    await _picker.pickImage(source: ImageSource.gallery);
-
-                if (image == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      snackbar(message: 'No image selected', success: false));
-                  return;
-                }
-
-                personalInfoForm.setSelectedImage(image.path);
-              },
-              borderRadius: BorderRadius.circular(50),
-              child: personalInfoForm.selectedImage == null
-                  ? SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          'assets/no_profile.png',
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.file(
-                          File(personalInfoForm.selectedImage!),
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-            ),
-          ),
-        ),
-        personalInfoForm.selectedImage == null
-            ? const SizedBox()
-            : IconButton(
-                onPressed: () {
-                  personalInfoForm.setSelectedImage(null);
-                },
-                icon: const Icon(
-                  Icons.close,
-                  size: 32,
+    return Obx(() => Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.grey,
+                border: Border.all(
                   color: CustomColors.primary,
-                ))
-      ],
-    );
+                  width: 3,
+                ),
+              ),
+              height: 100,
+              width: 100,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    final XFile? image =
+                        await _picker.pickImage(source: ImageSource.gallery);
+
+                    if (image == null) {
+                      Snackbar.error('Image selection', 'No image selected');
+                      return;
+                    }
+
+                    personalInfoForm.setSelectedImage(image.path);
+                  },
+                  borderRadius: BorderRadius.circular(50),
+                  child: personalInfoForm.selectedImage.value == ''
+                      ? SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.asset(
+                              'assets/no_profile.png',
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.file(
+                              File(personalInfoForm.selectedImage.value),
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+            ),
+            personalInfoForm.selectedImage.value == ''
+                ? const SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      personalInfoForm.setSelectedImage('');
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      size: 32,
+                      color: CustomColors.primary,
+                    ))
+          ],
+        ));
   }
 }

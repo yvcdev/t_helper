@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import 'package:t_helper/controllers/user_controller.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 
@@ -13,9 +14,10 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
       'onTap': () async {
         final subjectService =
             Provider.of<FBSubjectService>(context, listen: false);
-        final userService = Provider.of<FBUserService>(context, listen: false);
+        UserController userController = Get.find();
+        final user = userController.user;
 
-        final userId = userService.user.uid;
+        final userId = user.value.uid;
 
         Get.to(() => const SubjectsScreen());
 
@@ -45,9 +47,10 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
       'onTap': () async {
         final subjectService =
             Provider.of<FBSubjectService>(context, listen: false);
-        final userService = Provider.of<FBUserService>(context, listen: false);
+        UserController userController = Get.find();
+        final user = userController.user;
 
-        final userId = userService.user.uid;
+        final userId = user.value.uid;
         await subjectService.getSubjects(userId, onlyActive: true);
 
         Get.to(() => const CreateGroupScreen());

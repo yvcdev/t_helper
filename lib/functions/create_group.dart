@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/screens/screens.dart';
@@ -13,7 +14,8 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   final createGroupForm =
       Provider.of<CreateGroupFormProvider>(context, listen: false);
   final groupService = Provider.of<FBGroupService>(context, listen: false);
-  final userService = Provider.of<FBUserService>(context, listen: false);
+  UserController userController = Get.find();
+  final user = userController.user;
   final now = DateTime.now();
   String? downloadUrl;
 
@@ -36,7 +38,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
           '${now.month}' +
           '${now.day}' +
           '${now.hour}',
-      owner: userService.user.uid,
+      owner: user.value.uid,
       subject: {
         'name': createGroupForm.subject['name']!,
         'id': createGroupForm.subject['id']!
@@ -88,11 +90,12 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
 
 createGroupOnSubjectTextTap(BuildContext context) async {
   final subjectService = Provider.of<FBSubjectService>(context, listen: false);
-  final userService = Provider.of<FBUserService>(context, listen: false);
+  UserController userController = Get.find();
+  final user = userController.user;
   final createGroupForm =
       Provider.of<CreateGroupFormProvider>(context, listen: false);
 
-  final userId = userService.user.uid;
+  final userId = user.value.uid;
 
   createGroupForm.subject = {'name': '', 'id': ''};
 

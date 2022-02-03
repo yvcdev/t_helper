@@ -30,17 +30,34 @@ class RequestButton extends StatelessWidget {
       disabledColor: Colors.grey,
       elevation: 0,
       color: CustomColors.primary,
-      child: Container(
-          width: 140,
-          padding: const EdgeInsets.all(UiConsts.normalPadding),
-          child: Text(
-            isLoading ? waitTitle : title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: UiConsts.smallFontSize + 2,
-            ),
-          )),
+      child: SizedBox(
+        width: 160,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+                padding: const EdgeInsets.all(UiConsts.normalPadding),
+                child: Text(
+                  isLoading ? waitTitle : title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: UiConsts.smallFontSize + 2,
+                  ),
+                )),
+            isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const SizedBox()
+          ],
+        ),
+      ),
     );
   }
 }

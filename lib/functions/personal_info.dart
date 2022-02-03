@@ -1,67 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:get/instance_manager.dart';
+import 'package:t_helper/controllers/controllers.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/services/services.dart';
-import 'package:t_helper/utils/utils.dart';
-import 'package:t_helper/widgets/home_wrapper.dart';
 
 personalInfoOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   FocusScope.of(context).unfocus();
+  UserController userController = Get.find();
+  final user = userController.user;
+  PersonalInfoFormController personalInfoForm = Get.find();
 
-  final userService = Provider.of<FBUserService>(context, listen: false);
-  final personalInfoForm =
-      Provider.of<PersonalInfoFormProvider>(context, listen: false);
-  final user = userService.user;
   String? downloadUrl;
 
-  if (personalInfoForm.role == '') {
-    ScaffoldMessenger.of(context).showSnackBar(
-        snackbar(message: 'A role needs to be selected', success: false));
+  if (personalInfoForm.role.value == '') {
+    Snackbar.error('Select role', 'A role needs to be selected');
     return;
   }
   if (!personalInfoForm.isValidForm(formKey)) return;
 
-  personalInfoForm.isLoading = true;
+  personalInfoForm.isLoading.value = true;
 
-  if (personalInfoForm.selectedImage != null) {
-    final userStorageService =
-        Provider.of<FBStorageUser>(context, listen: false);
+  if (personalInfoForm.selectedImage.value != '') {
+    downloadUrl = await StorageUserService.uploadProfilePicture(
+        personalInfoForm.selectedImage.value, user.value.uid);
 
-    downloadUrl = await userStorageService.uploadProfilePicture(
-        personalInfoForm.selectedImage!, user.uid);
-
-    if (downloadUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          snackbar(message: userStorageService.error!, success: false));
-      return;
-    }
+    if (downloadUrl == null) return;
   }
 
   User userToSend = User(
-      email: user.email,
-      uid: user.uid,
+      email: user.value.email,
+      uid: user.value.uid,
       firstName: personalInfoForm.firstName.toCapitalized(),
-      middleName: personalInfoForm.middleName.toCapitalized(),
+      middleName: personalInfoForm.middleName.value.toCapitalized(),
       lastName: personalInfoForm.lastName.toCapitalized(),
-      preferredName: personalInfoForm.preferredName,
-      role: personalInfoForm.role,
+      preferredName: personalInfoForm.preferredName.value,
+      role: personalInfoForm.role.value,
       profilePic: downloadUrl,
       groups: []);
 
-  personalInfoForm.isLoading = true;
+  personalInfoForm.isLoading.value = true;
 
-  await userService.createUserInfo(userToSend);
-
-  if (userService.error != null) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackbar(message: userService.error!, success: false));
-    personalInfoForm.isLoading = false;
-  } else {
-    personalInfoForm.reset();
-    Get.offAll(() => const HomeWrapper());
-  }
+  await UserService.createUserInfo(userToSend);
 }

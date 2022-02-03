@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupFormController extends GetxController {
-  static SignupFormController instance = Get.find();
   var email = '';
   var password = '';
   var confirmPassword = '';

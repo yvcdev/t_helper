@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/services.dart';
+import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/routes/route_converter.dart';
 import 'package:t_helper/utils/utils.dart';
-import 'package:t_helper/widgets/home_wrapper.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AuthController authController = Get.find();
+
     return Drawer(
       child: Column(
         children: [
@@ -21,10 +21,7 @@ class CustomDrawer extends StatelessWidget {
           _ListTile(
               iconData: Icons.logout,
               onTap: () async {
-                final authService =
-                    Provider.of<FBAuthService>(context, listen: false);
-                await authService.signOut();
-                Get.offAll(() => const LoginScreen());
+                await authController.signOut();
               },
               title: 'Sign Out'),
         ],
@@ -47,10 +44,10 @@ class _Body extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: const [
             _ListTile(
-                iconData: Icons.home, route: HomeWrapper(), title: 'Home'),
+                iconData: Icons.home, route: '/HomeWrapper', title: 'Home'),
             _ListTile(
                 iconData: Icons.group,
-                route: RegisteredGroupScreen(),
+                route: '/RegisteredGroupScreen',
                 title: 'Groups'),
           ],
         ),
@@ -62,7 +59,7 @@ class _Body extends StatelessWidget {
 class _ListTile extends StatelessWidget {
   final IconData iconData;
   final String title;
-  final dynamic route;
+  final String? route;
   final Function? onTap;
 
   const _ListTile({
@@ -87,9 +84,9 @@ class _ListTile extends StatelessWidget {
           ? () {
               onTap!();
             }
-          : () {
-              routeName == route ? Get.back() : Get.off(() => route);
-            },
+          : () => routeName == route
+              ? Get.back()
+              : Get.offAll(routeConverter[route]),
       title: Text(
         title,
         textAlign: TextAlign.end,
@@ -110,8 +107,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<FBUserService>(context);
-    final user = userService.user;
+    UserController userController = Get.find();
+    final user = userController.user;
 
     return DrawerHeader(
       margin: EdgeInsets.zero,
@@ -128,10 +125,10 @@ class _Header extends StatelessWidget {
             const Expanded(child: SizedBox()),
             Container(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: user.profilePic == null
+                child: user.value.profilePic == null
                     ? Image.asset('assets/no_profile.png')
                     : FadeInImage(
-                        image: NetworkImage(user.profilePic!),
+                        image: NetworkImage(user.value.profilePic!),
                         placeholder: const AssetImage('assets/no_profile.png'),
                         fit: BoxFit.cover,
                       ),
