@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/helpers/helpers.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -216,9 +214,8 @@ class _InfoForm extends StatelessWidget {
                 ),
                 shape: MaterialStateProperty.all(const StadiumBorder())),
             onPressed: () async {
-              final authService =
-                  Provider.of<FBAuthService>(context, listen: false);
-              await authService.signOut();
+              AuthController authController = Get.find();
+              await authController.signOut();
               personalInfoForm.reset();
               Get.offAll(() => const HomeWrapper());
             },

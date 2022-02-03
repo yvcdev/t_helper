@@ -9,3 +9,5 @@ export 'package:t_helper/controllers/group_users_controller.dart';
 export 'package:t_helper/controllers/group_users_controller.dart';
 export 'package:t_helper/controllers/current_group_controller.dart';
 export 'package:t_helper/controllers/add_subject_form_controller.dart';
+export 'package:t_helper/controllers/create_group_form_controller.dart';
+export 'package:t_helper/controllers/activities_controller.dart';

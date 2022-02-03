@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/controllers/group_controller.dart';
+import 'package:t_helper/controllers/subject_controller.dart';
+import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
-import 'package:t_helper/utils/utils.dart';
 
 createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   FocusScope.of(context).unfocus();
-  final createGroupForm =
-      Provider.of<CreateGroupFormProvider>(context, listen: false);
-  final groupService = Provider.of<FBGroupService>(context, listen: false);
+  CreateGroupFormController createGroupForm = Get.find();
+  GroupController groupController = Get.find();
   UserController userController = Get.find();
   final user = userController.user;
   final now = DateTime.now();
   String? downloadUrl;
 
   if (createGroupForm.subject['name'] == '') {
-    ScaffoldMessenger.of(context).showSnackBar(
-        snackbar(message: 'A subject needs to be selected', success: false));
+    Snackbar.error('Subject selection', 'A subject needs to be selected');
     return;
   }
 
   if (!createGroupForm.isValidForm(formKey)) return;
 
-  createGroupForm.isLoading = true;
+  createGroupForm.isLoading.value = true;
   createGroupForm.getGroupId();
 
   final group = Group(
@@ -43,62 +41,51 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
         'name': createGroupForm.subject['name']!,
         'id': createGroupForm.subject['id']!
       },
-      level: createGroupForm.level,
+      level: createGroupForm.level.value,
       members: 0,
       activities: []);
 
-  final groupId = await groupService.createGroup(group);
+  final groupId = await groupController.createGroup(group);
 
-  if (groupService.error != null) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackbar(message: groupService.error!, success: false));
-    createGroupForm.isLoading = false;
-  } else {
-    group.id = groupId!;
-    if (createGroupForm.selectedImage != null) {
-      final groupStorageService =
-          Provider.of<FBStorageGroup>(context, listen: false);
+  if (groupId != null) {
+    group.id = groupId;
+    if (createGroupForm.selectedImage.value != null) {
+      final storageGroupService = Get.put(StorageGroupService());
 
-      downloadUrl = await groupStorageService.uploadGroupPicture(
-          createGroupForm.selectedImage!, groupId);
+      downloadUrl = await storageGroupService.uploadGroupPicture(
+          createGroupForm.selectedImage.value!, groupId);
 
-      if (downloadUrl == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            snackbar(message: groupStorageService.error!, success: false));
-        return;
-      } else {
-        await groupService.updateGroup(groupId, 'image', downloadUrl);
+      if (downloadUrl != null) {
+        await groupController.updateGroup(groupId, 'image', downloadUrl);
+
         group.image = downloadUrl;
 
-        if (groupService.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              snackbar(message: groupService.error!, success: false));
-          createGroupForm.isLoading = false;
-        }
+        createGroupForm.isLoading.value = false;
+      } else {
+        return;
       }
     }
-
-    CurrentGroupController currentGroupController = Get.find();
-
-    currentGroupController.currentGroup.value = group;
-
-    Get.off(() => const GroupInfoScreen());
-    createGroupForm.reset();
   }
+
+  CurrentGroupController currentGroupController = Get.find();
+
+  currentGroupController.currentGroup.value = group;
+
+  Get.off(() => const GroupInfoScreen());
+  createGroupForm.reset();
 }
 
 createGroupOnSubjectTextTap(BuildContext context) async {
-  final subjectService = Provider.of<FBSubjectService>(context, listen: false);
+  SubjectController subjectController = Get.find();
   UserController userController = Get.find();
   final user = userController.user;
-  final createGroupForm =
-      Provider.of<CreateGroupFormProvider>(context, listen: false);
+  CreateGroupFormController createGroupForm = Get.find();
 
   final userId = user.value.uid;
 
-  createGroupForm.subject = {'name': '', 'id': ''};
+  createGroupForm.subject.value = {'name': '', 'id': ''};
 
-  Get.to(() => const SubjectsScreen());
+  Get.to(() => SubjectsScreen());
 
-  await subjectService.getSubjects(userId);
+  await subjectController.getSubjects(userId);
 }

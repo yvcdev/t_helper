@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/controllers/subject_controller.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/screens/subjects_screen.dart';
-import 'package:t_helper/services/fb_subject_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -44,7 +43,7 @@ class _UpperPicturePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
+    final createGroupForm = Get.put(CreateGroupFormController());
 
     return Container(
       height: 200,
@@ -52,7 +51,7 @@ class _UpperPicturePicker extends StatelessWidget {
       decoration: BoxDecoration(boxShadow: [UiConsts.boxShadow]),
       child: Stack(
         children: [
-          createGroupForm.newPictureFile == null
+          createGroupForm.newPictureFile.value == null
               ? Image.asset(
                   'assets/no_image.jpg',
                   fit: BoxFit.cover,
@@ -60,12 +59,12 @@ class _UpperPicturePicker extends StatelessWidget {
                   height: 200,
                 )
               : Image.file(
-                  createGroupForm.newPictureFile!,
+                  createGroupForm.newPictureFile.value!,
                   height: 200,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
-          _PickerButton(createGroupForm: createGroupForm)
+          const _PickerButton()
         ],
       ),
     );
@@ -75,13 +74,12 @@ class _UpperPicturePicker extends StatelessWidget {
 class _PickerButton extends StatelessWidget {
   const _PickerButton({
     Key? key,
-    required this.createGroupForm,
   }) : super(key: key);
-
-  final CreateGroupFormProvider createGroupForm;
 
   @override
   Widget build(BuildContext context) {
+    CreateGroupFormController createGroupForm = Get.find();
+
     return Positioned(
       right: 5,
       bottom: 5,
@@ -119,9 +117,9 @@ class _CreateGroupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final createGroupForm = Provider.of<CreateGroupFormProvider>(context);
+    CreateGroupFormController createGroupForm = Get.find();
     final levels = ['beginner', 'intermediate', 'advanced'];
-    final subjectsService = Provider.of<FBSubjectService>(context);
+    SubjectController subjectController = Get.find();
     final subjects = [
       {
         "name": '',
@@ -133,7 +131,7 @@ class _CreateGroupForm extends StatelessWidget {
       },
     ];
 
-    for (var subject in subjectsService.subjectList) {
+    for (var subject in subjectController.subjectList.value) {
       if (subject.active) {
         subjects.add({"name": subject.name, "id": subject.id!});
       }
@@ -162,7 +160,7 @@ class _CreateGroupForm extends StatelessWidget {
                   ? null
                   : 'Only alphanumerics and spaces are accepted';
             },
-            onChanged: (value) => createGroupForm.name = value,
+            onChanged: (value) => createGroupForm.name.value = value,
           ),
           const SizedBox(
             height: 30,
@@ -175,7 +173,7 @@ class _CreateGroupForm extends StatelessWidget {
                 style: TextStyle(fontSize: 17),
               ),
               DropdownButton<String>(
-                  value: createGroupForm.level,
+                  value: createGroupForm.level.value,
                   items: levels.map((level) {
                     return DropdownMenuItem<String>(
                       value: level,
@@ -186,7 +184,7 @@ class _CreateGroupForm extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (level) {
-                    createGroupForm.level = level!;
+                    createGroupForm.level.value = level!;
                   }),
             ],
           ),
@@ -218,13 +216,13 @@ class _CreateGroupForm extends StatelessWidget {
                   }).toList(),
                   onChanged: (subjectId) {
                     if (subjectId == 'createSubject') {
-                      Get.to(() => const SubjectsScreen());
-                      createGroupForm.subject = {
+                      Get.to(() => SubjectsScreen());
+                      createGroupForm.subject.value = {
                         "name": '',
                         "id": '',
                       };
                     } else {
-                      createGroupForm.subject = subjects
+                      createGroupForm.subject.value = subjects
                           .where((subject) => subject['id'] == subjectId)
                           .toList()[0];
                     }
@@ -234,13 +232,13 @@ class _CreateGroupForm extends StatelessWidget {
           const SizedBox(
             height: 25,
           ),
-          RequestButton(
+          Obx(() => RequestButton(
               waitTitle: 'Please Wait',
               title: 'Create',
-              isLoading: createGroupForm.isLoading,
-              onTap: createGroupForm.isLoading
+              isLoading: createGroupForm.isLoading.value,
+              onTap: createGroupForm.isLoading.value
                   ? null
-                  : () => createGroupOnTap(context, formKey)),
+                  : () => createGroupOnTap(context, formKey))),
         ],
       ),
     );

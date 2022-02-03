@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
-import 'package:provider/provider.dart';
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/controllers/subject_controller.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
 Future subjectsOnSwitchChanged(
-    BuildContext context, String subjectId, bool activate) async {
-  final subjectService = Provider.of<FBSubjectService>(context, listen: false);
+    BuildContext context, String subjectId, bool activate, int index) async {
+  SubjectController subjectController = Get.find();
 
-  await subjectService.updateSubject(subjectId, 'active', activate);
-
-  //TODO: Show error message
+  await subjectController.updateSubject(subjectId, 'active', activate, index);
 }
 
 Future subjectsOnAddPressed(
@@ -23,7 +20,8 @@ Future subjectsOnAddPressed(
     GlobalKey<AnimatedListState> globalKey,
     TextEditingController formController) async {
   AddSubjectFormController addSubjectForm = Get.find();
-  final subjectService = Provider.of<FBSubjectService>(context, listen: false);
+  SubjectController subjectController = Get.find();
+
   UserController userController = Get.find();
   final user = userController.user;
 
@@ -43,16 +41,9 @@ Future subjectsOnAddPressed(
     return;
   }
 
-  final subjectId = await subjectService.addSubject(newSubject);
+  final subjectId = await subjectController.addSubject(newSubject);
 
-  if (subjectService.error != null) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackbar(message: subjectService.error!, success: false));
-    addSubjectForm.isLoading.value = false;
-  } else {
-    newSubject.id = subjectId;
-    subjectService.subjectList.insert(0, newSubject);
-
+  if (subjectId != null) {
     globalKey.currentState!.insertItem(0);
     addSubjectForm.reset();
     formController.text = '';

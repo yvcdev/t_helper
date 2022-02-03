@@ -24,9 +24,15 @@ class SubjectController extends GetxController {
     return response;
   }
 
-  Future updateSubject(String subjectId, String field, dynamic value) async {
+  Future updateSubject(
+      String subjectId, String field, dynamic value, int index) async {
     final response =
         await SubjectService().updateSubject(subjectId, field, value);
+
+    if (response != null && field == 'active') {
+      subjectList.value[index].active = value;
+    }
+
     return response;
   }
 

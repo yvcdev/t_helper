@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
-import 'package:provider/provider.dart';
 import 'package:t_helper/controllers/controllers.dart';
 
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/services/services.dart';
+import 'package:t_helper/services/group_service.dart';
 
 groupMembersOnChanged(
     String value, BuildContext context, GlobalKey<FormState> formkey) async {
@@ -117,11 +116,11 @@ Future groupMembersOnRemovePressed(
 
 Future _updateMembersNumber(BuildContext context, String groupId,
     {required bool increment}) async {
-  final groupService = Provider.of<FBGroupService>(context, listen: false);
+  GroupService groupController = Get.find();
 
   CurrentGroupController currentGroupController = Get.find();
 
   int members = currentGroupController.updateMembers(increment: increment);
 
-  await groupService.updateGroup(groupId, "members", members);
+  await groupController.updateGroup(groupId, "members", members);
 }

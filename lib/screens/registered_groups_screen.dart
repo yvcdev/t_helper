@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/controllers/group_controller.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/helpers/capitalize.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -16,7 +15,7 @@ class RegisteredGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupService = Provider.of<FBGroupService>(context);
+    final groupController = Get.put(GroupController());
     UserController userController = Get.find();
     final user = userController.user;
 
@@ -25,14 +24,14 @@ class RegisteredGroupScreen extends StatelessWidget {
         topSeparation: false,
         children: [
           FutureBuilder(
-              future: groupService.getGroups(user.value),
+              future: groupController.getGroups(user.value),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Group>?> snapshot) {
                 if (snapshot.hasData) {
-                  if (groupService.groups!.isEmpty) {
+                  if (groupController.groups.value!.isEmpty) {
                     return const _NoGroups();
                   } else {
-                    return _GroupList(groupService: groupService);
+                    return const _GroupList();
                   }
                 } else {
                   return const LoadingScreen(
@@ -47,19 +46,18 @@ class RegisteredGroupScreen extends StatelessWidget {
 class _GroupList extends StatelessWidget {
   const _GroupList({
     Key? key,
-    required this.groupService,
   }) : super(key: key);
-
-  final FBGroupService groupService;
 
   @override
   Widget build(BuildContext context) {
+    GroupController groupController = Get.find();
+
     return ListView.builder(
       shrinkWrap: true,
       physics: const ScrollPhysics(),
-      itemCount: groupService.groups!.length,
+      itemCount: groupController.groups.value!.length,
       itemBuilder: (context, index) {
-        List<Group> groups = groupService.groups!;
+        List<Group> groups = groupController.groups.value!;
         return CustomListTile(
           onDismissed: () {},
           dismissible: false,

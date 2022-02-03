@@ -1,72 +1,45 @@
-import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:t_helper/controllers/sentence_controller.dart';
+import 'package:t_helper/helpers/helpers.dart';
 import 'dart:convert';
 
 import 'package:t_helper/models/models.dart';
 
-class SentenceService extends ChangeNotifier {
+class SentenceService {
   final String _baseUrl = 't-helper-a0132-default-rtdb.firebaseio.com';
-  final List<Sentence> orderedSentences = [];
-  final List<Sentence> shuffledSentences = [];
+  SentenceController c = Get.find();
 
-  Sentence currentSentence = Sentence(words: []);
-  String stringifiedSentence = '';
-  int currentScreen = 0;
-  bool isLoading = true;
+  Future getSentences() async {
+    try {
+      c.isLoading.value = true;
 
-  void getSentences() async {
-    isLoading = true;
-    notifyListeners();
+      final url = Uri.https(_baseUrl, 'sentences/uidicoye06/sentences.json');
+      final res = await http.get(url);
 
-    final url = Uri.https(_baseUrl, 'sentences/uidicoye06/sentences.json');
-    final res = await http.get(url);
+      final List<dynamic> resSentence = jsonDecode(res.body);
 
-    final List<dynamic> resSentence = jsonDecode(res.body);
+      for (var sentence in resSentence) {
+        List<String> stringList = List<String>.from(sentence);
+        Sentence newOrderedSentence = Sentence(words: stringList);
+        c.orderedSentences.add(newOrderedSentence);
 
-    for (var sentence in resSentence) {
-      List<String> stringList = List<String>.from(sentence);
-      Sentence newOrderedSentence = Sentence(words: stringList);
-      orderedSentences.add(newOrderedSentence);
+        List<String> toBeShuffled = [...stringList];
 
-      List<String> toBeShuffled = [...stringList];
+        toBeShuffled.shuffle();
 
-      toBeShuffled.shuffle();
+        Sentence newShuffledSentence = Sentence(words: toBeShuffled);
+        c.shuffledSentences.add(newShuffledSentence);
 
-      Sentence newShuffledSentence = Sentence(words: toBeShuffled);
-      shuffledSentences.add(newShuffledSentence);
+        c.currentSentence.value = c.shuffledSentences[c.currentScreen];
+        c.stringifiedSentence.value =
+            c.shuffledSentences[c.currentScreen].getStringSentence();
+      }
 
-      currentSentence = shuffledSentences[currentScreen];
-      stringifiedSentence =
-          shuffledSentences[currentScreen].getStringSentence();
+      c.isLoading.value = false;
+    } catch (e) {
+      Snackbar.error(
+          'Unknown error', 'Error getting the sentences for the activity');
     }
-
-    isLoading = false;
-    notifyListeners();
-  }
-
-  String removeWordAt(int index) {
-    String res = currentSentence.words.removeAt(index);
-    stringifiedSentence = currentSentence.getStringSentence();
-    notifyListeners();
-
-    return res;
-  }
-
-  void insertWord(int newIndex, String word) {
-    currentSentence.words.insert(newIndex, word);
-    stringifiedSentence = currentSentence.getStringSentence();
-    notifyListeners();
-  }
-
-  void nextScreen() {
-    currentScreen += 1;
-    currentSentence = shuffledSentences[currentScreen];
-    stringifiedSentence = currentSentence.getStringSentence();
-    notifyListeners();
-  }
-
-  void previousScreen() {
-    currentScreen -= 1;
-    notifyListeners();
   }
 }

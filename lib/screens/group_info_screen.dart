@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/fb_group_service.dart';
+import 'package:t_helper/services/group_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -19,7 +18,7 @@ class GroupInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CurrentGroupController currentGroupController = Get.find();
-    final groupService = Provider.of<FBGroupService>(context);
+    final groupController = Get.put(GroupService());
     final group = currentGroupController.currentGroup.value;
     final _cards = groupInfoList(context);
 
@@ -51,7 +50,7 @@ class GroupInfoScreen extends StatelessWidget {
                               description:
                                   'Deleting the group will remove all of its information. This action cannot be undone.',
                               onAccept: () async {
-                                await groupService.deleteGroup(
+                                await groupController.deleteGroup(
                                     group!.id, group.image ?? '');
 
                                 Get.to(() => const RegisteredGroupScreen());

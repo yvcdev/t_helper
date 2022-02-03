@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/instance_manager.dart';
-import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/controllers/subject_controller.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
-class SubjectsScreen extends StatefulWidget {
-  const SubjectsScreen({Key? key}) : super(key: key);
+class SubjectsScreen extends StatelessWidget {
+  SubjectsScreen({Key? key}) : super(key: key);
 
-  @override
-  State<SubjectsScreen> createState() => _SubjectsScreenState();
-}
-
-class _SubjectsScreenState extends State<SubjectsScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
-  final subjectController = TextEditingController();
+  final subjectTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final addSubjectForm = Get.put(AddSubjectFormController());
-    final subjectService = Provider.of<FBSubjectService>(context);
+    final subjectController = Get.put(SubjectController());
 
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
@@ -37,7 +31,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         topSeparation: false,
         drawer: false,
         title: 'Subjects',
-        loading: subjectService.loading,
+        loading: subjectController.loading.value,
         children: [
           Container(
             padding: const EdgeInsets.only(
@@ -56,13 +50,13 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                       fontSize: UiConsts.smallFontSize, color: Colors.black),
                 ),
                 Text(
-                  subjectService.subjectNumber == 1
-                      ? 'You have ${subjectService.subjectNumber} subject'
-                      : 'You have ${subjectService.subjectNumber} subjects',
+                  subjectController.subjectNumber.value == 1
+                      ? 'You have ${subjectController.subjectNumber} subject'
+                      : 'You have ${subjectController.subjectNumber} subjects',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: UiConsts.tinyFontSize,
-                      color: subjectService.subjectNumber == 0
+                      color: subjectController.subjectNumber.value == 0
                           ? CustomColors.red
                           : CustomColors.green),
                 ),
@@ -72,7 +66,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                   child: Stack(
                     children: [
                       TextFormField(
-                        controller: subjectController,
+                        controller: subjectTextController,
                         inputFormatters: [LengthLimitingTextInputFormatter(20)],
                         autocorrect: false,
                         decoration: InputDecorations.generalInputDecoration(
@@ -83,7 +77,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                           String pattern = r'^[a-zA-Z1-9ñÑ\s]*$';
                           RegExp regExp = RegExp(pattern);
 
-                          if (subjectController.text != '') {
+                          if (subjectTextController.text != '') {
                             if (value!.length < 3) {
                               return 'The name should have more than 2 characters';
                             }
@@ -101,8 +95,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                         top: 10,
                         child: IconButton(
                             onPressed: () async {
-                              await subjectsOnAddPressed(
-                                  context, formKey, listKey, subjectController);
+                              await subjectsOnAddPressed(context, formKey,
+                                  listKey, subjectTextController);
                             },
                             icon: const Icon(
                               Icons.send,
@@ -121,9 +115,9 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
           Expanded(
             child: AnimatedList(
               key: listKey,
-              initialItemCount: subjectService.subjectList.length,
+              initialItemCount: subjectController.subjectList.value.length,
               itemBuilder: (context, index, animation) {
-                final subject = subjectService.subjectList[index];
+                final subject = subjectController.subjectList.value[index];
                 return SlideTransition(
                   position: animation.drive(_offset),
                   child: Container(
@@ -143,12 +137,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                       value: subject.active,
                       onChanged: (value) async {
                         await subjectsOnSwitchChanged(
-                            context, subject.id!, value);
-
-                        if (subjectService.error == null) {
-                          subject.active = value;
-                          setState(() {});
-                        }
+                            context, subject.id!, value, index);
                       },
                       title: Text(
                         subject.name,

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/routes/route_converter.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class SetUpActivityScreen extends StatelessWidget {
@@ -13,28 +12,29 @@ class SetUpActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activitiesService = Provider.of<FBActivitiesService>(context);
+    final activitiesController = Get.put(ActivitiesController());
 
     return DefaultAppBarLayout(
-        loading: activitiesService.isLoading,
+        loading: activitiesController.isLoading.value,
         topSeparation: false,
         drawer: false,
         title: 'Set Up Activity',
         children: [
-          activitiesService.activities == null
+          activitiesController.activities == null
               ? const Center(
                   child: Text('There are no activities to show'),
                 )
-              : activitiesService.activities!.isEmpty
+              : activitiesController.activities!.isEmpty
                   ? const Center(
                       child: Text('There are no activities to show'),
                     )
                   : GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: activitiesService.activities!.length,
+                      itemCount: activitiesController.activities!.length,
                       itemBuilder: (context, index) {
-                        final activity = activitiesService.activities![index];
+                        final activity =
+                            activitiesController.activities![index];
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

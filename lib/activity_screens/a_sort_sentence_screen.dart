@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/constants/ui.dart';
+import 'package:t_helper/controllers/sentence_controller.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
@@ -15,10 +15,10 @@ class ASortSentenceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sentenceService = Provider.of<SentenceService>(context);
+    SentenceController sentenceController = Get.find();
 
     return ActivityFloatingLayoutLayout(
-      loading: sentenceService.isLoading,
+      loading: sentenceController.isLoading.value,
       title: 'Sentence Sorting',
       child: Column(
         children: [
@@ -46,16 +46,16 @@ class ASortSentenceScreen extends StatelessWidget {
           CustomAcceptButton(
             onTap: () {
               final currentSentece =
-                  sentenceService.currentSentence.getStringSentence();
-              final correctSentence = sentenceService
-                  .orderedSentences[sentenceService.currentScreen]
+                  sentenceController.currentSentence.value.getStringSentence();
+              final correctSentence = sentenceController
+                  .orderedSentences[sentenceController.currentScreen]
                   .getStringSentence();
 
               bool correct = correctSentence == currentSentece;
 
               if (correct &&
-                  sentenceService.currentScreen + 1 >=
-                      sentenceService.shuffledSentences.length) {
+                  sentenceController.currentScreen + 1 >=
+                      sentenceController.shuffledSentences.length) {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
@@ -78,9 +78,9 @@ class ASortSentenceScreen extends StatelessWidget {
                             correct ? CustomColors.green : CustomColors.red,
                         onAccept: () {
                           if (correct &&
-                              sentenceService.currentScreen + 1 <
-                                  sentenceService.shuffledSentences.length) {
-                            sentenceService.nextScreen();
+                              sentenceController.currentScreen + 1 <
+                                  sentenceController.shuffledSentences.length) {
+                            sentenceController.nextScreen();
                             Get.back();
                           } else {
                             Get.back();
@@ -105,8 +105,8 @@ class _ReordableList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sentenceService = Provider.of<SentenceService>(context);
-    final sentence = sentenceService.currentSentence;
+    SentenceController sentenceController = Get.find();
+    final sentence = sentenceController.currentSentence.value;
 
     return Theme(
       data: ThemeData(
@@ -127,8 +127,8 @@ class _ReordableList extends StatelessWidget {
             newIndex -= 1;
           }
 
-          final word = sentenceService.removeWordAt(oldIndex);
-          sentenceService.insertWord(newIndex, word);
+          final word = sentenceController.removeWordAt(oldIndex);
+          sentenceController.insertWord(newIndex, word);
         },
       ),
     );
@@ -181,7 +181,7 @@ class _SentenceCreatedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sentenceService = Provider.of<SentenceService>(context);
+    SentenceController sentenceController = Get.find();
 
     return Expanded(
       child: Container(
@@ -193,7 +193,7 @@ class _SentenceCreatedContainer extends StatelessWidget {
             color: CustomColors.primary,
             borderRadius: BorderRadius.circular(UiConsts.borderRadius)),
         child: Text(
-          sentenceService.stringifiedSentence,
+          sentenceController.stringifiedSentence.value,
           textAlign: TextAlign.center,
           style: const TextStyle(
               color: Colors.white,

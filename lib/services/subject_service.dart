@@ -59,6 +59,11 @@ class SubjectService {
 
       subjectController.subjectNumber.value =
           subjectController.subjectNumber.value + 1;
+
+      subjectAdd.id = subject.id;
+
+      subjectController.subjectList.value.insert(0, subjectAdd);
+
       return subject.id;
     } catch (e) {
       Snackbar.error(

@@ -1,35 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
+import 'package:t_helper/controllers/group_controller.dart';
+import 'package:t_helper/helpers/helpers.dart';
 
 import 'package:t_helper/models/models.dart';
 
-class FBGroupService extends ChangeNotifier {
+class GroupService {
   CollectionReference groupsReference =
       FirebaseFirestore.instance.collection('groups');
   CollectionReference groupUsersReference =
       FirebaseFirestore.instance.collection('groupUsers');
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-
-  List<Group>? groups;
-  String? error;
+  GroupController groupController = Get.find();
 
   Future<List<Group>?> getGroups(User user) async {
     try {
       final querySnapshot =
           await groupsReference.where('owner', isEqualTo: user.uid).get();
 
-      groups = [];
+      groupController.groups.value = [];
 
       for (var doc in querySnapshot.docs) {
-        groups!.add(Group.fromMap(doc.data() as Map, doc.id));
+        groupController.groups.value!
+            .add(Group.fromMap(doc.data() as Map, doc.id));
       }
 
-      error = null;
-      return groups;
+      return groupController.groups.value;
     } catch (e) {
-      error = 'There was an error retrieving the groups';
+      Snackbar.error(
+          'Unknown error', 'There was an error retrieving the groups');
     }
   }
 
@@ -40,18 +41,15 @@ class FBGroupService extends ChangeNotifier {
           .get();
 
       if (existingGroupQuery.docs.isNotEmpty) {
-        error = 'A group with this ID already exists';
+        Snackbar.error('ID Error', 'A group with this ID already exists');
         return null;
       }
 
       final documentReference = await groupsReference.add(group.toMap());
 
-      error = null;
-
-      notifyListeners();
       return documentReference.id;
     } catch (e) {
-      error = 'There was an error creating the group';
+      Snackbar.error('Unknown error', 'There was an error creating the group');
     }
   }
 
@@ -61,11 +59,9 @@ class FBGroupService extends ChangeNotifier {
         {field: value},
         SetOptions(merge: true),
       );
-
-      notifyListeners();
-      error = null;
+      return id;
     } catch (e) {
-      error = 'There was an error updating the group';
+      Snackbar.error('Unknown error', 'There was an error updating the group');
     }
   }
 
@@ -84,12 +80,11 @@ class FBGroupService extends ChangeNotifier {
         await storage.refFromURL(imageUrl).delete();
       }
 
-      groups = groups!.where((group) => group.id != groupId).toList();
-
-      notifyListeners();
+      groupController.groups.value = groupController.groups.value!
+          .where((group) => group.id != groupId)
+          .toList();
     } catch (e) {
-      error = 'There was an error deleting the group';
-      notifyListeners();
+      Snackbar.error('Unknown error', 'There was an error deleting the group');
     }
   }
 }
