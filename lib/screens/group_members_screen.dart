@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/instance_manager.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/providers/providers.dart';
-import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
 import 'package:t_helper/widgets/widgets.dart';
@@ -20,10 +20,9 @@ class GroupMembersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addMemberForm = Provider.of<AddMemberFormProvider>(context);
-    final groupUsersService = Provider.of<FBGroupUsersService>(context);
-    final currentGroupProvider = Provider.of<CurrentGroupProvider>(context);
-    final group = currentGroupProvider.currentGroup;
+    final groupUsersController = Get.put(GroupUsersController());
+    CurrentGroupController currentGroupController = Get.find();
+    final group = currentGroupController.currentGroup.value;
 
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
@@ -34,7 +33,7 @@ class GroupMembersScreen extends StatelessWidget {
         topSeparation: false,
         drawer: false,
         title: 'Group Members',
-        loading: groupUsersService.loading,
+        loading: groupUsersController.loading.value,
         children: [
           Container(
             padding: const EdgeInsets.only(
@@ -94,8 +93,7 @@ class GroupMembersScreen extends StatelessWidget {
                   height: 20,
                 ),
                 _UserInfoSection(
-                  userInGroup: groupUsersService.userInGroup,
-                  addMemberForm: addMemberForm,
+                  userInGroup: groupUsersController.userInGroup.value,
                   globalKey: _listKey,
                   formController: emailController,
                   offset: _offset,
@@ -106,9 +104,9 @@ class GroupMembersScreen extends StatelessWidget {
           Expanded(
             child: AnimatedList(
               key: _listKey,
-              initialItemCount: groupUsersService.groupUsersList.length,
+              initialItemCount: groupUsersController.groupUsersList.length,
               itemBuilder: (context, index, animation) {
-                final groupUsers = groupUsersService.groupUsersList[index];
+                final groupUsers = groupUsersController.groupUsersList[index];
                 String fullName = groupUsers.userMiddleName == ''
                     ? '${groupUsers.userFirstName} ${groupUsers.userLastName}'
                     : '${groupUsers.userFirstName} ${groupUsers.userMiddleName} ${groupUsers.userLastName}';
@@ -128,7 +126,7 @@ class GroupMembersScreen extends StatelessWidget {
                     assetImageName: 'no_profile.png',
                     onTap: () {
                       groupMembersOnTap(context);
-                      print("TODO: go to individual student info");
+                      //TODO: go to individual student info
                     },
                   ),
                 );
@@ -142,14 +140,12 @@ class GroupMembersScreen extends StatelessWidget {
 class _UserInfoSection extends StatelessWidget {
   const _UserInfoSection({
     Key? key,
-    required this.addMemberForm,
     required this.globalKey,
     required this.userInGroup,
     required this.formController,
     required this.offset,
   }) : super(key: key);
 
-  final AddMemberFormProvider addMemberForm;
   final GlobalKey<AnimatedListState> globalKey;
   final bool userInGroup;
   final TextEditingController formController;
@@ -157,100 +153,103 @@ class _UserInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usersService = Provider.of<FBUsersService>(context);
+    final usersController = Get.put(UsersController());
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (usersService.error != null) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
-        child: Text(
-          usersService.error!,
-          style: const TextStyle(color: CustomColors.red),
-        ),
-      );
-    }
+    Obx(() {
+      if (usersController.error.value != null) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
+          child: Text(
+            usersController.error.value!,
+            style: const TextStyle(color: CustomColors.red),
+          ),
+        );
+      }
 
-    if (usersService.message != null) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
-        child: Text(
-          usersService.message!,
-          style: const TextStyle(color: CustomColors.red),
-        ),
-      );
-    }
+      if (usersController.message.value != null) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
+          child: Text(
+            usersController.message.value!,
+            style: const TextStyle(color: CustomColors.red),
+          ),
+        );
+      }
 
-    if (usersService.student != null) {
-      User student = usersService.student!;
-      String fullName = student.middleName == ""
-          ? '${student.firstName} ${student.lastName}'
-          : '${student.firstName} ${student.middleName} ${student.lastName}';
-      return Padding(
-        padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userInGroup ? 'Student already in group' : 'Found student',
-                  style: TextStyle(
-                      color:
-                          userInGroup ? CustomColors.red : CustomColors.green,
-                      fontSize: UiConsts.tinyFontSize),
-                ),
-                SizedBox(
-                  width: screenWidth -
-                      (UiConsts.largePadding * 2) -
-                      UiConsts.normalFontSize -
-                      28,
-                  child: Text(
-                    fullName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: UiConsts.normalFontSize),
-                  ),
-                ),
-                SizedBox(
-                  width: screenWidth -
-                      (UiConsts.largePadding * 2) -
-                      UiConsts.normalFontSize -
-                      28,
-                  child: Text(
-                    student.email,
-                    style: const TextStyle(
-                        color: CustomColors.almostBlack,
+      if (usersController.student.value != null) {
+        User student = usersController.student.value!;
+        String fullName = student.middleName == ""
+            ? '${student.firstName} ${student.lastName}'
+            : '${student.firstName} ${student.middleName} ${student.lastName}';
+        return Padding(
+          padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userInGroup ? 'Student already in group' : 'Found student',
+                    style: TextStyle(
+                        color:
+                            userInGroup ? CustomColors.red : CustomColors.green,
                         fontSize: UiConsts.tinyFontSize),
                   ),
-                )
-              ],
-            ),
-            const Spacer(),
-            userInGroup
-                ? IconButton(
-                    onPressed: () async {
-                      await groupMembersOnRemovePressed(
-                          context, student, globalKey, formController, offset);
-                    },
-                    icon: const Icon(Icons.delete_forever,
-                        color: CustomColors.almostBlack,
-                        size: UiConsts.largeFontSize))
-                : IconButton(
-                    onPressed: () async {
-                      await groupMembersOnAddPressed(
-                          context, globalKey, formController);
-                    },
-                    icon: const Icon(Icons.person_add_alt_rounded,
-                        color: CustomColors.almostBlack,
-                        size: UiConsts.largeFontSize))
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+                  SizedBox(
+                    width: screenWidth -
+                        (UiConsts.largePadding * 2) -
+                        UiConsts.normalFontSize -
+                        28,
+                    child: Text(
+                      fullName,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: UiConsts.normalFontSize),
+                    ),
+                  ),
+                  SizedBox(
+                    width: screenWidth -
+                        (UiConsts.largePadding * 2) -
+                        UiConsts.normalFontSize -
+                        28,
+                    child: Text(
+                      student.email,
+                      style: const TextStyle(
+                          color: CustomColors.almostBlack,
+                          fontSize: UiConsts.tinyFontSize),
+                    ),
+                  )
+                ],
+              ),
+              const Spacer(),
+              userInGroup
+                  ? IconButton(
+                      onPressed: () async {
+                        await groupMembersOnRemovePressed(context, student,
+                            globalKey, formController, offset);
+                      },
+                      icon: const Icon(Icons.delete_forever,
+                          color: CustomColors.almostBlack,
+                          size: UiConsts.largeFontSize))
+                  : IconButton(
+                      onPressed: () async {
+                        await groupMembersOnAddPressed(
+                            context, globalKey, formController);
+                      },
+                      icon: const Icon(Icons.person_add_alt_rounded,
+                          color: CustomColors.almostBlack,
+                          size: UiConsts.largeFontSize))
+            ],
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
+    return Container();
   }
 }

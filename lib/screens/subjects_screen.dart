@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:t_helper/constants/constants.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
@@ -24,7 +25,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final addSubjectForm = Provider.of<AddSubjectFormProvider>(context);
+    final addSubjectForm = Get.put(AddSubjectFormController());
     final subjectService = Provider.of<FBSubjectService>(context);
 
     Tween<Offset> _offset =

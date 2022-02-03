@@ -78,10 +78,9 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       }
     }
 
-    final currentGroupProvider =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
+    CurrentGroupController currentGroupController = Get.find();
 
-    currentGroupProvider.currentGroup = group;
+    currentGroupController.currentGroup.value = group;
 
     Get.off(() => const GroupInfoScreen());
     createGroupForm.reset();

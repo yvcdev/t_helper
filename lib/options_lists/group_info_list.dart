@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
-import 'package:t_helper/providers/providers.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/services.dart';
 
 List<Map<String, dynamic>> groupInfoList(BuildContext context) {
   return [
@@ -13,14 +11,14 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'color': Colors.orange,
       'text': 'Group members',
       'onTap': () async {
-        final groupUsersService =
-            Provider.of<FBGroupUsersService>(context, listen: false);
-        final currentGroupProvider =
-            Provider.of<CurrentGroupProvider>(context, listen: false);
+        GroupUsersController groupUsersController = Get.find();
+
+        CurrentGroupController currentGroupController = Get.find();
+
         Get.to(() => GroupMembersScreen());
 
-        await groupUsersService
-            .getGroupUsers(currentGroupProvider.currentGroup!.id);
+        await groupUsersController
+            .getGroupUsers(currentGroupController.currentGroup.value!.id);
       },
     },
     {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:t_helper/controllers/user_controller.dart';
+import 'package:t_helper/controllers/controllers.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/utils/utils.dart';
 
@@ -23,8 +22,7 @@ Future subjectsOnAddPressed(
     GlobalKey<FormState> formKey,
     GlobalKey<AnimatedListState> globalKey,
     TextEditingController formController) async {
-  final addSubjectForm =
-      Provider.of<AddSubjectFormProvider>(context, listen: false);
+  AddSubjectFormController addSubjectForm = Get.find();
   final subjectService = Provider.of<FBSubjectService>(context, listen: false);
   UserController userController = Get.find();
   final user = userController.user;
@@ -41,7 +39,7 @@ Future subjectsOnAddPressed(
       newSubject.name == 'Create Subject') {
     ScaffoldMessenger.of(context).showSnackBar(snackbar(
         message: 'A subject with this name cannot be created', success: false));
-    addSubjectForm.isLoading = false;
+    addSubjectForm.isLoading.value = false;
     return;
   }
 
@@ -50,7 +48,7 @@ Future subjectsOnAddPressed(
   if (subjectService.error != null) {
     ScaffoldMessenger.of(context)
         .showSnackBar(snackbar(message: subjectService.error!, success: false));
-    addSubjectForm.isLoading = false;
+    addSubjectForm.isLoading.value = false;
   } else {
     newSubject.id = subjectId;
     subjectService.subjectList.insert(0, newSubject);

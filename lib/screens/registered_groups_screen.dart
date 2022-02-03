@@ -6,7 +6,6 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
-import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/helpers/capitalize.dart';
@@ -71,10 +70,9 @@ class _GroupList extends StatelessWidget {
           trailing: groups[index].image,
           useAssetImage: groups[index].image == null ? true : false,
           onTap: () {
-            final currentGroupProvider =
-                Provider.of<CurrentGroupProvider>(context, listen: false);
+            CurrentGroupController currentGroupController = Get.find();
 
-            currentGroupProvider.currentGroup = groups[index];
+            currentGroupController.currentGroup.value = groups[index];
 
             Get.to(() => const GroupInfoScreen());
           },

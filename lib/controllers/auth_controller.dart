@@ -36,7 +36,7 @@ class AuthController extends GetxController {
           email: email, password: password);
       final _user = await UserService().getUserMAnually(authUser.user!.uid);
 
-      userController.onLogin();
+      userController.onAuth();
       userController.user.value = _user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -52,8 +52,12 @@ class AuthController extends GetxController {
 
   Future signup(String email, String password) async {
     try {
+      UserController userController = Get.find();
+
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      userController.onAuth();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Snackbar.error('Weak password', 'The password provided is too weak');

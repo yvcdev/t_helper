@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'firebase_options.dart';
 
-import 'package:t_helper/controllers/auth_controller.dart';
 import 'package:t_helper/providers/providers.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/screens/screens.dart';
@@ -17,6 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthController(), permanent: true));
+  Get.put(CurrentGroupController());
   runApp(const AppState());
 }
 
@@ -32,12 +33,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SignupFormProvider()),
         ChangeNotifierProvider(create: (_) => PersonalInfoFormProvider()),
         ChangeNotifierProvider(create: (_) => CreateGroupFormProvider()),
-        ChangeNotifierProvider(create: (_) => AddMemberFormProvider()),
-        ChangeNotifierProvider(create: (_) => AddSubjectFormProvider()),
         ChangeNotifierProvider(create: (_) => SentenceService()),
-        ChangeNotifierProvider(create: (_) => FBUsersService()),
-        ChangeNotifierProvider(create: (_) => FBGroupUsersService()),
-        ChangeNotifierProvider(create: (_) => CurrentGroupProvider()),
         ChangeNotifierProvider(create: (_) => FBGroupService()),
         ChangeNotifierProvider(create: (_) => FBSubjectService()),
         ChangeNotifierProvider(create: (_) => FBActivitiesService()),

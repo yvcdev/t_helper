@@ -15,7 +15,7 @@ class UserController extends GetxController {
     super.onInit();
   }
 
-  void onLogin() {
+  void onAuth() {
     final authUser = authController.fbUser;
     user.bindStream(
         UserService().getUser(authUser.value!.uid, authUser.value!.email!));
