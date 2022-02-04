@@ -27,113 +27,119 @@ class GroupMembersScreen extends StatelessWidget {
     Tween<Offset> _offset =
         Tween(begin: const Offset(1, 0), end: const Offset(0, 0));
 
-    return DefaultAppBarLayout(
-        scroll: false,
-        colunmLayout: true,
-        topSeparation: false,
-        drawer: false,
-        title: 'Group Members',
-        loading: groupUsersController.loading.value,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-                top: UiConsts.largePadding,
-                left: UiConsts.largePadding,
-                right: UiConsts.largePadding),
-            decoration: BoxDecoration(
-                color: Colors.white, boxShadow: [UiConsts.boxShadow]),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Find a user and add them to the group',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: UiConsts.smallFontSize, color: Colors.black),
-                ),
-                Text(
-                  group!.members == 1
-                      ? '${group.members} student in the group'
-                      : '${group.members} students in the group',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: UiConsts.tinyFontSize,
-                      color: group.members == 0
-                          ? CustomColors.red
-                          : CustomColors.green),
-                ),
-                Form(
-                  key: formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormField(
-                    controller: emailController,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecorations.generalInputDecoration(
-                        hintText: 'johndoe@gmail.com',
-                        labelText: 'Studet\'s Email',
-                        prefixIcon: Icons.alternate_email_outlined),
-                    validator: (value) {
-                      String pattern =
-                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                      RegExp regExp = RegExp(pattern);
+    return Obx(() => DefaultAppBarLayout(
+            scroll: false,
+            colunmLayout: true,
+            topSeparation: false,
+            drawer: false,
+            title: 'Group Members',
+            loading: groupUsersController.loading.value,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(
+                    top: UiConsts.largePadding,
+                    left: UiConsts.largePadding,
+                    right: UiConsts.largePadding),
+                decoration: BoxDecoration(
+                    color: Colors.white, boxShadow: [UiConsts.boxShadow]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Find a user and add them to the group',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: UiConsts.smallFontSize,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      group!.members == 1
+                          ? '${group.members} student in the group'
+                          : '${group.members} students in the group',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: UiConsts.tinyFontSize,
+                          color: group.members == 0
+                              ? CustomColors.red
+                              : CustomColors.green),
+                    ),
+                    Form(
+                      key: formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        controller: emailController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecorations.generalInputDecoration(
+                            hintText: 'johndoe@gmail.com',
+                            labelText: 'Studet\'s Email',
+                            prefixIcon: Icons.alternate_email_outlined),
+                        validator: (value) {
+                          String pattern =
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                          RegExp regExp = RegExp(pattern);
 
-                      if (emailController.text != '') {
-                        return regExp.hasMatch(value ?? '')
-                            ? null
-                            : 'This does not look like an email';
-                      }
-                    },
-                    onChanged: (value) {
-                      groupMembersOnChanged(value, context, formKey);
-                    },
-                  ),
+                          if (emailController.text != '') {
+                            return regExp.hasMatch(value ?? '')
+                                ? null
+                                : 'This does not look like an email';
+                          }
+                        },
+                        onChanged: (value) {
+                          groupMembersOnChanged(value, context, formKey);
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _UserInfoSection(
+                      userInGroup: groupUsersController.userInGroup.value,
+                      globalKey: _listKey,
+                      formController: emailController,
+                      offset: _offset,
+                    )
+                  ],
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+              Expanded(
+                child: AnimatedList(
+                  key: _listKey,
+                  initialItemCount: groupUsersController.groupUsersList.length,
+                  itemBuilder: (context, index, animation) {
+                    final groupUsers =
+                        groupUsersController.groupUsersList[index];
+                    String fullName = groupUsers.userMiddleName == ''
+                        ? '${groupUsers.userFirstName} ${groupUsers.userLastName}'
+                        : '${groupUsers.userFirstName} ${groupUsers.userMiddleName} ${groupUsers.userLastName}';
+                    return SlideTransition(
+                      position: animation.drive(_offset),
+                      child: CustomListTile(
+                        onDismissed: () async {
+                          groupMembersOnDeleteDismiss(
+                              context,
+                              groupUsers.groupId,
+                              groupUsers.userId,
+                              _listKey,
+                              _offset);
+                        },
+                        index: index,
+                        title: fullName,
+                        subtitle: groupUsers.userEmail,
+                        trailing: groupUsers.userProfilePic,
+                        useAssetImage:
+                            groupUsers.userProfilePic == null ? true : false,
+                        assetImageName: 'no_profile.png',
+                        onTap: () {
+                          groupMembersOnTap(context);
+                          //TODO: go to individual student info
+                        },
+                      ),
+                    );
+                  },
                 ),
-                _UserInfoSection(
-                  userInGroup: groupUsersController.userInGroup.value,
-                  globalKey: _listKey,
-                  formController: emailController,
-                  offset: _offset,
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: AnimatedList(
-              key: _listKey,
-              initialItemCount: groupUsersController.groupUsersList.length,
-              itemBuilder: (context, index, animation) {
-                final groupUsers = groupUsersController.groupUsersList[index];
-                String fullName = groupUsers.userMiddleName == ''
-                    ? '${groupUsers.userFirstName} ${groupUsers.userLastName}'
-                    : '${groupUsers.userFirstName} ${groupUsers.userMiddleName} ${groupUsers.userLastName}';
-                return SlideTransition(
-                  position: animation.drive(_offset),
-                  child: CustomListTile(
-                    onDismissed: () async {
-                      groupMembersOnDeleteDismiss(context, groupUsers.groupId,
-                          groupUsers.userId, _listKey, _offset);
-                    },
-                    index: index,
-                    title: fullName,
-                    subtitle: groupUsers.userEmail,
-                    trailing: groupUsers.userProfilePic,
-                    useAssetImage:
-                        groupUsers.userProfilePic == null ? true : false,
-                    assetImageName: 'no_profile.png',
-                    onTap: () {
-                      groupMembersOnTap(context);
-                      //TODO: go to individual student info
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ]);
+              ),
+            ]));
   }
 }
 

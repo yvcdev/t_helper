@@ -119,23 +119,6 @@ class _CreateGroupForm extends StatelessWidget {
   Widget build(BuildContext context) {
     CreateGroupFormController createGroupForm = Get.find();
     final levels = ['beginner', 'intermediate', 'advanced'];
-    SubjectController subjectController = Get.find();
-    final subjects = [
-      {
-        "name": '',
-        "id": '',
-      },
-      {
-        "name": 'Create Subject',
-        "id": 'createSubject',
-      },
-    ];
-
-    for (var subject in subjectController.subjectList.value) {
-      if (subject.active) {
-        subjects.add({"name": subject.name, "id": subject.id!});
-      }
-    }
 
     return Form(
       key: formKey,
@@ -198,35 +181,33 @@ class _CreateGroupForm extends StatelessWidget {
                 'Subject:',
                 style: TextStyle(fontSize: 17),
               ),
-              DropdownButton<String>(
-                  value: createGroupForm.subject['id'],
-                  items: subjects.map((subject) {
-                    return DropdownMenuItem<String>(
-                        value: subject['id'],
-                        child: Text(
-                          subject['name']! == ''
-                              ? 'Select'
-                              : subject['name']!.toTitleCase(),
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: subject['id'] == 'createSubject'
-                                  ? CustomColors.primary
-                                  : null),
-                        ));
-                  }).toList(),
-                  onChanged: (subjectId) {
-                    if (subjectId == 'createSubject') {
-                      Get.to(() => SubjectsScreen());
-                      createGroupForm.subject.value = {
-                        "name": '',
-                        "id": '',
-                      };
-                    } else {
-                      createGroupForm.subject.value = subjects
-                          .where((subject) => subject['id'] == subjectId)
-                          .toList()[0];
-                    }
-                  }),
+              GetX<SubjectController>(
+                builder: (controller) => DropdownButton<String>(
+                    value: createGroupForm.subject['id'],
+                    items: controller.subjects.map((subject) {
+                      return DropdownMenuItem<String>(
+                          value: subject['id'],
+                          child: Text(
+                            subject['name']! == ''
+                                ? 'Select'
+                                : subject['name']!.toTitleCase(),
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: subject['id'] == 'createSubject'
+                                    ? CustomColors.primary
+                                    : null),
+                          ));
+                    }).toList(),
+                    onChanged: (subjectId) {
+                      if (subjectId == 'createSubject') {
+                        createGroupOnSubjectTextTap(context);
+                      } else {
+                        createGroupForm.subject.value = controller.subjects
+                            .where((subject) => subject['id'] == subjectId)
+                            .toList()[0];
+                      }
+                    }),
+              )
             ],
           ),
           const SizedBox(

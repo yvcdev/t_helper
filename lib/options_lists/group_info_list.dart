@@ -11,7 +11,7 @@ List<Map<String, dynamic>> groupInfoList(BuildContext context) {
       'color': Colors.orange,
       'text': 'Group members',
       'onTap': () async {
-        GroupUsersController groupUsersController = Get.find();
+        final groupUsersController = Get.put(GroupUsersController());
 
         CurrentGroupController currentGroupController = Get.find();
 

@@ -12,51 +12,51 @@ class SetUpActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activitiesController = Get.put(ActivitiesController());
+    ActivitiesController activitiesController = Get.find();
 
-    return DefaultAppBarLayout(
-        loading: activitiesController.isLoading.value,
-        topSeparation: false,
-        drawer: false,
-        title: 'Set Up Activity',
-        children: [
-          activitiesController.activities == null
-              ? const Center(
-                  child: Text('There are no activities to show'),
-                )
-              : activitiesController.activities!.isEmpty
+    return Obx(() => DefaultAppBarLayout(
+            loading: activitiesController.isLoading.value,
+            topSeparation: false,
+            drawer: false,
+            title: 'Set Up Activity',
+            children: [
+              activitiesController.activities == null
                   ? const Center(
                       child: Text('There are no activities to show'),
                     )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: activitiesController.activities!.length,
-                      itemBuilder: (context, index) {
-                        final activity =
-                            activitiesController.activities![index];
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ImageDescriptionCard(
-                                index: index,
-                                onTap: () {
-                                  Get.to(
-                                      () => routeConverter[activity.namedId]!);
-                                },
-                                status: 1,
-                                description: activity.description,
-                                title: activity.name,
-                                image: activity.coverImage!),
-                          ],
-                        );
-                      },
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: UiConsts.normalSpacing - 10,
-                        mainAxisExtent: UiConsts.largeCardHeight,
-                      )),
-        ]);
+                  : activitiesController.activities!.isEmpty
+                      ? const Center(
+                          child: Text('There are no activities to show'),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: activitiesController.activities!.length,
+                          itemBuilder: (context, index) {
+                            final activity =
+                                activitiesController.activities![index];
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ImageDescriptionCard(
+                                    index: index,
+                                    onTap: () {
+                                      Get.to(() =>
+                                          routeConverter[activity.namedId]!);
+                                    },
+                                    status: 1,
+                                    description: activity.description,
+                                    title: activity.name,
+                                    image: activity.coverImage!),
+                              ],
+                            );
+                          },
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: UiConsts.normalSpacing - 10,
+                            mainAxisExtent: UiConsts.largeCardHeight,
+                          )),
+            ]));
   }
 }

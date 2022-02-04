@@ -15,7 +15,7 @@ class SubjectService {
     subjectController.loading.value = true;
 
     try {
-      if (subjectController.subjectList.value.isNotEmpty) {
+      if (subjectController.subjectList.isNotEmpty) {
         subjectController.subjectList.value = [];
       }
 
@@ -34,13 +34,13 @@ class SubjectService {
       for (var doc in querySnapshot.docs) {
         final _subject = Subject.fromMap(doc.data() as Map);
         _subject.id = doc.id;
-        subjectController.subjectList.value.add(_subject);
+        subjectController.subjectList.add(_subject);
       }
 
       subjectController.subjectNumber.value =
-          subjectController.subjectList.value.length;
+          subjectController.subjectList.length;
       subjectController.loading.value = false;
-      return subjectController.subjectList.value;
+      return subjectController.subjectList;
     } catch (e) {
       subjectController.loading.value = false;
       return [];
@@ -62,7 +62,7 @@ class SubjectService {
 
       subjectAdd.id = subject.id;
 
-      subjectController.subjectList.value.insert(0, subjectAdd);
+      subjectController.subjectList.insert(0, subjectAdd);
 
       return subject.id;
     } catch (e) {
@@ -83,9 +83,9 @@ class SubjectService {
 
       await subjectsReference.doc(userId).delete();
 
-      final index = subjectController.subjectList.value
+      final index = subjectController.subjectList
           .indexWhere((subject) => subject.owner == userId);
-      subjectController.subjectList.value = subjectController.subjectList.value
+      subjectController.subjectList.value = subjectController.subjectList
           .where((subject) => subject.owner != userId)
           .toList();
 
@@ -95,16 +95,19 @@ class SubjectService {
     }
   }
 
-  Future updateSubject(String subjectId, String field, dynamic value) async {
+  Future<bool> updateSubject(
+      String subjectId, String field, dynamic value) async {
     try {
       await subjectsReference.doc(subjectId).update({field: value});
-      int subjectIndex = subjectController.subjectList.value
+      int subjectIndex = subjectController.subjectList
           .indexWhere((subject) => subject.id == subjectId);
 
-      subjectController.subjectList.value[subjectIndex].active = value;
+      subjectController.subjectList[subjectIndex].active = value;
+      return true;
     } catch (e) {
       Snackbar.error(
           'Unknown error', 'There was an error updating the subject');
+      return false;
     }
   }
 

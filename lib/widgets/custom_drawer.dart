@@ -86,7 +86,7 @@ class _ListTile extends StatelessWidget {
             }
           : () => routeName == route
               ? Get.back()
-              : Get.offAll(routeConverter[route]),
+              : Get.offAll(() => routeConverter[route]!),
       title: Text(
         title,
         textAlign: TextAlign.end,

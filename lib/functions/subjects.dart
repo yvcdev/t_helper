@@ -5,7 +5,6 @@ import 'package:t_helper/controllers/subject_controller.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
-import 'package:t_helper/utils/utils.dart';
 
 Future subjectsOnSwitchChanged(
     BuildContext context, String subjectId, bool activate, int index) async {
@@ -25,7 +24,10 @@ Future subjectsOnAddPressed(
   UserController userController = Get.find();
   final user = userController.user;
 
-  if (!addSubjectForm.isValidForm(formKey)) return;
+  if (!addSubjectForm.isValidForm(formKey) || addSubjectForm.subject.isEmpty) {
+    Snackbar.error('Subject name', 'Name must not be empty');
+    return;
+  }
 
   final newSubject = Subject(
       name: addSubjectForm.subject.trim().toTitleCase(),
@@ -35,8 +37,8 @@ Future subjectsOnAddPressed(
 
   if (newSubject.namedId == 'createSubject' ||
       newSubject.name == 'Create Subject') {
-    ScaffoldMessenger.of(context).showSnackBar(snackbar(
-        message: 'A subject with this name cannot be created', success: false));
+    Snackbar.error(
+        'Subject name', 'A subject with this name cannot be created');
     addSubjectForm.isLoading.value = false;
     return;
   }

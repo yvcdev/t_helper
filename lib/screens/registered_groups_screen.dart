@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/controllers/group_controller.dart';
+import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
 import 'package:t_helper/screens/screens.dart';
@@ -104,9 +105,10 @@ class _NoGroups extends StatelessWidget {
           ),
           CustomTextButton(
             onPressed: () {
-              Get.to(() => const CreateGroupScreen());
+              registeredGroupsOnCreateGroupTap();
             },
             title: 'Create one?',
+            fontSize: UiConsts.normalFontSize,
           )
         ],
       )),

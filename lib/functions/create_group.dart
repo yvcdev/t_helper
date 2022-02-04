@@ -12,7 +12,7 @@ import 'package:t_helper/services/services.dart';
 createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   FocusScope.of(context).unfocus();
   CreateGroupFormController createGroupForm = Get.find();
-  GroupController groupController = Get.find();
+  final groupController = Get.put(GroupController());
   UserController userController = Get.find();
   final user = userController.user;
   final now = DateTime.now();
@@ -78,9 +78,9 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
 createGroupOnSubjectTextTap(BuildContext context) async {
   SubjectController subjectController = Get.find();
   UserController userController = Get.find();
-  final user = userController.user;
   CreateGroupFormController createGroupForm = Get.find();
 
+  final user = userController.user;
   final userId = user.value.uid;
 
   createGroupForm.subject.value = {'name': '', 'id': ''};
