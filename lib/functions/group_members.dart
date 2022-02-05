@@ -7,7 +7,7 @@ import 'package:t_helper/services/group_service.dart';
 
 groupMembersOnChanged(
     String value, BuildContext context, GlobalKey<FormState> formkey) async {
-  AddMemberFormController addMemberFormController = Get.find();
+  final addMemberFormController = Get.put(AddMemberFormController());
   UsersController usersController = Get.find();
   GroupUsersController groupUsersController = Get.find();
   CurrentGroupController currentGroupController = Get.find();
@@ -116,7 +116,7 @@ Future groupMembersOnRemovePressed(
 
 Future _updateMembersNumber(BuildContext context, String groupId,
     {required bool increment}) async {
-  GroupService groupController = Get.find();
+  GroupController groupController = Get.find();
 
   CurrentGroupController currentGroupController = Get.find();
 

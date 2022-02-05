@@ -63,8 +63,8 @@ class GroupService {
       final groupUsers =
           await groupUsersReference.where('groupId', isEqualTo: groupId).get();
 
-      for (var groupUser in groupUsers.docs) {
-        await groupUsersReference.doc(groupUser.id).delete();
+      for (var groupUsers in groupUsers.docs) {
+        await groupUsersReference.doc(groupUsers.id).delete();
       }
 
       await groupsReference.doc(groupId).delete();
@@ -75,7 +75,10 @@ class GroupService {
 
       groupController.groups.value =
           groupController.groups.where((group) => group.id != groupId).toList();
+
+      groupController.isLoading.value = false;
     } catch (e) {
+      groupController.isLoading.value = false;
       Snackbar.error('Unknown error', 'There was an error deleting the group');
     }
   }

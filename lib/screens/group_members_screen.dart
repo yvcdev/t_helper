@@ -93,12 +93,12 @@ class GroupMembersScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    _UserInfoSection(
-                      userInGroup: groupUsersController.userInGroup.value,
-                      globalKey: _listKey,
-                      formController: emailController,
-                      offset: _offset,
-                    )
+                    Obx(() => _UserInfoSection(
+                          userInGroup: groupUsersController.userInGroup.value,
+                          globalKey: _listKey,
+                          formController: emailController,
+                          offset: _offset,
+                        ))
                   ],
                 ),
               ),
@@ -162,7 +162,7 @@ class _UserInfoSection extends StatelessWidget {
     final usersController = Get.put(UsersController());
     final screenWidth = MediaQuery.of(context).size.width;
 
-    Obx(() {
+    return Obx(() {
       if (usersController.error.value != null) {
         return Padding(
           padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
@@ -171,9 +171,7 @@ class _UserInfoSection extends StatelessWidget {
             style: const TextStyle(color: CustomColors.red),
           ),
         );
-      }
-
-      if (usersController.message.value != null) {
+      } else if (usersController.message.value != null) {
         return Padding(
           padding: const EdgeInsets.only(bottom: UiConsts.largePadding),
           child: Text(
@@ -181,9 +179,7 @@ class _UserInfoSection extends StatelessWidget {
             style: const TextStyle(color: CustomColors.red),
           ),
         );
-      }
-
-      if (usersController.student.value != null) {
+      } else if (usersController.student.value != null) {
         User student = usersController.student.value!;
         String fullName = student.middleName == ""
             ? '${student.firstName} ${student.lastName}'
@@ -256,6 +252,5 @@ class _UserInfoSection extends StatelessWidget {
         return Container();
       }
     });
-    return Container();
   }
 }

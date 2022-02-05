@@ -41,31 +41,32 @@ class _GroupList extends StatelessWidget {
   Widget build(BuildContext context) {
     GroupController groupController = Get.find();
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const ScrollPhysics(),
-      itemCount: groupController.groups.length,
-      itemBuilder: (context, index) {
-        List<Group> groups = groupController.groups;
-        return Obx(() => CustomListTile(
-              onDismissed: () {},
-              dismissible: false,
-              index: index,
-              title: groups[index].name.toTitleCase(),
-              subtitle: '${groups[index].subject['name']!.toCapitalized()} - '
-                  '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
-              trailing: groups[index].image,
-              useAssetImage: groups[index].image == null ? true : false,
-              onTap: () {
-                CurrentGroupController currentGroupController = Get.find();
+    return Obx(() => ListView.builder(
+          shrinkWrap: true,
+          physics: const ScrollPhysics(),
+          itemCount: groupController.groups.length,
+          itemBuilder: (context, index) {
+            List<Group> groups = groupController.groups;
+            return Obx(() => CustomListTile(
+                  onDismissed: () {},
+                  dismissible: false,
+                  index: index,
+                  title: groups[index].name.toTitleCase(),
+                  subtitle:
+                      '${groups[index].subject['name']!.toCapitalized()} - '
+                      '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
+                  trailing: groups[index].image,
+                  useAssetImage: groups[index].image == null ? true : false,
+                  onTap: () {
+                    CurrentGroupController currentGroupController = Get.find();
 
-                currentGroupController.currentGroup.value = groups[index];
+                    currentGroupController.currentGroup.value = groups[index];
 
-                Get.to(() => const GroupInfoScreen());
-              },
-            ));
-      },
-    );
+                    Get.to(() => const GroupInfoScreen());
+                  },
+                ));
+          },
+        ));
   }
 }
 

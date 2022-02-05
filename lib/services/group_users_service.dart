@@ -39,7 +39,9 @@ class GroupUsersService {
 
   Future addUserToGroup(GroupUsers groupUserAdd) async {
     try {
+      UsersController usersController = Get.find();
       await groupUsers.add(groupUserAdd.toMap());
+      usersController.student.value = null;
       groupUsersController.groupUsersList.add(groupUserAdd);
     } catch (e) {
       Snackbar.error(
@@ -64,6 +66,9 @@ class GroupUsersService {
           .groupUsersList
           .where((groupUser) => groupUser.userId != userId)
           .toList();
+
+      UsersController usersController = Get.find();
+      usersController.student.value = null;
 
       return index;
     } catch (e) {

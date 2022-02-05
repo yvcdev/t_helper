@@ -16,7 +16,7 @@ class GroupInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CurrentGroupController currentGroupController = Get.find();
-    final groupController = Get.put(GroupController());
+    GroupController groupController = Get.find();
     final group = currentGroupController.currentGroup.value;
     final _cards = groupInfoList(context);
 
@@ -52,8 +52,6 @@ class GroupInfoScreen extends StatelessWidget {
                                     group!.id, group.image ?? '');
 
                                 Get.to(() => const RegisteredGroupScreen());
-
-                                groupController.isLoading.value = false;
                               },
                               isAcceptActive: !groupController.isLoading.value,
                               isCancelActive: !groupController.isLoading.value,
@@ -111,8 +109,11 @@ class _HeroInfo extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 10),
         Text(
           group.name.toTitleCase(),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
           style: const TextStyle(
             fontSize: UiConsts.largeFontSize,
             fontWeight: FontWeight.bold,
@@ -134,6 +135,7 @@ class _HeroInfo extends StatelessWidget {
                 )),
             Text(
               'ID: ${group.namedId}',
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontSize: UiConsts.tinyFontSize,
                   fontWeight: FontWeight.bold,
@@ -141,6 +143,7 @@ class _HeroInfo extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 10),
         Text(
           group.subject['name']!.toTitleCase(),
           style: TextStyle(
