@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/routes/route_converter.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const CustomDrawer({Key? key, required this.scaffoldKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +20,9 @@ class CustomDrawer extends StatelessWidget {
       child: Column(
         children: [
           const _Header(),
-          const _Body(),
+          _Body(scaffoldKey: scaffoldKey),
           _ListTile(
+              scaffoldKey: scaffoldKey,
               iconData: Icons.logout,
               onTap: () async {
                 await authController.signOut();
@@ -31,23 +35,41 @@ class CustomDrawer extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({
-    Key? key,
-  }) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const _Body({Key? key, required this.scaffoldKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String route = Get.currentRoute;
+
     return Expanded(
       child: Container(
         color: CustomColors.almostWhite,
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
+          children: [
             _ListTile(
-                iconData: Icons.home, route: '/HomeWrapper', title: 'Home'),
+                scaffoldKey: scaffoldKey,
+                iconData: Icons.home,
+                onTap: () {
+                  if (route == '/HomeWrapper') {
+                    Get.back();
+                  } else {
+                    Get.offAll(() => const HomeWrapper());
+                  }
+                },
+                title: 'Home'),
             _ListTile(
+                scaffoldKey: scaffoldKey,
                 iconData: Icons.group,
-                route: '/RegisteredGroupScreen',
+                onTap: () {
+                  if (route == '/RegisteredGroupScreen') {
+                    Get.back();
+                  } else {
+                    Get.offAll(() => const RegisteredGroupScreen());
+                  }
+                },
                 title: 'Groups'),
           ],
         ),
@@ -59,34 +81,28 @@ class _Body extends StatelessWidget {
 class _ListTile extends StatelessWidget {
   final IconData iconData;
   final String title;
-  final String? route;
-  final Function? onTap;
+  final Function onTap;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   const _ListTile({
     Key? key,
     required this.iconData,
     required this.title,
-    this.route,
-    this.onTap,
+    required this.scaffoldKey,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String? routeName = ModalRoute.of(context)!.settings.name;
-
     return ListTile(
       trailing: Icon(
         iconData,
         color: CustomColors.primaryGradient,
         size: UiConsts.largeFontSize,
       ),
-      onTap: onTap != null
-          ? () {
-              onTap!();
-            }
-          : () => routeName == route
-              ? Get.back()
-              : Get.offAll(() => routeConverter[route]!),
+      onTap: () {
+        onTap();
+      },
       title: Text(
         title,
         textAlign: TextAlign.end,

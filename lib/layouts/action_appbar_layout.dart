@@ -15,7 +15,7 @@ class ActionAppBarLayout extends StatelessWidget {
   final Icon? actionIcon;
   final Function? onActionPressed;
 
-  const ActionAppBarLayout({
+  ActionAppBarLayout({
     Key? key,
     required this.children,
     this.title,
@@ -28,6 +28,8 @@ class ActionAppBarLayout extends StatelessWidget {
     this.actionIcon,
   }) : super(key: key);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     if (loading!) {
@@ -35,7 +37,10 @@ class ActionAppBarLayout extends StatelessWidget {
     }
 
     return Scaffold(
-      drawer: const CustomDrawer(),
+      key: _scaffoldKey,
+      drawer: CustomDrawer(
+        scaffoldKey: _scaffoldKey,
+      ),
       appBar: AppBar(
         elevation: elevation,
         flexibleSpace: Container(

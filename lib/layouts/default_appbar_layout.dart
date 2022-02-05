@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:t_helper/routes/routes.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/custom_colors.dart';
 
@@ -18,7 +17,7 @@ class DefaultAppBarLayout extends StatelessWidget {
   final bool? colunmLayout;
   final bool? drawer;
 
-  const DefaultAppBarLayout({
+  DefaultAppBarLayout({
     Key? key,
     required this.children,
     this.title,
@@ -32,6 +31,8 @@ class DefaultAppBarLayout extends StatelessWidget {
     this.drawer = true,
   }) : super(key: key);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final String? routeName = ModalRoute.of(context)!.settings.name;
@@ -41,7 +42,12 @@ class DefaultAppBarLayout extends StatelessWidget {
     }
 
     return Scaffold(
-      drawer: drawer! ? const CustomDrawer() : null,
+      drawer: drawer!
+          ? CustomDrawer(
+              scaffoldKey: _scaffoldKey,
+            )
+          : null,
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: elevation,
         flexibleSpace: Container(
@@ -57,7 +63,7 @@ class DefaultAppBarLayout extends StatelessWidget {
               Icons.notifications_none_rounded,
               color: Colors.white,
             ),
-            onPressed: routeName == Routes.NOTIFICATIONS
+            onPressed: routeName == '/NotificationsScreen'
                 ? null
                 : () {
                     Get.to(() => const NotificationsScreen());
