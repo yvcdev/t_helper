@@ -46,28 +46,29 @@ class _UpperPicturePicker extends StatelessWidget {
     final createGroupForm = Get.put(CreateGroupFormController());
 
     return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(boxShadow: [UiConsts.boxShadow]),
-      child: Stack(
-        children: [
-          createGroupForm.newPictureFile.value == null
-              ? Image.asset(
-                  'assets/no_image.jpg',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
-                )
-              : Image.file(
-                  createGroupForm.newPictureFile.value!,
-                  height: 200,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-          const _PickerButton()
-        ],
-      ),
-    );
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(boxShadow: [UiConsts.boxShadow]),
+        child: Obx(
+          () => Stack(
+            children: [
+              createGroupForm.newPictureFile.value == null
+                  ? Image.asset(
+                      'assets/no_image.jpg',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 200,
+                    )
+                  : Image.file(
+                      createGroupForm.newPictureFile.value!,
+                      height: 200,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+              const _PickerButton()
+            ],
+          ),
+        ));
   }
 }
 
@@ -81,33 +82,54 @@ class _PickerButton extends StatelessWidget {
     CreateGroupFormController createGroupForm = Get.find();
 
     return Positioned(
-      right: 5,
-      bottom: 5,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: CustomColors.primary,
-        ),
-        child: IconButton(
-            highlightColor: Colors.green,
-            padding: const EdgeInsets.all(5),
-            onPressed: () async {
-              final ImagePicker _picker = ImagePicker();
-              final XFile? image =
-                  await _picker.pickImage(source: ImageSource.gallery);
+        right: 5,
+        bottom: 5,
+        child: Obx(() => Row(
+              children: [
+                createGroupForm.selectedImage.value == null
+                    ? Container()
+                    : Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: CustomColors.primary,
+                        ),
+                        child: IconButton(
+                            highlightColor: Colors.green,
+                            padding: const EdgeInsets.all(5),
+                            onPressed: () {
+                              createGroupForm.setSelectedImage(null);
+                            },
+                            icon: const Icon(Icons.close_rounded,
+                                size: UiConsts.largeFontSize,
+                                color: Colors.white)),
+                      ),
+                const SizedBox(width: 5),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: CustomColors.primary,
+                  ),
+                  child: IconButton(
+                      highlightColor: Colors.green,
+                      padding: const EdgeInsets.all(5),
+                      onPressed: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery);
 
-              if (image == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    snackbar(message: 'No image selected', success: false));
-                return;
-              }
+                        if (image == null) {
+                          Snackbar.error(
+                              'Image selection', 'No new image selected');
+                          return;
+                        }
 
-              createGroupForm.setSelectedImage(image.path);
-            },
-            icon: const Icon(Icons.camera_alt_outlined,
-                size: UiConsts.largeFontSize, color: Colors.white)),
-      ),
-    );
+                        createGroupForm.setSelectedImage(image.path);
+                      },
+                      icon: const Icon(Icons.camera_alt_outlined,
+                          size: UiConsts.largeFontSize, color: Colors.white)),
+                ),
+              ],
+            )));
   }
 }
 

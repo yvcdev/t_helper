@@ -27,8 +27,13 @@ class CreateGroupFormController extends GetxController {
   }
 
   void setSelectedImage(String? path) {
-    selectedImage.value = path;
-    newPictureFile.value = File.fromUri(Uri(path: path));
+    if (path != null) {
+      selectedImage.value = path;
+      newPictureFile.value = File.fromUri(Uri(path: path));
+    } else {
+      selectedImage.value = null;
+      newPictureFile.value = null;
+    }
   }
 
   String getGroupId() {
