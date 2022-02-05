@@ -15,23 +15,15 @@ class GroupService {
       firebase_storage.FirebaseStorage.instance;
   GroupController groupController = Get.find();
 
-  Future<List<Group>?> getGroups(User user) async {
-    try {
-      final querySnapshot =
-          await groupsReference.where('owner', isEqualTo: user.uid).get();
-
-      groupController.groups.value = [];
-
-      for (var doc in querySnapshot.docs) {
-        groupController.groups.value!
-            .add(Group.fromMap(doc.data() as Map, doc.id));
-      }
-
-      return groupController.groups.value;
-    } catch (e) {
-      Snackbar.error(
-          'Unknown error', 'There was an error retrieving the groups');
-    }
+  Stream<List<Group>> getGroups(User user) {
+    return groupsReference
+        .where('owner', isEqualTo: user.uid)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Group.fromMap(doc.data() as Map, doc.id);
+      }).toList();
+    });
   }
 
   Future<String?> createGroup(Group group) async {
@@ -67,6 +59,7 @@ class GroupService {
 
   Future deleteGroup(String groupId, String imageUrl) async {
     try {
+      groupController.isLoading.value = true;
       final groupUsers =
           await groupUsersReference.where('groupId', isEqualTo: groupId).get();
 
@@ -80,9 +73,8 @@ class GroupService {
         await storage.refFromURL(imageUrl).delete();
       }
 
-      groupController.groups.value = groupController.groups.value!
-          .where((group) => group.id != groupId)
-          .toList();
+      groupController.groups.value =
+          groupController.groups.where((group) => group.id != groupId).toList();
     } catch (e) {
       Snackbar.error('Unknown error', 'There was an error deleting the group');
     }

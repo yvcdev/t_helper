@@ -1,13 +1,21 @@
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
+import 'package:t_helper/controllers/user_controller.dart';
 import 'package:t_helper/models/group.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/services/group_service.dart';
 
 class GroupController extends GetxController {
-  Rx<List<Group>?> groups = Rx(null);
+  var groups = <Group>[].obs;
+  var isLoading = false.obs;
+  UserController userController = Get.find();
+  @override
+  onReady() {
+    groups.bindStream(GroupService().getGroups(userController.user.value));
+    super.onReady();
+  }
 
-  Future<List<Group>?> getGroups(User user) async {
-    final response = await GroupService().getGroups(user);
+  Stream<List<Group>> getGroups(User user) {
+    final response = GroupService().getGroups(user);
     return response;
   }
 

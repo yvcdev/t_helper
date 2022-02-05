@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/controllers/subject_controller.dart';
 import 'firebase_options.dart';
 
 import 'package:t_helper/constants/constants.dart';
@@ -26,6 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SubjectController(), fenix: true);
     Get.lazyPut(() => ActivitiesController(), fenix: true);
+    Get.lazyPut(() => GroupController(), fenix: true);
 
     return GetMaterialApp(
       theme: _themeData(context),

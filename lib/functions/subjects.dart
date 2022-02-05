@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/controllers/subject_controller.dart';
 
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';

@@ -16,22 +16,26 @@ class MinimalPopUp extends StatelessWidget {
   final Color? acceptButtonColor;
   final Color? cancelButtonColor;
   final Color? descriptionColor;
+  final bool? isAcceptActive;
+  final bool? isCancelActive;
 
-  const MinimalPopUp({
-    Key? key,
-    required this.topImage,
-    required this.onAccept,
-    this.correct = true,
-    this.correctText = 'You did a great job!',
-    this.incorrectText = 'Ups, that was incorrect!',
-    this.onCancel,
-    this.acceptButtonLabel,
-    this.cancelButtonLabel,
-    this.acceptButtonColor,
-    this.cancelButtonColor,
-    this.description,
-    this.descriptionColor,
-  }) : super(key: key);
+  const MinimalPopUp(
+      {Key? key,
+      required this.topImage,
+      required this.onAccept,
+      this.correct = true,
+      this.correctText = 'You did a great job!',
+      this.incorrectText = 'Ups, that was incorrect!',
+      this.onCancel,
+      this.acceptButtonLabel,
+      this.cancelButtonLabel,
+      this.acceptButtonColor,
+      this.cancelButtonColor,
+      this.description,
+      this.descriptionColor,
+      this.isAcceptActive,
+      this.isCancelActive})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +45,20 @@ class MinimalPopUp extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: [
           _Content(
-            description: description,
-            descriptionColor: descriptionColor,
-            topImage: topImage,
-            correct: correct!,
-            incorrectText: incorrectText,
-            correctText: correctText,
-            onAccept: onAccept,
-            onCancel: onCancel,
-            acceptButtonLabel: acceptButtonLabel,
-            cancelButtonLabel: cancelButtonLabel,
-            acceptButtonColor: acceptButtonColor,
-            cancelButtonColor: cancelButtonColor,
-          ),
+              description: description,
+              descriptionColor: descriptionColor,
+              topImage: topImage,
+              correct: correct!,
+              incorrectText: incorrectText,
+              correctText: correctText,
+              onAccept: onAccept,
+              onCancel: onCancel,
+              acceptButtonLabel: acceptButtonLabel,
+              cancelButtonLabel: cancelButtonLabel,
+              acceptButtonColor: acceptButtonColor,
+              cancelButtonColor: cancelButtonColor,
+              isAcceptActive: isAcceptActive,
+              isCancelActive: isCancelActive),
           topImage
               ? _TopImage(
                   correct: correct!,
@@ -116,24 +121,28 @@ class _Content extends StatelessWidget {
   final Color? cancelButtonColor;
   final String? description;
   final Color? descriptionColor;
+  final bool? isAcceptActive;
+  final bool? isCancelActive;
 
   final String correctText;
   final String incorrectText;
-  const _Content({
-    Key? key,
-    required this.topImage,
-    required this.correct,
-    required this.correctText,
-    required this.incorrectText,
-    required this.onAccept,
-    this.onCancel,
-    this.acceptButtonLabel = 'Continue',
-    this.cancelButtonLabel = 'Cancel',
-    this.acceptButtonColor,
-    this.cancelButtonColor,
-    required this.description,
-    required this.descriptionColor,
-  }) : super(key: key);
+  const _Content(
+      {Key? key,
+      required this.topImage,
+      required this.correct,
+      required this.correctText,
+      required this.incorrectText,
+      required this.onAccept,
+      this.onCancel,
+      this.acceptButtonLabel = 'Continue',
+      this.cancelButtonLabel = 'Cancel',
+      this.acceptButtonColor,
+      this.cancelButtonColor,
+      required this.description,
+      required this.descriptionColor,
+      this.isAcceptActive = true,
+      this.isCancelActive = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,12 +188,14 @@ class _Content extends StatelessWidget {
               children: [
                 CustomAcceptButton(
                   onTap: () {
-                    onAccept();
+                    if (isAcceptActive!) {
+                      onAccept();
+                    }
                   },
                   title: acceptButtonLabel ?? 'Continue',
                   shadow: false,
                   fontSize: UiConsts.smallFontSize,
-                  color: acceptButtonColor,
+                  color: isAcceptActive! ? acceptButtonColor : Colors.grey,
                 ),
                 SizedBox(width: (onCancel == null) ? 0 : 20),
                 (onCancel == null)
@@ -192,9 +203,12 @@ class _Content extends StatelessWidget {
                     : CustomAcceptButton(
                         shadow: false,
                         fontSize: UiConsts.smallFontSize,
-                        color: cancelButtonColor,
+                        color:
+                            isCancelActive! ? cancelButtonColor : Colors.grey,
                         onTap: () {
-                          onCancel!();
+                          if (isCancelActive!) {
+                            onCancel!();
+                          }
                         },
                         title: cancelButtonLabel ?? 'Cancel')
               ],

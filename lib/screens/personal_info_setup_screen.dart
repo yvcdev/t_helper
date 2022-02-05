@@ -9,8 +9,8 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/helpers/helpers.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/utils.dart';
-import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class PersonalInfoSetupScreen extends StatelessWidget {
@@ -212,7 +212,7 @@ class _InfoForm extends StatelessWidget {
                 AuthController authController = Get.find();
                 await authController.signOut();
                 personalInfoForm.reset();
-                Get.offAll(() => const HomeWrapper());
+                Get.offAll(() => const LoginScreen());
               },
               title: 'Log Out')
         ],

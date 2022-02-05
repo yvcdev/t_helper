@@ -16,33 +16,32 @@ class HomeWrapper extends StatelessWidget {
     return Obx(() {
       if (user.value.uid == '') {
         return const LoadingScreen();
-      }
-
-      switch (user.value.role) {
-        case 'teacher':
-          return const TeacherHomeScreen();
-        case 'student':
-          return const StudentHomeScreen();
-        default:
-          return Scaffold(
-            body: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Invalid role'),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        authController.signOut();
-                      },
-                      child: const Text('Sign Out'))
-                ],
-              ),
+      } else if (user.value.uid != '' && user.value.role == null) {
+        return const LoadingScreen();
+      } else if (user.value.role == 'teacher') {
+        return const TeacherHomeScreen();
+      } else if (user.value.role == 'student') {
+        return const StudentHomeScreen();
+      } else {
+        return Scaffold(
+          body: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Invalid role'),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextButton(
+                    onPressed: () {
+                      authController.signOut();
+                    },
+                    child: const Text('Sign Out'))
+              ],
             ),
-          );
+          ),
+        );
       }
     });
   }

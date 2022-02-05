@@ -16,7 +16,10 @@ class AuthController extends GetxController {
     super.onReady();
     fbUser = Rx<User?>(_auth.currentUser);
     fbUser.bindStream(_auth.userChanges());
-    Get.put(UserController(), permanent: true);
+    if (_auth.currentUser != null) {
+      final userController = Get.put(UserController(), permanent: true);
+      userController.onAuth();
+    }
     ever(fbUser, _initialScreen);
   }
 
@@ -30,7 +33,7 @@ class AuthController extends GetxController {
 
   Future login(String email, String password) async {
     try {
-      UserController userController = Get.find();
+      final userController = Get.put(UserController(), permanent: true);
 
       final authUser = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -52,7 +55,7 @@ class AuthController extends GetxController {
 
   Future signup(String email, String password) async {
     try {
-      UserController userController = Get.find();
+      final userController = Get.put(UserController(), permanent: true);
 
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);

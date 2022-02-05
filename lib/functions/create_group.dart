@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/controllers/group_controller.dart';
-import 'package:t_helper/controllers/subject_controller.dart';
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/models.dart';
 import 'package:t_helper/screens/screens.dart';
@@ -12,7 +10,7 @@ import 'package:t_helper/services/services.dart';
 createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   FocusScope.of(context).unfocus();
   CreateGroupFormController createGroupForm = Get.find();
-  final groupController = Get.put(GroupController());
+  GroupController groupController = Get.find();
   UserController userController = Get.find();
   final user = userController.user;
   final now = DateTime.now();

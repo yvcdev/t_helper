@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/controllers/group_controller.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/models/group.dart';
@@ -16,30 +15,19 @@ class RegisteredGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupController = Get.put(GroupController());
-    UserController userController = Get.find();
-    final user = userController.user;
+    GroupController groupController = Get.find();
 
     return DefaultAppBarLayout(
         title: 'Your Groups',
         topSeparation: false,
         children: [
-          FutureBuilder(
-              future: groupController.getGroups(user.value),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Group>?> snapshot) {
-                if (snapshot.hasData) {
-                  if (groupController.groups.value!.isEmpty) {
-                    return const _NoGroups();
-                  } else {
-                    return const _GroupList();
-                  }
-                } else {
-                  return const LoadingScreen(
-                    useScafold: false,
-                  );
-                }
-              }),
+          Obx(() {
+            if (groupController.groups.isEmpty) {
+              return const _NoGroups();
+            } else {
+              return const _GroupList();
+            }
+          })
         ]);
   }
 }
@@ -56,26 +44,26 @@ class _GroupList extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const ScrollPhysics(),
-      itemCount: groupController.groups.value!.length,
+      itemCount: groupController.groups.length,
       itemBuilder: (context, index) {
-        List<Group> groups = groupController.groups.value!;
-        return CustomListTile(
-          onDismissed: () {},
-          dismissible: false,
-          index: index,
-          title: groups[index].name.toTitleCase(),
-          subtitle: '${groups[index].subject['name']!.toCapitalized()} - '
-              '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
-          trailing: groups[index].image,
-          useAssetImage: groups[index].image == null ? true : false,
-          onTap: () {
-            CurrentGroupController currentGroupController = Get.find();
+        List<Group> groups = groupController.groups;
+        return Obx(() => CustomListTile(
+              onDismissed: () {},
+              dismissible: false,
+              index: index,
+              title: groups[index].name.toTitleCase(),
+              subtitle: '${groups[index].subject['name']!.toCapitalized()} - '
+                  '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
+              trailing: groups[index].image,
+              useAssetImage: groups[index].image == null ? true : false,
+              onTap: () {
+                CurrentGroupController currentGroupController = Get.find();
 
-            currentGroupController.currentGroup.value = groups[index];
+                currentGroupController.currentGroup.value = groups[index];
 
-            Get.to(() => const GroupInfoScreen());
-          },
-        );
+                Get.to(() => const GroupInfoScreen());
+              },
+            ));
       },
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
@@ -7,7 +6,6 @@ import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/group_service.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
@@ -18,7 +16,7 @@ class GroupInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CurrentGroupController currentGroupController = Get.find();
-    final groupController = Get.put(GroupService());
+    final groupController = Get.put(GroupController());
     final group = currentGroupController.currentGroup.value;
     final _cards = groupInfoList(context);
 
@@ -42,7 +40,7 @@ class GroupInfoScreen extends StatelessWidget {
                     showDialog(
                         barrierDismissible: false,
                         context: context,
-                        builder: (context) => MinimalPopUp(
+                        builder: (context) => Obx(() => MinimalPopUp(
                               topImage: false,
                               acceptButtonLabel: 'Yes',
                               cancelButtonLabel: 'No',
@@ -54,12 +52,16 @@ class GroupInfoScreen extends StatelessWidget {
                                     group!.id, group.image ?? '');
 
                                 Get.to(() => const RegisteredGroupScreen());
+
+                                groupController.isLoading.value = false;
                               },
+                              isAcceptActive: !groupController.isLoading.value,
+                              isCancelActive: !groupController.isLoading.value,
                               acceptButtonColor: CustomColors.red,
                               onCancel: () {
                                 Get.back();
                               },
-                            ));
+                            )));
                   },
                   icon: Icon(
                     Icons.delete_forever_rounded,
@@ -123,9 +125,7 @@ class _HeroInfo extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: group.namedId));
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(snackbar(message: "Copied!"));
+                  Snackbar.success('Copied', 'The group ID has been copied');
                 },
                 icon: const Icon(
                   Icons.copy,

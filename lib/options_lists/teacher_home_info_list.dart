@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/controllers/subject_controller.dart';
 
 import 'package:t_helper/screens/screens.dart';
 
