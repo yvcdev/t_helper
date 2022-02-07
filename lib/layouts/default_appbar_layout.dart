@@ -16,6 +16,7 @@ class DefaultAppBarLayout extends StatelessWidget {
   final bool? scroll;
   final bool? colunmLayout;
   final bool? drawer;
+  final bool? showActionButton;
 
   DefaultAppBarLayout({
     Key? key,
@@ -29,6 +30,7 @@ class DefaultAppBarLayout extends StatelessWidget {
     this.scroll = true,
     this.colunmLayout = false,
     this.drawer = true,
+    this.showActionButton = true,
   }) : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -58,19 +60,21 @@ class DefaultAppBarLayout extends StatelessWidget {
           ])),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications_none_rounded,
-              color: Colors.white,
-            ),
-            onPressed: routeName == '/NotificationsScreen'
-                ? null
-                : () {
-                    Get.to(() => const NotificationsScreen());
-                  },
-            iconSize: 30,
-            splashRadius: 20,
-          )
+          showActionButton!
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.notifications_none_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: routeName == '/NotificationsScreen'
+                      ? null
+                      : () {
+                          Get.to(() => const NotificationsScreen());
+                        },
+                  iconSize: 30,
+                  splashRadius: 20,
+                )
+              : Container()
         ],
         title: Text(
           title ?? '',

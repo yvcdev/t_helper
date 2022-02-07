@@ -13,3 +13,5 @@ export 'package:t_helper/controllers/create_group_form_controller.dart';
 export 'package:t_helper/controllers/activities_controller.dart';
 export 'package:t_helper/controllers/subject_controller.dart';
 export 'package:t_helper/controllers/group_controller.dart';
+export 'package:t_helper/controllers/personal_info_form_controller.dart';
+export 'package:t_helper/controllers/edit_info_form_controller.dart';

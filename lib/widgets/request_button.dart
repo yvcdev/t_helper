@@ -7,19 +7,21 @@ class RequestButton extends StatelessWidget {
   final String waitTitle;
   final String title;
   final Function? onTap;
+  final bool? isActive;
 
   const RequestButton(
       {Key? key,
       required this.isLoading,
       required this.onTap,
       required this.waitTitle,
-      required this.title})
+      required this.title,
+      this.isActive = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: isLoading
+      onPressed: (isLoading || !isActive!)
           ? null
           : () async {
               onTap!();

@@ -19,15 +19,60 @@ class CustomDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          const _Header(),
+          _Header(scaffoldKey: scaffoldKey),
           _Body(scaffoldKey: scaffoldKey),
+          _Footer(scaffoldKey: scaffoldKey, authController: authController)
+        ],
+      ),
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  const _Footer({
+    Key? key,
+    required this.scaffoldKey,
+    required this.authController,
+  }) : super(key: key);
+
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  final AuthController authController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            colors: [
+              CustomColors.primary,
+              CustomColors.primaryGradient,
+            ]),
+      ),
+      alignment: Alignment.centerRight,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
           _ListTile(
               scaffoldKey: scaffoldKey,
               iconData: Icons.logout,
+              iconColor: Colors.white,
+              textColor: Colors.white,
               onTap: () async {
                 await authController.signOut();
               },
               title: 'Sign Out'),
+          Container(
+            padding: const EdgeInsets.only(top: 5, bottom: 20, right: 10),
+            child: const Image(
+              height: 30,
+              image: AssetImage(
+                'assets/logo/logo.png',
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -83,21 +128,26 @@ class _ListTile extends StatelessWidget {
   final String title;
   final Function onTap;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final Color? iconColor;
+  final Color? textColor;
 
-  const _ListTile({
-    Key? key,
-    required this.iconData,
-    required this.title,
-    required this.scaffoldKey,
-    required this.onTap,
-  }) : super(key: key);
+  const _ListTile(
+      {Key? key,
+      required this.iconData,
+      required this.title,
+      required this.scaffoldKey,
+      required this.onTap,
+      this.iconColor,
+      this.textColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.only(right: 10),
       trailing: Icon(
         iconData,
-        color: CustomColors.primaryGradient,
+        color: iconColor ?? CustomColors.primaryGradient,
         size: UiConsts.largeFontSize,
       ),
       onTap: () {
@@ -106,8 +156,8 @@ class _ListTile extends StatelessWidget {
       title: Text(
         title,
         textAlign: TextAlign.end,
-        style: const TextStyle(
-          color: CustomColors.almostBlack,
+        style: TextStyle(
+          color: textColor ?? CustomColors.almostBlack,
           fontSize: UiConsts.normalFontSize - 4,
           fontWeight: FontWeight.bold,
         ),
@@ -117,54 +167,106 @@ class _ListTile extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({
-    Key? key,
-  }) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const _Header({Key? key, required this.scaffoldKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     UserController userController = Get.find();
+    String route = Get.currentRoute;
     final user = userController.user;
 
-    return DrawerHeader(
-      margin: EdgeInsets.zero,
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Image(
-              width: 100,
-              image: AssetImage('assets/logo/logo.png'),
-              fit: BoxFit.contain,
-            ),
-            const Expanded(child: SizedBox()),
-            Container(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: user.value.profilePic == null
-                    ? Image.asset('assets/no_profile.png')
-                    : FadeInImage(
-                        image: NetworkImage(user.value.profilePic!),
-                        placeholder: const AssetImage('assets/no_profile.png'),
-                        fit: BoxFit.cover,
+    return SizedBox(
+      height: 200,
+      child: DrawerHeader(
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            user.value.preferredName! == 'firstName'
+                                ? '${user.value.firstName!} ${user.value.lastName!}'
+                                : '${user.value.middleName!} ${user.value.lastName!}',
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: UiConsts.normalFontSize),
+                          ),
+                          Text(
+                            user.value.email,
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontWeight: FontWeight.bold,
+                                fontSize: UiConsts.normalFontSize - 4),
+                          ),
+                        ],
                       ),
-                height: UiConsts.largeImageRadius * 2,
-                width: UiConsts.largeImageRadius * 2,
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(UiConsts.largeImageRadius),
-                )),
-          ],
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: user.value.profilePic == null
+                            ? Image.asset('assets/no_profile.png')
+                            : FadeInImage(
+                                image: NetworkImage(user.value.profilePic!),
+                                placeholder:
+                                    const AssetImage('assets/no_profile.png'),
+                                fit: BoxFit.cover,
+                              ),
+                        height: UiConsts.largeImageRadius * 2,
+                        width: UiConsts.largeImageRadius * 2,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(UiConsts.largeImageRadius),
+                        )),
+                  ],
+                ),
+              ),
+              _ListTile(
+                  scaffoldKey: scaffoldKey,
+                  iconData: Icons.edit,
+                  iconColor: Colors.white,
+                  textColor: Colors.white,
+                  onTap: () {
+                    if (route == '/EditPersonalInfoScreen') {
+                      Get.back();
+                    } else {
+                      Get.offAll(() => const EditPersonalInfoScreen());
+                    }
+                  },
+                  title: 'Edit Details'),
+            ],
+          ),
         ),
-      ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.centerRight,
-            end: Alignment.centerLeft,
-            colors: [
-              CustomColors.primary,
-              CustomColors.primaryGradient,
-            ]),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: [
+                CustomColors.primary,
+                CustomColors.primaryGradient,
+              ]),
+        ),
       ),
     );
   }

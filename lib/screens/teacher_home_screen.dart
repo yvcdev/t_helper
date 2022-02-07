@@ -46,8 +46,8 @@ class _AppBarBottom extends StatelessWidget {
         ),
         Obx(() => Text(
               user.value.preferredName == 'firstName'
-                  ? '${user.value.firstName!} ${user.value.lastName!}'
-                  : '${user.value.middleName!} ${user.value.lastName!}',
+                  ? user.value.firstName!
+                  : user.value.middleName!,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: UiConsts.normalFontSize,

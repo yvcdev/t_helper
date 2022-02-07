@@ -9,71 +9,67 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/helpers/helpers.dart';
-import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
-class PersonalInfoSetupScreen extends StatelessWidget {
-  const PersonalInfoSetupScreen({Key? key}) : super(key: key);
+class EditPersonalInfoScreen extends StatelessWidget {
+  const EditPersonalInfoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AuthBg(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 250,
-              ),
-              CardContainer(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'My Details',
-                      style: TextStyle(
-                        color: CustomColors.almostBlack.withOpacity(0.8),
-                        fontSize: UiConsts.largeFontSize,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    _InfoForm(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-            ],
+    return DefaultAppBarLayout(
+        topSeparation: false,
+        showActionButton: false,
+        title: 'My Details',
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(UiConsts.normalPadding),
+            child: Column(
+              children: [
+                _InfoForm(),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
+        ]);
   }
 }
 
-class _InfoForm extends StatelessWidget {
-  _InfoForm({Key? key}) : super(key: key);
-  final GlobalKey<FormState> personalInfoFormKey = GlobalKey<FormState>();
+class _InfoForm extends StatefulWidget {
+  const _InfoForm({Key? key}) : super(key: key);
+
+  @override
+  State<_InfoForm> createState() => _InfoFormState();
+}
+
+class _InfoFormState extends State<_InfoForm> {
+  final GlobalKey<FormState> editInfoFormKey = GlobalKey<FormState>();
+  final editInfoForm = Get.put(EditInfoFormController());
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController middleNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController preferredNameController = TextEditingController();
+  TextEditingController roleController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    firstNameController.text = editInfoForm.firstName.value;
+    middleNameController.text = editInfoForm.middleName.value;
+    lastNameController.text = editInfoForm.lastName.value;
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(PersonalInfoFormController());
-    PersonalInfoFormController personalInfoForm = Get.find();
-
-    List<String> roleValues = ['', 'teacher', 'student'];
-    List<String> preferredNameValues = ['firstName', 'middleName'];
+    List<String> roleValues = ['teacher', 'student']; //TODO:
+    List<String> preferredNameValues = [
+      'firstName',
+      'middleName'
+    ]; //TODO: change this to get the info from a const in
+    //another file in persona info screen too
 
     return Form(
-      key: personalInfoFormKey,
+      key: editInfoFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -84,22 +80,8 @@ class _InfoForm extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          Obx(() => DropdownButton<String>(
-              value: personalInfoForm.role.value,
-              items: roleValues.map((role) {
-                return DropdownMenuItem<String>(
-                  value: role,
-                  child:
-                      Text(role == '' ? 'Select role' : role.toCapitalized()),
-                );
-              }).toList(),
-              onChanged: (role) {
-                personalInfoForm.role.value = role!;
-              })),
-          const SizedBox(
-            height: 20,
-          ),
           TextFormField(
+            controller: firstNameController,
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
@@ -115,12 +97,13 @@ class _InfoForm extends StatelessWidget {
                   ? null
                   : 'Your fisrt name can only have letters (3-20)';
             },
-            onChanged: (value) => personalInfoForm.firstName = value,
+            onChanged: (value) => editInfoForm.firstName.value = value,
           ),
           const SizedBox(
             height: 30,
           ),
           TextFormField(
+            controller: middleNameController,
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
@@ -139,9 +122,9 @@ class _InfoForm extends StatelessWidget {
               }
             },
             onChanged: (value) {
-              personalInfoForm.middleName.value = value;
+              editInfoForm.middleName.value = value;
               if (value.length < 3) {
-                personalInfoForm.preferredName.value = 'firstName';
+                editInfoForm.preferredName.value = 'firstName';
               }
             },
           ),
@@ -156,7 +139,7 @@ class _InfoForm extends StatelessWidget {
                 style: TextStyle(fontSize: 17),
               ),
               Obx(() => DropdownButton<String>(
-                  value: personalInfoForm.preferredName.value,
+                  value: editInfoForm.preferredName.value,
                   items: preferredNameValues.map((preferredName) {
                     return DropdownMenuItem<String>(
                       value: preferredName,
@@ -165,10 +148,10 @@ class _InfoForm extends StatelessWidget {
                           : 'middle name'),
                     );
                   }).toList(),
-                  onChanged: personalInfoForm.middleName.value.length < 3
+                  onChanged: editInfoForm.middleName.value.length < 3
                       ? null
                       : (preferredName) {
-                          personalInfoForm.preferredName.value = preferredName!;
+                          editInfoForm.preferredName.value = preferredName!;
                         })),
             ],
           ),
@@ -176,6 +159,7 @@ class _InfoForm extends StatelessWidget {
             height: 25,
           ),
           TextFormField(
+            controller: lastNameController,
             autocorrect: false,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
@@ -192,29 +176,35 @@ class _InfoForm extends StatelessWidget {
                   ? null
                   : 'Your last name can only have letters (3-20)';
             },
-            onChanged: (value) => personalInfoForm.lastName = value,
+            onChanged: (value) => editInfoForm.lastName.value = value,
           ),
           const SizedBox(
             height: 50,
           ),
           Obx(() => RequestButton(
               waitTitle: 'Please Wait',
-              title: 'Finish',
-              isLoading: personalInfoForm.isLoading.value,
-              onTap: personalInfoForm.isLoading.value
-                  ? null
-                  : () => personalInfoOnTap(context, personalInfoFormKey))),
+              title: 'Save',
+              isLoading: editInfoForm.isLoading.value,
+              isActive: !editInfoForm.isSaved.value,
+              onTap:
+                  (editInfoForm.isLoading.value || editInfoForm.isSaved.value)
+                      ? null
+                      : () => personalInfoOnTap(context, editInfoFormKey))),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
-          CustomTextButton(
-              onPressed: () async {
-                AuthController authController = Get.find();
-                await authController.signOut();
-                personalInfoForm.reset();
-                Get.offAll(() => const LoginScreen());
-              },
-              title: 'Log Out')
+          Obx(() => Visibility(
+                visible: !editInfoForm.isSaved.value,
+                child: CustomTextButton(
+                    onPressed: () {
+                      editInfoForm.populate();
+                      firstNameController.text = editInfoForm.firstName.value;
+                      middleNameController.text = editInfoForm.middleName.value;
+                      lastNameController.text = editInfoForm.lastName.value;
+                      FocusScope.of(context).unfocus();
+                    },
+                    title: 'Cancel'),
+              )),
         ],
       ),
     );
@@ -228,7 +218,7 @@ class _ProfilePicturePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PersonalInfoFormController personalInfoForm = Get.find();
+    final editInfoForm = Get.put(EditInfoFormController());
 
     _openPicker() async {
       final ImagePicker _picker = ImagePicker();
@@ -239,7 +229,7 @@ class _ProfilePicturePicker extends StatelessWidget {
         return;
       }
 
-      personalInfoForm.setSelectedImage(image.path);
+      editInfoForm.setSelectedImage(image.path);
     }
 
     return Obx(() => Column(
@@ -262,7 +252,7 @@ class _ProfilePicturePicker extends StatelessWidget {
                     await _openPicker();
                   },
                   borderRadius: BorderRadius.circular(50),
-                  child: personalInfoForm.selectedImage.value == ''
+                  child: editInfoForm.selectedImage.value == ''
                       ? SizedBox(
                           height: 100,
                           width: 100,
@@ -276,23 +266,37 @@ class _ProfilePicturePicker extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.file(
-                              File(personalInfoForm.selectedImage.value),
+                      : editInfoForm.selectedImage.value.startsWith('http')
+                          ? SizedBox(
                               height: 100,
                               width: 100,
-                              fit: BoxFit.cover,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.network(
+                                  editInfoForm.selectedImage.value,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.file(
+                                  File(editInfoForm.selectedImage.value),
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
                 ),
               ),
             ),
-            personalInfoForm.selectedImage.value == ''
+            editInfoForm.selectedImage.value == ''
                 ? CustomTextButton(
                     onPressed: () async {
                       await _openPicker();
@@ -300,7 +304,7 @@ class _ProfilePicturePicker extends StatelessWidget {
                     title: 'Add Profile Picture')
                 : CustomTextButton(
                     onPressed: () {
-                      personalInfoForm.setSelectedImage('');
+                      editInfoForm.setSelectedImage('');
                     },
                     title: 'Remove Profile Picture',
                   )
