@@ -86,7 +86,40 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthController authController = AuthController();
     String route = Get.currentRoute;
+
+    if (!authController.auth.currentUser!.emailVerified) {
+      return Expanded(
+        child: Column(
+          children: [
+            _ListTile(
+                scaffoldKey: scaffoldKey,
+                iconData: Icons.alternate_email_rounded,
+                onTap: () {
+                  if (route == '/EditEmailPasswordScreen') {
+                    Get.back();
+                  } else {
+                    Get.back();
+                    Get.to(() => const EditEmailPasswordScreen());
+                  }
+                },
+                title: 'Change Email'),
+            _ListTile(
+                scaffoldKey: scaffoldKey,
+                iconData: Icons.mark_email_unread,
+                onTap: () {
+                  if (route == '/HomeWrapper') {
+                    Get.back();
+                  } else {
+                    Get.offAll(() => const HomeWrapper());
+                  }
+                },
+                title: 'Verify Email'),
+          ],
+        ),
+      );
+    }
 
     return Expanded(
       child: Container(
@@ -174,6 +207,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserController userController = Get.find();
+    AuthController authController = Get.find();
     String route = Get.currentRoute;
     final user = userController.user;
 
@@ -184,78 +218,84 @@ class _Header extends StatelessWidget {
         padding: EdgeInsets.zero,
         child: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            user.value.preferredName! == 'firstName'
-                                ? '${user.value.firstName!} ${user.value.lastName!}'
-                                : '${user.value.middleName!} ${user.value.lastName!}',
-                            textAlign: TextAlign.right,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: UiConsts.normalFontSize),
-                          ),
-                          Text(
-                            user.value.email,
-                            textAlign: TextAlign.right,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
-                                fontWeight: FontWeight.bold,
-                                fontSize: UiConsts.normalFontSize - 4),
-                          ),
-                        ],
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: authController.auth.currentUser!.emailVerified ? 0 : 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              user.value.preferredName! == 'firstName'
+                                  ? '${user.value.firstName!} ${user.value.lastName!}'
+                                  : '${user.value.middleName!} ${user.value.lastName!}',
+                              textAlign: TextAlign.right,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: UiConsts.normalFontSize),
+                            ),
+                            Text(
+                              user.value.email,
+                              textAlign: TextAlign.right,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: UiConsts.normalFontSize - 4),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: user.value.profilePic == null
-                            ? Image.asset('assets/no_profile.png')
-                            : FadeInImage(
-                                image: NetworkImage(user.value.profilePic!),
-                                placeholder:
-                                    const AssetImage('assets/no_profile.png'),
-                                fit: BoxFit.cover,
-                              ),
-                        height: UiConsts.largeImageRadius * 2,
-                        width: UiConsts.largeImageRadius * 2,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(UiConsts.largeImageRadius),
-                        )),
-                  ],
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: user.value.profilePic == null
+                              ? Image.asset('assets/no_profile.png')
+                              : FadeInImage(
+                                  image: NetworkImage(user.value.profilePic!),
+                                  placeholder:
+                                      const AssetImage('assets/no_profile.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                          height: UiConsts.largeImageRadius * 2,
+                          width: UiConsts.largeImageRadius * 2,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                UiConsts.largeImageRadius),
+                          )),
+                    ],
+                  ),
                 ),
-              ),
-              _ListTile(
-                  scaffoldKey: scaffoldKey,
-                  iconData: Icons.edit,
-                  iconColor: Colors.white,
-                  textColor: Colors.white,
-                  onTap: () {
-                    if (route == '/EditPersonalInfoScreen') {
-                      Get.back();
-                    } else {
-                      Get.offAll(() => const EditPersonalInfoScreen());
-                    }
-                  },
-                  title: 'Edit Details'),
-            ],
+                authController.auth.currentUser!.emailVerified
+                    ? _ListTile(
+                        scaffoldKey: scaffoldKey,
+                        iconData: Icons.edit,
+                        iconColor: Colors.white,
+                        textColor: Colors.white,
+                        onTap: () {
+                          if (route == '/EditPersonalInfoScreen') {
+                            Get.back();
+                          } else {
+                            Get.offAll(() => const EditPersonalInfoScreen());
+                          }
+                        },
+                        title: 'Edit Details')
+                    : const SizedBox(),
+              ],
+            ),
           ),
         ),
         decoration: const BoxDecoration(

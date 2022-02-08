@@ -19,8 +19,14 @@ class HomeWrapper extends StatelessWidget {
       } else if (user.value.uid != '' && user.value.role == null) {
         return const LoadingScreen();
       } else if (user.value.role == 'teacher') {
+        if (!authController.auth.currentUser!.emailVerified) {
+          return const VerifyEmailScreen();
+        }
         return const TeacherHomeScreen();
       } else if (user.value.role == 'student') {
+        if (!authController.auth.currentUser!.emailVerified) {
+          return const VerifyEmailScreen();
+        }
         return const StudentHomeScreen();
       } else {
         return Scaffold(

@@ -5,6 +5,7 @@ import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/screens/personal_info_setup_screen.dart';
+import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
 class UserService {
@@ -55,6 +56,35 @@ class UserService {
     } catch (e) {
       Snackbar.error(
           'Student not added', 'There was an error adding the student');
+    }
+  }
+
+  Future updateUserInfo(User user, Map<String, dynamic> updateInfo) async {
+    try {
+      if (updateInfo['profilePic'] != null) {
+        if (user.profilePic != null) {
+          await StorageUserService.deleteProfilePicture(user.profilePic!);
+        }
+
+        if (updateInfo['profilePic'] == '') {
+          updateInfo['profilePic'] = null;
+        } else {
+          String? downloadUrl = await StorageUserService.uploadProfilePicture(
+              updateInfo['profilePic'], user.uid);
+
+          if (downloadUrl == null) return;
+
+          updateInfo['profilePic'] = downloadUrl;
+        }
+      }
+
+      await _firestore.collection('users').doc(user.uid).update(updateInfo);
+
+      Snackbar.success(
+          'Data updating', 'The details were successfully updated');
+    } catch (e) {
+      Snackbar.error(
+          'Data updating', 'There was an error updating the details');
     }
   }
 }

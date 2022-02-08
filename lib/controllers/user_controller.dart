@@ -16,4 +16,8 @@ class UserController extends GetxController {
   reset() {
     user.value = User(email: '', uid: '');
   }
+
+  Future updateUserInfo(User user, Map<String, dynamic> updateInfo) async {
+    await UserService().updateUserInfo(user, updateInfo);
+  }
 }

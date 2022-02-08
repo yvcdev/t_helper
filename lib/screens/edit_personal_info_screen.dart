@@ -10,6 +10,7 @@ import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/layouts/layouts.dart';
+import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -26,7 +27,7 @@ class EditPersonalInfoScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(UiConsts.normalPadding),
             child: Column(
-              children: [
+              children: const [
                 _InfoForm(),
               ],
             ),
@@ -61,7 +62,6 @@ class _InfoFormState extends State<_InfoForm> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> roleValues = ['teacher', 'student']; //TODO:
     List<String> preferredNameValues = [
       'firstName',
       'middleName'
@@ -73,13 +73,12 @@ class _InfoFormState extends State<_InfoForm> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
           const _ProfilePicturePicker(),
-          const SizedBox(
-            height: 20,
-          ),
+          CustomTextButton(
+              onPressed: () {
+                Get.to(() => const EditEmailPasswordScreen());
+              },
+              title: 'Update email or password'),
           TextFormField(
             controller: firstNameController,
             autocorrect: false,
@@ -186,10 +185,10 @@ class _InfoFormState extends State<_InfoForm> {
               title: 'Save',
               isLoading: editInfoForm.isLoading.value,
               isActive: !editInfoForm.isSaved.value,
-              onTap:
-                  (editInfoForm.isLoading.value || editInfoForm.isSaved.value)
-                      ? null
-                      : () => personalInfoOnTap(context, editInfoFormKey))),
+              onTap: (editInfoForm.isLoading.value ||
+                      editInfoForm.isSaved.value)
+                  ? null
+                  : () => editPersonalInfoOnUpdate(editInfoFormKey, context))),
           const SizedBox(
             height: 10,
           ),
@@ -295,6 +294,9 @@ class _ProfilePicturePicker extends StatelessWidget {
                             ),
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             editInfoForm.selectedImage.value == ''
                 ? CustomTextButton(

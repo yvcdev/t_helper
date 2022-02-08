@@ -8,15 +8,15 @@ import 'package:t_helper/services/user_service.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
 class AuthController extends GetxController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   late Rx<User?> fbUser;
 
   @override
   onReady() {
     super.onReady();
-    fbUser = Rx<User?>(_auth.currentUser);
-    fbUser.bindStream(_auth.userChanges());
-    if (_auth.currentUser != null) {
+    fbUser = Rx<User?>(auth.currentUser);
+    fbUser.bindStream(auth.userChanges());
+    if (auth.currentUser != null) {
       final userController = Get.put(UserController(), permanent: true);
       userController.onAuth();
     }
@@ -35,7 +35,7 @@ class AuthController extends GetxController {
     try {
       final userController = Get.put(UserController(), permanent: true);
 
-      final authUser = await _auth.signInWithEmailAndPassword(
+      final authUser = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       final _user = await UserService().getUserMAnually(authUser.user!.uid);
 
@@ -57,7 +57,7 @@ class AuthController extends GetxController {
     try {
       final userController = Get.put(UserController(), permanent: true);
 
-      await _auth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       userController.onAuth();
@@ -78,8 +78,17 @@ class AuthController extends GetxController {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    await auth.signOut();
     UserController userController = Get.find();
     userController.reset();
+  }
+
+  verifyUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      await user.reload();
+    }
   }
 }

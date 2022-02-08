@@ -15,7 +15,7 @@ class EditInfoFormController extends GetxController {
   var isSaved = true.obs;
   UserController userController = Get.find();
   Map<String, bool> fields = {
-    'selectedImage': false,
+    'profilePic': false,
     'firstName': false,
     'lastName': false,
     'middleName': false,
@@ -46,7 +46,7 @@ class EditInfoFormController extends GetxController {
     ever(
         selectedImage,
         (value) => updateIsSaved(
-            'selectedImage', value, userController.user.value.profilePic));
+            'profilePic', value, userController.user.value.profilePic));
     ever(
         preferredName,
         (value) => updateIsSaved(

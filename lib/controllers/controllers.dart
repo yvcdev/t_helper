@@ -15,3 +15,5 @@ export 'package:t_helper/controllers/subject_controller.dart';
 export 'package:t_helper/controllers/group_controller.dart';
 export 'package:t_helper/controllers/personal_info_form_controller.dart';
 export 'package:t_helper/controllers/edit_info_form_controller.dart';
+export 'package:t_helper/controllers/edit_email_password_form_controller.dart';
+export 'package:t_helper/controllers/verify_email_controller.dart';

@@ -26,10 +26,21 @@ class StorageUserService {
       if (e.code == 'canceled') {
         Snackbar.error('Canceled', 'The upload was canceled');
       } else {
-        Snackbar.error('Error', 'Please try again later');
+        Snackbar.error('Unknown Error', 'Please try again later');
       }
     } catch (e) {
-      Snackbar.error('Error', 'Please try again later');
+      Snackbar.error('Unknown Error', 'Please try again later');
+    }
+  }
+
+  static Future<bool> deleteProfilePicture(String imageUrl) async {
+    try {
+      await _storage.refFromURL(imageUrl).delete();
+      return true;
+    } catch (e) {
+      Snackbar.error(
+          'Image deletion', 'The profile picture could not be deleted');
+      return false;
     }
   }
 }

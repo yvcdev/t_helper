@@ -7,9 +7,12 @@ class CustomTextButton extends StatelessWidget {
   final String title;
   final double? fontSize;
 
-  const CustomTextButton(
-      {Key? key, required this.onPressed, required this.title, this.fontSize})
-      : super(key: key);
+  const CustomTextButton({
+    Key? key,
+    required this.onPressed,
+    required this.title,
+    this.fontSize,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

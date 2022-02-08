@@ -13,3 +13,5 @@ export 'package:t_helper/screens/finished_screen.dart';
 export 'package:t_helper/screens/student_home_screen.dart';
 export 'package:t_helper/screens/subjects_screen.dart';
 export 'package:t_helper/screens/edit_personal_info_screen.dart';
+export 'package:t_helper/screens/edit_email_pasword_screen.dart';
+export 'package:t_helper/screens/verify_email_screen.dart';

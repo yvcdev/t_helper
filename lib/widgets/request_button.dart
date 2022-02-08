@@ -33,8 +33,8 @@ class RequestButton extends StatelessWidget {
       elevation: 0,
       color: CustomColors.primary,
       child: SizedBox(
-        width: 160,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
