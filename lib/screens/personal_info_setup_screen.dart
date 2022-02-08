@@ -231,15 +231,20 @@ class _ProfilePicturePicker extends StatelessWidget {
     PersonalInfoFormController personalInfoForm = Get.find();
 
     _openPicker() async {
-      final ImagePicker _picker = ImagePicker();
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      try {
+        final ImagePicker _picker = ImagePicker();
+        final XFile? image =
+            await _picker.pickImage(source: ImageSource.gallery);
 
-      if (image == null) {
-        Snackbar.error('Image selection', 'No new image selected');
-        return;
+        if (image == null) {
+          Snackbar.error('Image selection', 'No new image selected');
+          return;
+        }
+
+        personalInfoForm.setSelectedImage(image.path);
+      } catch (e) {
+        Snackbar.error('Image selection', 'Error selecting the image');
       }
-
-      personalInfoForm.setSelectedImage(image.path);
     }
 
     return Obx(() => Column(
