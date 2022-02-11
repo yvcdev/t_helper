@@ -18,7 +18,7 @@ class EditEmailPasswordFormController extends GetxController {
     'password': false,
     'confirmPassword': false,
   };
-  String toUpdate = '';
+  var toUpdate = ''.obs;
 
   @override
   onReady() {
@@ -28,9 +28,11 @@ class EditEmailPasswordFormController extends GetxController {
         (value) =>
             updateIsSaved('email', value, userController.user.value.email));
     ever(newPassword,
-        (value) => updateIsSaved('currentPassword', newPassword.value, value));
-    ever(currentPassword,
-        (value) => updateIsSaved('password', currentPassword.value, value));
+        (value) => updateIsSaved('password', newPassword.value, value));
+    ever(
+        currentPassword,
+        (value) =>
+            updateIsSaved('currentPassword', currentPassword.value, value));
     ever(
         confirmPassword,
         (value) =>
@@ -77,24 +79,22 @@ class EditEmailPasswordFormController extends GetxController {
         _password = true;
       } else if (key == "confirmPassword" && active) {
         _password = true;
-      } else if (key == "currentPassword" && active) {
-        _password = true;
-      }
-
-      if (_email && _password) {
-        updateButtonText.value = "Update Both";
-        toUpdate = 'both';
-      } else if (_password) {
-        updateButtonText.value = "Update Password";
-        toUpdate = 'password';
-      } else if (_email) {
-        updateButtonText.value = "Update Email";
-        toUpdate = 'email';
-      } else {
-        updateButtonText.value = "Update";
-        toUpdate = '';
       }
     });
+
+    if (_email && _password) {
+      updateButtonText.value = "Update Both";
+      toUpdate.value = 'both';
+    } else if (_password) {
+      updateButtonText.value = "Update Password";
+      toUpdate.value = 'password';
+    } else if (_email) {
+      updateButtonText.value = "Update Email";
+      toUpdate.value = 'email';
+    } else {
+      updateButtonText.value = "Update";
+      toUpdate.value = '';
+    }
   }
 
   void reset() {

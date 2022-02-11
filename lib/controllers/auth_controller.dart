@@ -84,11 +84,71 @@ class AuthController extends GetxController {
   }
 
   verifyUserEmail() async {
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = auth.currentUser;
 
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
       await user.reload();
+    }
+  }
+
+  Future<bool> updateEmail(String newEmail, String currentPassword,
+      {bool onlyEmail = true}) async {
+    try {
+      final user = auth.currentUser;
+      UserController userController = Get.find();
+
+      if (onlyEmail) {
+        await user!.reauthenticateWithCredential(EmailAuthProvider.credential(
+            email: user.email!, password: currentPassword));
+      }
+
+      await user!.updateEmail(newEmail);
+
+      await userController
+          .updateUserInfo(userController.user.value, {'email': newEmail});
+
+      if (onlyEmail) {
+        Snackbar.success('Email change', 'Email successfully updated');
+      }
+      return true;
+    } catch (e) {
+      Snackbar.error('Email change', 'Error when trying to change the email');
+      return true;
+    }
+  }
+
+  Future<bool> updatePassword(String newPassword, String currentPassword,
+      {bool onlyPassword = true}) async {
+    try {
+      final user = auth.currentUser;
+
+      await user!.reauthenticateWithCredential(EmailAuthProvider.credential(
+          email: user.email!, password: currentPassword));
+
+      await user.updatePassword(newPassword);
+
+      if (onlyPassword) {
+        Snackbar.success('Password change', 'Password successfully updated');
+      }
+      return true;
+    } catch (e) {
+      Snackbar.error(
+          'Password change', 'Error when trying to change the email');
+      return false;
+    }
+  }
+
+  Future updateEmailPassword(
+      String newEmail, String newPassword, String currentPassword) async {
+    final emailChanged =
+        await updateEmail(newEmail, currentPassword, onlyEmail: false);
+    final passwordChanged =
+        await updatePassword(newPassword, currentPassword, onlyPassword: false);
+
+    if (emailChanged && passwordChanged) {
+      Snackbar.success('Email and password change',
+          'Email and Password successfully updated');
     }
   }
 }

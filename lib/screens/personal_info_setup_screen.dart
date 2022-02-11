@@ -18,6 +18,8 @@ class PersonalInfoSetupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final personalInfoForm = Get.put(PersonalInfoFormController());
+
     return Scaffold(
       body: AuthBg(
         child: SingleChildScrollView(
@@ -50,6 +52,17 @@ class PersonalInfoSetupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(
+                height: 10,
+              ),
+              CustomTextButton(
+                  onPressed: () async {
+                    AuthController authController = Get.find();
+                    await authController.signOut();
+                    personalInfoForm.reset();
+                    Get.offAll(() => const LoginScreen());
+                  },
+                  title: 'Log Out'),
+              const SizedBox(
                 height: 30,
               ),
             ],
@@ -66,7 +79,6 @@ class _InfoForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(PersonalInfoFormController());
     PersonalInfoFormController personalInfoForm = Get.find();
 
     List<String> roleValues = ['', 'teacher', 'student'];
@@ -204,17 +216,6 @@ class _InfoForm extends StatelessWidget {
               onTap: personalInfoForm.isLoading.value
                   ? null
                   : () => personalInfoOnTap(context, personalInfoFormKey))),
-          const SizedBox(
-            height: 20,
-          ),
-          CustomTextButton(
-              onPressed: () async {
-                AuthController authController = Get.find();
-                await authController.signOut();
-                personalInfoForm.reset();
-                Get.offAll(() => const LoginScreen());
-              },
-              title: 'Log Out')
         ],
       ),
     );

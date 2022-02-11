@@ -8,33 +8,35 @@ import 'package:t_helper/widgets/widgets.dart';
 editEmailPasswordOnUpdate(
     GlobalKey<FormState> editEmailPassword, BuildContext context) async {
   EditEmailPasswordFormController editEmailPasswordForm = Get.find();
-  UserController userController = Get.find();
-  Map<String, dynamic> _updateInfo = {};
+  AuthController authController = Get.find();
   Map _fieldMap = {
     'email': editEmailPasswordForm.newEmail.value,
     'password': editEmailPasswordForm.newPassword.value,
+    'currentPassword': editEmailPasswordForm.currentPassword.value,
   };
 
   if (!editEmailPasswordForm.isValidForm(editEmailPassword)) return;
+
   FocusScope.of(context).unfocus();
 
   editEmailPasswordForm.isLoading.value = true;
 
-  return;
+  switch (editEmailPasswordForm.toUpdate.value) {
+    case 'email':
+      await authController.updateEmail(
+          _fieldMap['email'], _fieldMap['currentPassword']);
+      break;
+    case 'password':
+      await authController.updatePassword(
+          _fieldMap['password'], _fieldMap['currentPassword']);
+      break;
+    case 'both':
+      await authController.updateEmailPassword(_fieldMap['email'],
+          _fieldMap['password'], _fieldMap['currentPassword']);
+      break;
+  }
 
-  editEmailPasswordForm.fields.forEach((key, value) {
-    if (value) {
-      if (key == 'password') {
-        //_updateInfo['password'] = editEmailPasswordForm.newPassword.value;
-      } else {
-        //_updateInfo[key] = _fieldMap[key];
-      }
-    }
-  });
-
-  await userController.updateUserInfo(userController.user.value, _updateInfo);
   editEmailPasswordForm.isSaved.value = true;
-
   editEmailPasswordForm.isLoading.value = false;
 }
 
@@ -48,20 +50,22 @@ editEmailPasswordShowDialog(
         builder: (context) => MinimalPopUp(
               topImage: false,
               correctText: 'Please confirm you want to change ' +
-                  (editEmailPasswordForm.toUpdate == 'both'
+                  (editEmailPasswordForm.toUpdate.value == 'both'
                       ? 'your email and password'
-                      : editEmailPasswordForm.toUpdate == 'email'
+                      : editEmailPasswordForm.toUpdate.value == 'email'
                           ? 'your email'
                           : 'your password'),
               description:
-                  'If the email is change, you would have to verify the new one in order to access your account',
+                  'If the email is changed, you would have to verify the new one in order to access your account',
               acceptButtonLabel: 'Confirm',
               cancelButtonLabel: 'Cancel',
               isAcceptActive: true,
               isCancelActive: true,
               acceptButtonColor: CustomColors.green,
               cancelButtonColor: CustomColors.red,
-              onAccept: () => print('implement'),
+              onAccept: () {
+                editEmailPasswordOnUpdate(editEmailPasswordFormKey, context);
+              },
               onCancel: () => Get.back(),
             ));
   }

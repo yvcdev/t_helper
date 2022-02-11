@@ -118,7 +118,7 @@ class _SignupForm extends StatelessWidget {
                 labelText: 'Password',
                 prefixIcon: Icons.lock_outline),
             validator: (value) {
-              if (value != null && value.length >= 6) return null;
+              if (value != null && value.length >= 7) return null;
 
               return 'Password should have more than 6 characters';
             },

@@ -6,17 +6,11 @@ import 'package:t_helper/helpers/helpers.dart';
 
 class VerifyEmailController extends GetxController {
   AuthController authController = Get.find();
-  var allowResendEmail = false.obs;
+  var allowResendEmail = true.obs;
   var isLoadingVerify = false.obs;
   var isLoadingSend = false.obs;
   var minutes = 2.obs;
   var seconds = 0.obs;
-
-  @override
-  onReady() {
-    sendVerificationEmail();
-    startTimer();
-  }
 
   startTimer() {
     minutes.value = 2;

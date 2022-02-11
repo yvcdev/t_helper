@@ -36,7 +36,7 @@ class VerifyEmailScreen extends StatelessWidget {
                   height: 15,
                 ),
                 Text(
-                  'Verification email sent to ${userController.user.value.email}',
+                  'Email verification process for ${userController.user.value.email}',
                   style: const TextStyle(
                       fontSize: UiConsts.normalFontSize,
                       fontWeight: FontWeight.bold),
@@ -46,22 +46,12 @@ class VerifyEmailScreen extends StatelessWidget {
                   height: 15,
                 ),
                 const Text(
-                  'Please check your inbox for the verification email. Open the link there, come back to the app, and click the button bellow.',
+                  'Tap "Send Email", go to your email account and open the link we sent you. Then, come back to the app and tap "Already Verfied Email".',
                   style: TextStyle(
                     fontSize: UiConsts.normalFontSize,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Obx(() => RequestButton(
-                    isLoading: verifyEmailController.isLoadingVerify.value,
-                    onTap: () async {
-                      await authController.auth.currentUser!.reload();
-                    },
-                    waitTitle: 'Please wait',
-                    title: 'Already Verified My Email')),
                 const SizedBox(
                   height: 20,
                 ),
@@ -75,7 +65,7 @@ class VerifyEmailScreen extends StatelessWidget {
                       verifyEmailController.allowResendEmail.value = false;
                     },
                     waitTitle: 'Please wait',
-                    title: 'Send Email Again')),
+                    title: 'Send Email')),
                 const SizedBox(
                   height: 5,
                 ),
@@ -89,6 +79,17 @@ class VerifyEmailScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     )),
+                const SizedBox(
+                  height: 20,
+                ),
+                Obx(() => RequestButton(
+                    isActive: !verifyEmailController.allowResendEmail.value,
+                    isLoading: verifyEmailController.isLoadingVerify.value,
+                    onTap: () async {
+                      await authController.auth.currentUser!.reload();
+                    },
+                    waitTitle: 'Please wait',
+                    title: 'Already Verified My Email')),
                 const SizedBox(
                   height: 5,
                 ),

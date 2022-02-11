@@ -5,6 +5,7 @@ import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/screens/personal_info_setup_screen.dart';
+import 'package:t_helper/screens/verify_email_screen.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
@@ -80,11 +81,17 @@ class UserService {
 
       await _firestore.collection('users').doc(user.uid).update(updateInfo);
 
-      Snackbar.success(
-          'Data updating', 'The details were successfully updated');
+      Get.to(() => const VerifyEmailScreen());
+
+      if (!updateInfo.containsKey('email')) {
+        Snackbar.success(
+            'Data updating', 'The details were successfully updated');
+      }
     } catch (e) {
-      Snackbar.error(
-          'Data updating', 'There was an error updating the details');
+      if (!updateInfo.containsKey('email')) {
+        Snackbar.error(
+            'Data updating', 'There was an error updating the details');
+      }
     }
   }
 }
