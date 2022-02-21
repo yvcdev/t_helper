@@ -4,9 +4,10 @@ import 'package:t_helper/services/subject_service.dart';
 
 class SubjectController extends GetxController {
   var subjectList = RxList<Subject>([]);
+  var editionMode = false.obs;
+  var subjectToDelete = ''.obs;
   var subjectNumber = 0.obs;
   var loading = true.obs;
-  var subjectExists = false.obs;
   var subjects = [
     {
       "name": '',
@@ -63,8 +64,7 @@ class SubjectController extends GetxController {
     final wasUpdated =
         await SubjectService().updateSubject(subjectId, field, value);
 
-    if (wasUpdated == true && field == 'active') {
-      subjectList[index].active = value;
+    if (wasUpdated) {
       filterActiveSubjects();
       update();
     }
@@ -72,8 +72,9 @@ class SubjectController extends GetxController {
     return wasUpdated;
   }
 
-  Future<bool> checkSubjectExists(String namedId) async {
-    final response = await SubjectService().checkSubjectExists(namedId);
+  Future<int?> deleteSubject(String subjectId) async {
+    final response = await SubjectService().deleteSubject(subjectId);
+    filterActiveSubjects();
     return response;
   }
 }

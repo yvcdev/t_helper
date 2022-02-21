@@ -4,6 +4,7 @@ import 'package:t_helper/controllers/subject_controller.dart';
 import 'package:t_helper/helpers/helpers.dart';
 
 import 'package:t_helper/models/models.dart';
+import 'package:t_helper/utils/generate_unique_id.dart';
 
 class SubjectService {
   CollectionReference subjectsReference =
@@ -49,20 +50,33 @@ class SubjectService {
 
   Future<String?> addSubject(Subject subjectAdd) async {
     try {
-      if (await checkSubjectExists(subjectAdd.namedId)) {
-        Snackbar.error('Naming error', 'Subject already exists');
+      int sequence = 2;
+
+      int index = checkSubjectNameExists(subjectAdd.name);
+      if (index != -1) {
         return null;
       }
 
-      final subject = await subjectsReference.add(subjectAdd.toMap());
-      //TODO: add the subject to the group info - do it in functions file
+      await Future.doWhile(() async {
+        bool _exists = await checkIdExists(subjectAdd.namedId);
 
-      subjectController.subjectNumber.value =
-          subjectController.subjectNumber.value + 1;
+        if (_exists) {
+          String namedId = generateUniqueId(subjectAdd.name, sequence, 's');
+          subjectAdd.namedId = namedId;
+          sequence++;
+        }
+
+        return _exists;
+      });
+      var subject = await subjectsReference.add(subjectAdd.toMap());
+      //TODO: add the subject to the group info - do it in functions file
 
       subjectAdd.id = subject.id;
 
       subjectController.subjectList.insert(0, subjectAdd);
+
+      subjectController.subjectNumber.value =
+          subjectController.subjectList.length;
 
       return subject.id;
     } catch (e) {
@@ -91,7 +105,8 @@ class SubjectService {
 
       return index;
     } catch (e) {
-      Snackbar.error('Unknown error', 'There was an error deleting the group');
+      Snackbar.error(
+          'Unknown error', 'There was an error deleting the subject');
     }
   }
 
@@ -102,7 +117,11 @@ class SubjectService {
       int subjectIndex = subjectController.subjectList
           .indexWhere((subject) => subject.id == subjectId);
 
-      subjectController.subjectList[subjectIndex].active = value;
+      if (field == 'active') {
+        subjectController.subjectList[subjectIndex].active = value;
+      } else {
+        subjectController.subjectList[subjectIndex].name = value;
+      }
       return true;
     } catch (e) {
       Snackbar.error(
@@ -111,16 +130,43 @@ class SubjectService {
     }
   }
 
-  Future<bool> checkSubjectExists(String namedId) async {
+  Future<bool> checkIdExists(String namedId) async {
     final _existingSubjects =
         await subjectsReference.where('namedId', isEqualTo: namedId).get();
 
     if (_existingSubjects.docs.isNotEmpty) {
-      subjectController.subjectExists.value = true;
       return true;
     }
-
-    subjectController.subjectExists.value = false;
     return false;
+  }
+
+  int checkSubjectNameExists(String subjectName) {
+    final index = subjectController.subjectList.indexWhere((subject) =>
+        subjectName.trim().toLowerCase() == subject.name.trim().toLowerCase());
+
+    if (index != -1) {
+      Snackbar.error('Naming error', 'Subject already exists');
+    }
+
+    return index;
+  }
+
+  Future<int?> deleteSubject(String subjectId) async {
+    try {
+      subjectsReference.doc(subjectId).delete();
+
+      final index = subjectController.subjectList
+          .indexWhere((subject) => subject.id == subjectId);
+
+      subjectController.subjectList.removeAt(index);
+
+      subjectController.subjectNumber.value =
+          subjectController.subjectList.length;
+
+      return index;
+    } catch (e) {
+      Snackbar.error(
+          'Unknown error', 'There was an error deleting the subject');
+    }
   }
 }

@@ -8,14 +8,28 @@ import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/utils/utils.dart';
+import 'package:t_helper/widgets/widgets.dart';
 
-class SubjectsScreen extends StatelessWidget {
-  SubjectsScreen({Key? key}) : super(key: key);
+class SubjectsScreen extends StatefulWidget {
+  const SubjectsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SubjectsScreen> createState() => _SubjectsScreenState();
+}
+
+class _SubjectsScreenState extends State<SubjectsScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
   final subjectTextController = TextEditingController();
+
+  @override
+  dispose() {
+    super.dispose();
+    SubjectController subjectController = Get.find();
+    subjectController.editionMode.value = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,51 +80,115 @@ class SubjectsScreen extends StatelessWidget {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Stack(
                         children: [
-                          TextFormField(
-                            controller: subjectTextController,
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
-                            ],
-                            autocorrect: false,
-                            decoration: InputDecorations.generalInputDecoration(
-                                hintText: 'Subject Name',
-                                labelText: 'Subject Name',
-                                prefixIcon: Icons.text_fields_rounded),
-                            validator: (value) {
-                              String pattern = r'^[a-zA-Z1-9ñÑ\s]*$';
-                              RegExp regExp = RegExp(pattern);
+                          Obx(() => TextFormField(
+                                controller: subjectTextController,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(20)
+                                ],
+                                autocorrect: false,
+                                decoration: InputDecorations.generalInputDecoration(
+                                    labelText:
+                                        'Subject Name ${subjectController.editionMode.value ? "(edition mode)" : ""}',
+                                    hintText: 'Subject Name',
+                                    prefixIcon: Icons.text_fields_rounded,
+                                    labelColor:
+                                        subjectController.editionMode.value
+                                            ? CustomColors.red
+                                            : null),
+                                validator: (value) {
+                                  String pattern = r'^[a-zA-Z1-9ñÑ\s]*$';
+                                  RegExp regExp = RegExp(pattern);
 
-                              if (subjectTextController.text != '') {
-                                if (value!.trim().length < 3) {
-                                  return 'The name should have more than 2 characters';
-                                }
-                                return regExp.hasMatch(value)
-                                    ? null
-                                    : 'Only alphanumerics and numbers are accepted';
-                              }
-                            },
-                            onChanged: (value) {
-                              addSubjectForm.subject = value;
-                            },
-                          ),
+                                  if (subjectTextController.text != '') {
+                                    if (value!.trim().length < 3) {
+                                      return 'The name should have more than 2 characters';
+                                    }
+                                    return regExp.hasMatch(value)
+                                        ? null
+                                        : 'Only alphanumerics and numbers are accepted';
+                                  }
+                                },
+                                onChanged: (value) {
+                                  addSubjectForm.subject = value;
+                                },
+                              )),
                           Positioned(
                             right: 5,
                             top: 10,
                             child: IconButton(
                                 onPressed: () async {
-                                  await subjectsOnAddPressed(context, formKey,
-                                      listKey, subjectTextController);
+                                  if (subjectController.editionMode.value) {
+                                    int index = subjectController.subjectList
+                                        .indexWhere((subject) =>
+                                            subject.id ==
+                                            subjectController
+                                                .subjectToDelete.value);
+
+                                    await subjectsOnSendNewNamePressed(
+                                        context,
+                                        subjectController.subjectToDelete.value,
+                                        subjectTextController.text,
+                                        index,
+                                        formKey,
+                                        subjectTextController);
+                                  } else {
+                                    await subjectsOnAddPressed(context, formKey,
+                                        listKey, subjectTextController);
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.send,
                                   color: CustomColors.primary,
                                 )),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    Visibility(
+                      visible: subjectController.editionMode.value,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            subjectController.editionMode.value
+                                ? 'Editing "${subjectController.subjectList.firstWhere((subject) => subject.id == subjectController.subjectToDelete.value).name}"'
+                                : '',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: UiConsts.smallFontSize,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomTextButton(
+                                  onPressed: () async {
+                                    await subjectOnDeleteSubjectPressed(
+                                        context,
+                                        subjectController.subjectToDelete.value,
+                                        subjectTextController,
+                                        listKey,
+                                        _offset);
+                                  },
+                                  title: 'Delete Subject'),
+                              CustomTextButton(
+                                  onPressed: () {
+                                    subjectController.editionMode.value = false;
+                                    subjectTextController.text = '';
+                                    formKey.currentState!.validate();
+                                    addSubjectForm.reset();
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  title: 'Cancel')
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: subjectController.editionMode.value ? 2 : 20,
                     ),
                   ],
                 ),
@@ -126,7 +204,6 @@ class SubjectsScreen extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(
                             horizontal: UiConsts.smallPadding,
                             vertical: UiConsts.smallPadding),
-                        //padding: const EdgeInsets.all(UiConsts.normalPadding),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(
                                 UiConsts.borderRadius - 5),
@@ -136,34 +213,61 @@ class SubjectsScreen extends StatelessWidget {
                                   .withOpacity(0.9)
                             ])),
                         child: GetBuilder<SubjectController>(
-                            builder: (controller) => SwitchListTile(
-                                  value: controller.subjectList[index].active,
-                                  onChanged: (value) async {
-                                    await subjectsOnSwitchChanged(
-                                        context,
-                                        controller.subjectList[index].id!,
-                                        value,
-                                        index);
-                                  },
-                                  title: Text(
-                                    controller.subjectList[index].name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: UiConsts.normalFontSize,
-                                      fontWeight: FontWeight.bold,
+                            builder: (controller) => Row(
+                                  children: [
+                                    Expanded(
+                                      child: SwitchListTile(
+                                        contentPadding: const EdgeInsets.only(
+                                            right: 0,
+                                            top: 4,
+                                            left: 15,
+                                            bottom: 4),
+                                        value: controller
+                                            .subjectList[index].active,
+                                        onChanged: (value) async {
+                                          await subjectsOnSwitchChanged(
+                                              context,
+                                              controller.subjectList[index].id!,
+                                              value,
+                                              index);
+                                        },
+                                        title: Text(
+                                          controller.subjectList[index].name,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: UiConsts.normalFontSize,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                            controller.subjectList[index].active
+                                                ? 'Active'
+                                                : 'Inactive',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: UiConsts.smallFontSize,
+                                            )),
+                                        activeColor: Colors.white,
+                                        tileColor: UiConsts.colors[
+                                            index % UiConsts.colors.length],
+                                      ),
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                      controller.subjectList[index].active
-                                          ? 'Active'
-                                          : 'Inactive',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: UiConsts.smallFontSize,
-                                      )),
-                                  activeColor: Colors.white,
-                                  tileColor: UiConsts
-                                      .colors[index % UiConsts.colors.length],
+                                    IconButton(
+                                        onPressed: () {
+                                          subjectOnEditPress(
+                                              context,
+                                              controller.subjectList[index].id!,
+                                              controller
+                                                  .subjectList[index].name,
+                                              index,
+                                              subjectTextController);
+                                          formKey.currentState!.validate();
+                                        },
+                                        icon: const Icon(
+                                          Icons.edit_rounded,
+                                          color: Colors.white,
+                                        ))
+                                  ],
                                 )),
                       ),
                     );
