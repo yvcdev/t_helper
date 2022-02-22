@@ -81,16 +81,16 @@ class UserService {
 
       await _firestore.collection('users').doc(user.uid).update(updateInfo);
 
-      Get.to(() => const VerifyEmailScreen());
+      Get.to(() => const HomeWrapper());
 
       if (!updateInfo.containsKey('email')) {
         Snackbar.success(
-            'Data updating', 'The details were successfully updated');
+            'Data update', 'The details were successfully updated');
       }
     } catch (e) {
       if (!updateInfo.containsKey('email')) {
         Snackbar.error(
-            'Data updating', 'There was an error updating the details');
+            'Data update', 'There was an error updating the details');
       }
     }
   }

@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 import 'firebase_options.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/utils.dart';
 
 void main() async {
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       theme: _themeData(context),
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      home: const LoginScreen(),
+      title: 'T Helper',
+      home: const HomeWrapper(),
     );
   }
 

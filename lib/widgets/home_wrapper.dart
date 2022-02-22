@@ -9,6 +9,7 @@ class HomeWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(() => UserController());
     UserController userController = Get.find();
     final user = userController.user;
     AuthController authController = Get.find();
