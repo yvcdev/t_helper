@@ -55,8 +55,9 @@ editEmailPasswordShowDialog(
                       : editEmailPasswordForm.toUpdate.value == 'email'
                           ? 'your email'
                           : 'your password'),
-              description:
-                  'If the email is changed, you would have to verify the new one in order to access your account',
+              description: editEmailPasswordForm.toUpdate.value != 'password'
+                  ? 'A new email verification process will be necessary if the email is changed'
+                  : null,
               acceptButtonLabel: 'Confirm',
               cancelButtonLabel: 'Cancel',
               isAcceptActive: true,
