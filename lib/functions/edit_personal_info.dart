@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
+import 'package:t_helper/helpers/helpers.dart';
 
 import 'package:t_helper/controllers/edit_info_form_controller.dart';
 import 'package:t_helper/controllers/user_controller.dart';
@@ -10,9 +11,9 @@ editPersonalInfoOnUpdate(
   UserController userController = Get.find();
   Map<String, dynamic> _updateInfo = {};
   Map _fieldMap = {
-    'firstName': editInfoForm.firstName.value,
-    'middleName': editInfoForm.middleName.value,
-    'lastName': editInfoForm.lastName.value,
+    'firstName': editInfoForm.firstName.value.toCapitalized(),
+    'middleName': editInfoForm.middleName.value.toCapitalized(),
+    'lastName': editInfoForm.lastName.value.toCapitalized(),
     'preferredName': editInfoForm.preferredName.value,
   };
 
