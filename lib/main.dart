@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 import 'firebase_options.dart';
 

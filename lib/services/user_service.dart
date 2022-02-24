@@ -5,7 +5,6 @@ import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/screens/personal_info_setup_screen.dart';
-import 'package:t_helper/screens/verify_email_screen.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 

@@ -12,18 +12,20 @@ import 'package:t_helper/widgets/widgets.dart';
 import 'package:t_helper/helpers/helpers.dart';
 
 class CreateGroupScreen extends StatelessWidget {
-  const CreateGroupScreen({Key? key}) : super(key: key);
+  CreateGroupScreen({Key? key}) : super(key: key);
+  final arguments = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     return DefaultAppBarLayout(
         topSeparation: false,
-        title: 'Create Group',
+        title:
+            arguments?['type'] == 'editGroup' ? 'Edit Group' : 'Create Group',
         drawer: false,
         children: [
           Column(
             children: [
-              const _UpperPicturePicker(),
+              _UpperPicturePicker(),
               Padding(
                 padding: const EdgeInsets.all(UiConsts.largePadding),
                 child: _CreateGroupForm(),
@@ -35,14 +37,13 @@ class CreateGroupScreen extends StatelessWidget {
 }
 
 class _UpperPicturePicker extends StatelessWidget {
-  const _UpperPicturePicker({
+  _UpperPicturePicker({
     Key? key,
   }) : super(key: key);
+  final createGroupForm = Get.put(CreateGroupFormController());
 
   @override
   Widget build(BuildContext context) {
-    final createGroupForm = Get.put(CreateGroupFormController());
-
     return Container(
         height: 200,
         width: double.infinity,
@@ -50,20 +51,30 @@ class _UpperPicturePicker extends StatelessWidget {
         child: Obx(
           () => Stack(
             children: [
-              createGroupForm.newPictureFile.value == null
-                  ? Image.asset(
-                      'assets/no_image.jpg',
+              (createGroupForm.selectedImage.value != null &&
+                      createGroupForm.selectedImage.value!.startsWith('http'))
+                  ? FadeInImage(
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,
-                    )
-                  : Image.file(
-                      createGroupForm.newPictureFile.value!,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-              const _PickerButton()
+                      placeholder: const AssetImage(
+                        'assets/no_image.jpg',
+                      ),
+                      image: NetworkImage(createGroupForm.selectedImage.value!))
+                  : createGroupForm.newPictureFile.value == null
+                      ? Image.asset(
+                          'assets/no_image.jpg',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: 200,
+                        )
+                      : Image.file(
+                          createGroupForm.newPictureFile.value!,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+              _PickerButton()
             ],
           ),
         ));
@@ -71,14 +82,13 @@ class _UpperPicturePicker extends StatelessWidget {
 }
 
 class _PickerButton extends StatelessWidget {
-  const _PickerButton({
+  _PickerButton({
     Key? key,
   }) : super(key: key);
+  final CreateGroupFormController createGroupForm = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    CreateGroupFormController createGroupForm = Get.find();
-
     return Positioned(
         right: 5,
         bottom: 5,
@@ -133,12 +143,15 @@ class _PickerButton extends StatelessWidget {
 
 class _CreateGroupForm extends StatelessWidget {
   _CreateGroupForm({Key? key}) : super(key: key);
+  final CreateGroupFormController createGroupForm = Get.find();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final nameInputController = TextEditingController();
+  final arguments = Get.arguments;
+  final levels = ['beginner', 'intermediate', 'advanced'];
 
   @override
   Widget build(BuildContext context) {
-    CreateGroupFormController createGroupForm = Get.find();
-    final levels = ['beginner', 'intermediate', 'advanced'];
+    nameInputController.text = createGroupForm.name.value;
 
     return Form(
       key: formKey,
@@ -146,6 +159,7 @@ class _CreateGroupForm extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            controller: nameInputController,
             autocorrect: false,
             inputFormatters: [LengthLimitingTextInputFormatter(25)],
             decoration: InputDecorations.generalInputDecoration(
@@ -163,34 +177,36 @@ class _CreateGroupForm extends StatelessWidget {
                   ? null
                   : 'Only alphanumerics and spaces are accepted';
             },
-            onChanged: (value) => createGroupForm.name.value = value,
+            onChanged: (value) {
+              createGroupForm.name.value = value;
+            },
           ),
           const SizedBox(
             height: 30,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Group Level:',
-                style: TextStyle(fontSize: 17),
-              ),
-              DropdownButton<String>(
-                  value: createGroupForm.level.value,
-                  items: levels.map((level) {
-                    return DropdownMenuItem<String>(
-                      value: level,
-                      child: Text(
-                        level.toCapitalized(),
-                        style: const TextStyle(fontSize: 17),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (level) {
-                    createGroupForm.level.value = level!;
-                  }),
-            ],
-          ),
+          Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Group Level:',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  DropdownButton<String>(
+                      value: createGroupForm.level.value,
+                      items: levels.map((level) {
+                        return DropdownMenuItem<String>(
+                          value: level,
+                          child: Text(
+                            level.toCapitalized(),
+                            style: const TextStyle(fontSize: 17),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (level) {
+                        createGroupForm.level.value = level!;
+                      }),
+                ],
+              )),
           const SizedBox(
             height: 25,
           ),
@@ -233,13 +249,22 @@ class _CreateGroupForm extends StatelessWidget {
           const SizedBox(
             height: 25,
           ),
-          Obx(() => RequestButton(
+          Obx(
+            () => RequestButton(
               waitTitle: 'Please Wait',
-              title: 'Create',
+              title: arguments?['type'] == 'editGroup' ? 'Update' : 'Create',
               isLoading: createGroupForm.isLoading.value,
               onTap: createGroupForm.isLoading.value
                   ? null
-                  : () => createGroupOnTap(context, formKey))),
+                  : () {
+                      if (arguments?['type'] == 'editGroup') {
+                        editGroupOnTap(context, formKey);
+                      } else {
+                        createGroupOnTap(context, formKey);
+                      }
+                    },
+            ),
+          ),
         ],
       ),
     );

@@ -20,6 +20,23 @@ class RegisteredGroupScreen extends StatelessWidget {
     return DefaultAppBarLayout(
         title: 'Your Groups',
         topSeparation: false,
+        showAdditionalOptions: true,
+        additionalOptions: const [
+          'Create group'
+        ],
+        optionFunctions: {
+          'Create group': () async {
+            SubjectController subjectController = Get.find();
+
+            UserController userController = Get.find();
+            final user = userController.user;
+
+            final userId = user.value.uid;
+            await subjectController.getSubjects(userId, onlyActive: true);
+
+            Get.to(() => CreateGroupScreen());
+          }
+        },
         children: [
           Obx(() {
             if (groupController.groups.isEmpty) {

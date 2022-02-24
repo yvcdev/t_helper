@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 
 import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
@@ -33,6 +32,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
     final addSubjectForm = Get.put(AddSubjectFormController());
     SubjectController subjectController = Get.find();
 
@@ -43,6 +43,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
             scroll: false,
             colunmLayout: true,
             topSeparation: false,
+            showActionButton: arguments?['showNotificationIcon'] ?? true,
             drawer: false,
             title: 'Subjects',
             loading: subjectController.loading.value,

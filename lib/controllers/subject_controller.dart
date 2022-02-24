@@ -14,7 +14,7 @@ class SubjectController extends GetxController {
       "id": '',
     },
     {
-      "name": 'Create Subject',
+      "name": 'Edit/Create',
       "id": 'createSubject',
     },
   ].obs;
@@ -34,7 +34,7 @@ class SubjectController extends GetxController {
         "id": '',
       },
       {
-        "name": 'Create Subject',
+        "name": 'Edit/Create',
         "id": 'createSubject',
       }
     ]);

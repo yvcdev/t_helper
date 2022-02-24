@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:t_helper/controllers/current_group_controller.dart';
 
 class CreateGroupFormController extends GetxController {
   var name = ''.obs;
@@ -45,5 +46,16 @@ class CreateGroupFormController extends GetxController {
       groupId = _formattedName;
     }
     return groupId ?? '';
+  }
+
+  void populateFields() {
+    CurrentGroupController currentGroupController = Get.find();
+    final currentGroup = currentGroupController.currentGroup.value;
+
+    name.value = currentGroup!.name;
+    selectedImage.value = currentGroup.image;
+    groupId = currentGroup.namedId;
+    subject.value = currentGroup.subject;
+    level.value = currentGroup.level;
   }
 }

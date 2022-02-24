@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/utils/custom_colors.dart';
-
 import 'package:t_helper/widgets/widgets.dart';
 
 class DefaultAppBarLayout extends StatelessWidget {
@@ -17,21 +16,27 @@ class DefaultAppBarLayout extends StatelessWidget {
   final bool? colunmLayout;
   final bool? drawer;
   final bool? showActionButton;
+  final bool? showAdditionalOptions;
+  final List<String>? additionalOptions;
+  final Map<String, Function>? optionFunctions;
 
-  DefaultAppBarLayout({
-    Key? key,
-    required this.children,
-    this.title,
-    this.topSeparation = true,
-    this.loading = false,
-    this.appBarBottom,
-    this.appBarBottomHeight,
-    this.elevation,
-    this.scroll = true,
-    this.colunmLayout = false,
-    this.drawer = true,
-    this.showActionButton = true,
-  }) : super(key: key);
+  DefaultAppBarLayout(
+      {Key? key,
+      required this.children,
+      this.title,
+      this.topSeparation = true,
+      this.loading = false,
+      this.appBarBottom,
+      this.appBarBottomHeight,
+      this.elevation,
+      this.scroll = true,
+      this.colunmLayout = false,
+      this.drawer = true,
+      this.showActionButton = true,
+      this.showAdditionalOptions = false,
+      this.additionalOptions,
+      this.optionFunctions})
+      : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -41,6 +46,12 @@ class DefaultAppBarLayout extends StatelessWidget {
 
     if (loading!) {
       return const LoadingScreen();
+    }
+
+    void handleAdditionalOption(String value) {
+      if (optionFunctions != null && optionFunctions!.containsKey(value)) {
+        optionFunctions![value]!();
+      }
     }
 
     return Scaffold(
@@ -74,7 +85,39 @@ class DefaultAppBarLayout extends StatelessWidget {
                   iconSize: 30,
                   splashRadius: 20,
                 )
-              : Container()
+              : Container(),
+          showAdditionalOptions!
+              ? PopupMenuButton<String>(
+                  onSelected: handleAdditionalOption,
+                  itemBuilder: (BuildContext context) {
+                    if (additionalOptions != null &&
+                        additionalOptions!.isNotEmpty) {
+                      return additionalOptions!.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice[0].toUpperCase() +
+                              choice.substring(1).toLowerCase()),
+                        );
+                      }).toList();
+                    } else if (additionalOptions != null &&
+                        additionalOptions!.isEmpty) {
+                      return {'No options'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    } else {
+                      return {'No options'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    }
+                  },
+                )
+              : Container(),
         ],
         title: Text(
           title ?? '',

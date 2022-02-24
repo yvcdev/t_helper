@@ -23,6 +23,49 @@ class GroupInfoScreen extends StatelessWidget {
     return DefaultAppBarLayout(
         elevation: 0,
         title: 'Group infomation',
+        showAdditionalOptions: true,
+        additionalOptions: const ['Edit group', 'Delete group'],
+        optionFunctions: {
+          'Edit group': () async {
+            final createGroupFormController =
+                Get.put(CreateGroupFormController());
+            SubjectController subjectController = Get.find();
+
+            UserController userController = Get.find();
+            final user = userController.user;
+
+            final userId = user.value.uid;
+            await subjectController.getSubjects(userId, onlyActive: true);
+
+            createGroupFormController.populateFields();
+            Get.to(() => CreateGroupScreen(), arguments: {'type': 'editGroup'});
+          },
+          'Delete group': () {
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => Obx(() => MinimalPopUp(
+                      topImage: false,
+                      acceptButtonLabel: 'Yes',
+                      cancelButtonLabel: 'No',
+                      correctText: 'Delete group?',
+                      description:
+                          'Deleting the group will remove all of its information. This action cannot be undone.',
+                      onAccept: () async {
+                        await groupController.deleteGroup(
+                            group!.id, group.image ?? '');
+
+                        Get.to(() => const RegisteredGroupScreen());
+                      },
+                      isAcceptActive: !groupController.isLoading.value,
+                      isCancelActive: !groupController.isLoading.value,
+                      acceptButtonColor: CustomColors.red,
+                      onCancel: () {
+                        Get.back();
+                      },
+                    )));
+          }
+        },
         drawer: false,
         topSeparation: false,
         children: [
@@ -32,40 +75,6 @@ class GroupInfoScreen extends StatelessWidget {
               GridSingleCardTwo(
                 cards: _cards,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              IconButton(
-                  onPressed: () async {
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => Obx(() => MinimalPopUp(
-                              topImage: false,
-                              acceptButtonLabel: 'Yes',
-                              cancelButtonLabel: 'No',
-                              correctText: 'Delete group?',
-                              description:
-                                  'Deleting the group will remove all of its information. This action cannot be undone.',
-                              onAccept: () async {
-                                await groupController.deleteGroup(
-                                    group!.id, group.image ?? '');
-
-                                Get.to(() => const RegisteredGroupScreen());
-                              },
-                              isAcceptActive: !groupController.isLoading.value,
-                              isCancelActive: !groupController.isLoading.value,
-                              acceptButtonColor: CustomColors.red,
-                              onCancel: () {
-                                Get.back();
-                              },
-                            )));
-                  },
-                  icon: Icon(
-                    Icons.delete_forever_rounded,
-                    size: UiConsts.extraLargeFontSize,
-                    color: CustomColors.red.withOpacity(0.8),
-                  )),
               const SizedBox(
                 height: 20,
               ),

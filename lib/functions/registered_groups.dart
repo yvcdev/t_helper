@@ -10,7 +10,7 @@ registeredGroupsOnCreateGroupTap() async {
 
   final userId = user.value.uid;
 
-  Get.to(() => const CreateGroupScreen());
+  Get.to(() => CreateGroupScreen());
 
   await subjectController.getSubjects(userId);
 }

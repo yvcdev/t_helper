@@ -16,7 +16,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
 
         final userId = user.value.uid;
 
-        Get.to(() => SubjectsScreen());
+        Get.to(() => const SubjectsScreen());
 
         await subjectController.getSubjects(userId);
       },
@@ -49,7 +49,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
         final userId = user.value.uid;
         await subjectController.getSubjects(userId, onlyActive: true);
 
-        Get.to(() => const CreateGroupScreen());
+        Get.to(() => CreateGroupScreen());
       },
     },
   ];
