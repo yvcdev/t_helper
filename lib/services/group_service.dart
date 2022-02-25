@@ -72,7 +72,12 @@ class GroupService {
   Future<String?> updateGroupWithImage(Group group) async {
     try {
       await groupsReference.doc(group.id).set(
-        {'name': group.name, 'subject': group.subject, 'level': group.level},
+        {
+          'name': group.name,
+          'subject': group.subject,
+          'level': group.level,
+          'image': group.image
+        },
         SetOptions(merge: true),
       );
       return group.id;
@@ -104,6 +109,20 @@ class GroupService {
     } catch (e) {
       groupController.isLoading.value = false;
       Snackbar.error('Unknown error', 'There was an error deleting the group');
+    }
+  }
+
+  Future<bool> deletePicture(String imageUrl) async {
+    try {
+      groupController.isLoading.value = true;
+      await storage.refFromURL(imageUrl).delete();
+      groupController.isLoading.value = false;
+      return true;
+    } catch (e) {
+      groupController.isLoading.value = false;
+      Snackbar.error(
+          'Unknown error', 'There was an error removing the picture');
+      return true;
     }
   }
 }

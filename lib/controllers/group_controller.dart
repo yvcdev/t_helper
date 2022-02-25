@@ -35,11 +35,16 @@ class GroupController extends GetxController {
   }
 
   Future<String?> updateGroupWithImage(Group group) async {
-    final response = await GroupService().updateGroupNoImage(group);
+    final response = await GroupService().updateGroupWithImage(group);
     return response;
   }
 
   Future deleteGroup(String groupId, String imageUrl) async {
     await GroupService().deleteGroup(groupId, imageUrl);
+  }
+
+  Future<bool> deletePicture(String imageUrl) async {
+    final response = await GroupService().deletePicture(imageUrl);
+    return response;
   }
 }

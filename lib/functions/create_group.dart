@@ -130,40 +130,40 @@ editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   } else {
     if (currentGroup.image == null &&
         createGroupForm.selectedImage.value != null) {
-      print('no tengo y voy a agregar');
+      if (createGroupForm.selectedImage.value != null) {
+        final storageGroupService = Get.put(StorageGroupService());
+
+        downloadUrl = await storageGroupService.uploadGroupPicture(
+            createGroupForm.selectedImage.value!, currentGroup.id);
+
+        if (downloadUrl != null) {
+          group.image = downloadUrl;
+        }
+      }
     } else if (currentGroup.image != null &&
         createGroupForm.selectedImage.value != null) {
-      print('ya tengo y voy a cambiar');
+      final deleted = await groupController.deletePicture(currentGroup.image!);
+
+      if (deleted) {
+        final storageGroupService = Get.put(StorageGroupService());
+
+        downloadUrl = await storageGroupService.uploadGroupPicture(
+            createGroupForm.selectedImage.value!, currentGroup.id);
+
+        if (downloadUrl != null) {
+          group.image = downloadUrl;
+        }
+      }
     } else if (currentGroup.image != null &&
         createGroupForm.selectedImage.value == null) {
-      print('ya tengo y voy a borrar');
-    }
-    //response = await groupController.updateGroupWithImage(group);
-  }
+      final deleted = await groupController.deletePicture(currentGroup.image!);
 
-/*final groupId = await groupController.createGroup(group);
-
-  if (groupId != null) {
-    group.id = groupId;
-    if (createGroupForm.selectedImage.value != null) {
-      final storageGroupService = Get.put(StorageGroupService());
-
-      downloadUrl = await storageGroupService.uploadGroupPicture(
-          createGroupForm.selectedImage.value!, groupId);
-
-      if (downloadUrl != null) {
-        await groupController.updateGroup(groupId, 'image', downloadUrl);
-
-        group.image = downloadUrl;
-
-        createGroupForm.isLoading.value = false;
-      } else {
-        return;
+      if (deleted) {
+        group.image = null;
       }
     }
+    response = await groupController.updateGroupWithImage(group);
   }
-*/
-
   if (response != null) {
     currentGroupController.currentGroup.value = group;
     currentGroupController.update();
