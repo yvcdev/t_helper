@@ -26,5 +26,10 @@ List<Map<String, dynamic>> studentHomeInfoList(BuildContext context) {
       'text': 'Grades',
       'onTap': () async {},
     },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
   ];
 }
