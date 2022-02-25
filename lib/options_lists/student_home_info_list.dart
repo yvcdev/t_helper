@@ -31,5 +31,50 @@ List<Map<String, dynamic>> studentHomeInfoList(BuildContext context) {
       'text': 'Attendance',
       'onTap': () async {},
     },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
+    {
+      'icon': Icons.checklist_rounded,
+      'text': 'Attendance',
+      'onTap': () async {},
+    },
   ];
 }

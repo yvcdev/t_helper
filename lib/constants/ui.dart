@@ -35,8 +35,12 @@ class UiConsts {
 
   static const colors = [
     Colors.teal,
+    Color.fromRGBO(241, 196, 15, 1),
+    Color.fromRGBO(155, 89, 182, 1),
     Color.fromRGBO(69, 81, 249, 1),
-    Colors.deepPurpleAccent,
     Color.fromRGBO(248, 182, 25, 1),
+    Colors.deepPurpleAccent,
+    Color.fromRGBO(41, 128, 185, 1),
+    Color.fromRGBO(46, 204, 113, 1),
   ];
 }
