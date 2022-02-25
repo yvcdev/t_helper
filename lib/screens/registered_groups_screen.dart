@@ -34,6 +34,11 @@ class RegisteredGroupScreen extends StatelessWidget {
             final userId = user.value.uid;
             await subjectController.getSubjects(userId, onlyActive: true);
 
+            if (Get.isRegistered<CreateGroupFormController>()) {
+              CreateGroupFormController createGroupFormController = Get.find();
+              createGroupFormController.reset();
+            }
+
             Get.to(() => CreateGroupScreen());
           }
         },

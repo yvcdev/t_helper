@@ -54,7 +54,6 @@ class GroupInfoScreen extends StatelessWidget {
                       onAccept: () async {
                         await groupController.deleteGroup(
                             group!.id, group.image ?? '');
-
                         Get.to(() => const RegisteredGroupScreen());
                       },
                       isAcceptActive: !groupController.isLoading.value,

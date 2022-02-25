@@ -8,8 +8,10 @@ class CurrentGroupController extends GetxController {
     if (currentGroup.value!.members < 0) return 0;
     if (increment) {
       currentGroup.value!.members = currentGroup.value!.members + 1;
+      update();
       return currentGroup.value!.members;
     } else {
+      update();
       currentGroup.value!.members = currentGroup.value!.members - 1;
       return currentGroup.value!.members;
     }
