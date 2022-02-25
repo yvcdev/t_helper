@@ -57,6 +57,30 @@ class GroupService {
     }
   }
 
+  Future<String?> updateGroupNoImage(Group group) async {
+    try {
+      await groupsReference.doc(group.id).set(
+        {'name': group.name, 'subject': group.subject, 'level': group.level},
+        SetOptions(merge: true),
+      );
+      return group.id;
+    } catch (e) {
+      Snackbar.error('Unknown error', 'There was an error updating the group');
+    }
+  }
+
+  Future<String?> updateGroupWithImage(Group group) async {
+    try {
+      await groupsReference.doc(group.id).set(
+        {'name': group.name, 'subject': group.subject, 'level': group.level},
+        SetOptions(merge: true),
+      );
+      return group.id;
+    } catch (e) {
+      Snackbar.error('Unknown error', 'There was an error updating the group');
+    }
+  }
+
   Future deleteGroup(String groupId, String imageUrl) async {
     try {
       groupController.isLoading.value = true;

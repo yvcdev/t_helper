@@ -14,7 +14,6 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   GroupController groupController = Get.find();
   UserController userController = Get.find();
   final user = userController.user;
-  final now = DateTime.now();
   String? downloadUrl;
 
   if (createGroupForm.subject['name'] == '') {
@@ -25,7 +24,6 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   if (!createGroupForm.isValidForm(formKey)) return;
 
   createGroupForm.isLoading.value = true;
-  createGroupForm.getGroupId();
 
   final group = Group(
       id: '',
@@ -87,15 +85,20 @@ createGroupOnSubjectTextTap(BuildContext context) async {
 }
 
 editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
-  print('TODO: implement group edition');
-  return;
   FocusScope.of(context).unfocus();
   CreateGroupFormController createGroupForm = Get.find();
   GroupController groupController = Get.find();
-  UserController userController = Get.find();
-  final user = userController.user;
-  final now = DateTime.now();
+  CurrentGroupController currentGroupController = Get.find();
+  final currentGroup = currentGroupController.currentGroup.value;
   String? downloadUrl;
+
+  if (currentGroup!.image == createGroupForm.selectedImage.value &&
+      currentGroup.name == createGroupForm.name.value &&
+      currentGroup.level == createGroupForm.level.value &&
+      currentGroup.subject['name'] == createGroupForm.subject['name']) {
+    Snackbar.error('Not updating', 'No changes have been made');
+    return;
+  }
 
   if (createGroupForm.subject['name'] == '') {
     Snackbar.error('Subject selection', 'A subject needs to be selected');
@@ -105,22 +108,40 @@ editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   if (!createGroupForm.isValidForm(formKey)) return;
 
   createGroupForm.isLoading.value = true;
-  createGroupForm.getGroupId();
 
   final group = Group(
-      id: '',
+      id: currentGroup.id,
       name: createGroupForm.name.trim().toTitleCase(),
-      namedId: generateUniqueId(createGroupForm.name.value, 1, 'g'),
-      owner: user.value.uid,
+      namedId: currentGroup.namedId,
+      owner: currentGroup.owner,
       subject: {
         'name': createGroupForm.subject['name']!,
         'id': createGroupForm.subject['id']!
       },
+      image: currentGroup.image,
       level: createGroupForm.level.value,
-      members: 0,
+      members: currentGroup.members,
       activities: []);
 
-  final groupId = await groupController.createGroup(group);
+  String? response;
+
+  if (currentGroup.image == createGroupForm.selectedImage.value) {
+    response = await groupController.updateGroupNoImage(group);
+  } else {
+    if (currentGroup.image == null &&
+        createGroupForm.selectedImage.value != null) {
+      print('no tengo y voy a agregar');
+    } else if (currentGroup.image != null &&
+        createGroupForm.selectedImage.value != null) {
+      print('ya tengo y voy a cambiar');
+    } else if (currentGroup.image != null &&
+        createGroupForm.selectedImage.value == null) {
+      print('ya tengo y voy a borrar');
+    }
+    //response = await groupController.updateGroupWithImage(group);
+  }
+
+/*final groupId = await groupController.createGroup(group);
 
   if (groupId != null) {
     group.id = groupId;
@@ -141,11 +162,13 @@ editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       }
     }
   }
+*/
 
-  CurrentGroupController currentGroupController = Get.find();
+  if (response != null) {
+    currentGroupController.currentGroup.value = group;
+    currentGroupController.update();
+    Snackbar.success('Group updated', 'Group information updated successfully');
+  }
 
-  currentGroupController.currentGroup.value = group;
-
-  Get.off(() => const GroupInfoScreen());
-  createGroupForm.reset();
+  createGroupForm.isLoading.value = false;
 }

@@ -91,82 +91,86 @@ class _HeroInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CurrentGroupController currentGroupController = Get.find();
-    final group = currentGroupController.currentGroup.value;
-    return HeroInfo(
-      imageUrl: group!.image,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Students: ${group.members}',
-              style: TextStyle(
-                color:
-                    group.members == 0 ? CustomColors.red : CustomColors.green,
-                fontSize: UiConsts.smallFontSize,
+    return GetBuilder<CurrentGroupController>(
+        builder: (currentGroupController) {
+      final group = currentGroupController.currentGroup.value;
+      return HeroInfo(
+        imageUrl: group!.image,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Students: ${group.members}',
+                style: TextStyle(
+                  color: group.members == 0
+                      ? CustomColors.red
+                      : CustomColors.green,
+                  fontSize: UiConsts.smallFontSize,
+                ),
               ),
-            ),
-            Text(
-              'Activities: ${group.activities.length}',
-              style: TextStyle(
-                color: group.activities.isEmpty
-                    ? CustomColors.red
-                    : CustomColors.green,
-                fontSize: UiConsts.smallFontSize,
+              Text(
+                'Activities: ${group.activities.length}',
+                style: TextStyle(
+                  color: group.activities.isEmpty
+                      ? CustomColors.red
+                      : CustomColors.green,
+                  fontSize: UiConsts.smallFontSize,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(
-          group.name.toTitleCase(),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          style: const TextStyle(
-            fontSize: UiConsts.largeFontSize,
-            fontWeight: FontWeight.bold,
+            ],
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  Snackbar.success('Copied', 'The group ID has been copied');
-                },
-                icon: const Icon(
-                  Icons.copy,
-                  color: Colors.black87,
-                  size: UiConsts.tinyFontSize,
-                )),
-            Text(
-              'ID: ${group.namedId}',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: UiConsts.tinyFontSize,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black.withOpacity(0.7)),
+          const SizedBox(height: 10),
+          Text(
+            group.name.toTitleCase(),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: UiConsts.largeFontSize,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(
-          group.subject['name']!.toTitleCase(),
-          style: TextStyle(
-            fontSize: UiConsts.smallFontSize,
-            fontWeight: FontWeight.bold,
-            color: Colors.black.withOpacity(0.7),
           ),
-        ),
-        Text(
-          group.level.toCapitalized(),
-          style: const TextStyle(
-              fontSize: UiConsts.smallFontSize - 2, color: CustomColors.green),
-        ),
-      ],
-    );
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () {
+                    Snackbar.success('Copied', 'The group ID has been copied');
+                  },
+                  icon: const Icon(
+                    Icons.copy,
+                    color: Colors.black87,
+                    size: UiConsts.tinyFontSize,
+                  )),
+              Text(
+                'ID: ${group.namedId}',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: UiConsts.tinyFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(0.7)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            group.subject['name']!.toTitleCase(),
+            style: TextStyle(
+              fontSize: UiConsts.smallFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.black.withOpacity(0.7),
+            ),
+          ),
+          Text(
+            group.level.toCapitalized(),
+            style: const TextStyle(
+                fontSize: UiConsts.smallFontSize - 2,
+                color: CustomColors.green),
+          ),
+        ],
+      );
+    });
   }
 }

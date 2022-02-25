@@ -37,17 +37,6 @@ class CreateGroupFormController extends GetxController {
     }
   }
 
-  String getGroupId() {
-    List<String> _formattedNameList = name.trim().split(' ');
-    String _formattedName = _formattedNameList.join('-').toLowerCase();
-    if (_formattedName.length > 25) {
-      groupId = _formattedName.substring(0, 24);
-    } else {
-      groupId = _formattedName;
-    }
-    return groupId ?? '';
-  }
-
   void populateFields() {
     CurrentGroupController currentGroupController = Get.find();
     final currentGroup = currentGroupController.currentGroup.value;
