@@ -33,7 +33,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
       },
     },
     {
-      'icon': Icons.group_add,
+      'icon': Icons.add_to_photos_rounded,
       'text': 'Your activities',
       'onTap': () {},
     },
