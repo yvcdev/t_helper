@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SubjectController(), fenix: true);
     Get.lazyPut(() => ActivitiesController(), fenix: true);
-    Get.lazyPut(() => GroupController(), fenix: true);
 
     return GetMaterialApp(
       theme: _themeData(context),

@@ -5,7 +5,7 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/functions/functions.dart';
 import 'package:t_helper/layouts/layouts.dart';
-import 'package:t_helper/models/group.dart';
+import 'package:t_helper/models/models.dart';
 import 'package:t_helper/screens/screens.dart';
 import 'package:t_helper/helpers/capitalize.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -16,11 +16,14 @@ class RegisteredGroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GroupController groupController = Get.find();
+    UserController userController = Get.find();
+    final user = userController.user.value;
 
     return DefaultAppBarLayout(
         title: 'Your Groups',
         topSeparation: false,
-        showAdditionalOptions: true,
+        loading: groupController.isLoading.value,
+        showAdditionalOptions: user.role == 'teacher' ? true : false,
         additionalOptions: const [
           'Create group'
         ],
@@ -44,10 +47,18 @@ class RegisteredGroupScreen extends StatelessWidget {
         },
         children: [
           Obx(() {
-            if (groupController.groups.isEmpty) {
-              return const _NoGroups();
+            if (user.role == 'teacher') {
+              if (groupController.groups.isEmpty) {
+                return const _NoGroups();
+              } else {
+                return const _GroupList();
+              }
             } else {
-              return const _GroupList();
+              if (groupController.studentGroups.isEmpty) {
+                return const _NoGroups();
+              } else {
+                return const _GroupList();
+              }
             }
           })
         ]);
@@ -62,29 +73,56 @@ class _GroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GroupController groupController = Get.find();
+    List<Group> groups = groupController.groups;
+    List<UserGroups> studentGroups = groupController.studentGroups;
+    UserController userController = Get.find();
+    final user = userController.user.value;
+    final role = user.role;
+
+    bool isTeacher() {
+      return role == 'teacher';
+    }
+
+    bool useAssetImage(int index) {
+      if (isTeacher()) {
+        return groups[index].image == null ? true : false;
+      } else {
+        return studentGroups[index].groupPicture == null ? true : false;
+      }
+    }
 
     return Obx(() => ListView.builder(
           shrinkWrap: true,
           physics: const ScrollPhysics(),
-          itemCount: groupController.groups.length,
+          itemCount: isTeacher()
+              ? groupController.groups.length
+              : groupController.studentGroups.length,
           itemBuilder: (context, index) {
-            List<Group> groups = groupController.groups;
             return Obx(() => CustomListTile(
                   onDismissed: () {},
                   dismissible: false,
                   index: index,
-                  title: groups[index].name.toTitleCase(),
-                  subtitle:
-                      '${groups[index].subject['name']!.toCapitalized()} - '
-                      '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}',
-                  trailing: groups[index].image,
-                  useAssetImage: groups[index].image == null ? true : false,
+                  title: isTeacher()
+                      ? groups[index].name.toTitleCase()
+                      : studentGroups[index].groupName.toTitleCase(),
+                  subtitle: isTeacher()
+                      ? '${groups[index].subject['name']!.toCapitalized()} - '
+                          '${groups[index].members == 1 ? "${groups[index].members} student" : "${groups[index].members} students"}'
+                      : '${studentGroups[index].groupSubject.toCapitalized()} - '
+                          '${studentGroups[index].groupStudentsNumber == 1 ? "${studentGroups[index].groupStudentsNumber} student" : "${studentGroups[index].groupStudentsNumber} students"}',
+                  trailing: isTeacher()
+                      ? groups[index].image
+                      : studentGroups[index].groupPicture,
+                  useAssetImage: useAssetImage(index),
                   onTap: () {
-                    CurrentGroupController currentGroupController = Get.find();
+                    if (isTeacher()) {
+                      CurrentGroupController currentGroupController =
+                          Get.find();
 
-                    currentGroupController.currentGroup.value = groups[index];
+                      currentGroupController.currentGroup.value = groups[index];
 
-                    Get.to(() => const GroupInfoScreen());
+                      Get.to(() => const GroupInfoScreen());
+                    } else {}
                   },
                 ));
           },
@@ -99,26 +137,36 @@ class _NoGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserController userController = Get.find();
+    final user = userController.user.value;
+
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: screenHeight - 130,
+      height: screenHeight / 1.2,
       child: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'You haven\'t created any group yet',
-            style: TextStyle(
+          Text(
+            user.role == 'teacher'
+                ? 'You have not created any group yet'
+                : 'You are not part of any group yet',
+            style: const TextStyle(
               fontSize: UiConsts.normalFontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
           CustomTextButton(
             onPressed: () {
-              registeredGroupsOnCreateGroupTap();
+              if (user.role == 'teacher') {
+                registeredGroupsOnCreateGroupTap();
+              } else {
+                GroupController groupController = Get.find();
+                print(groupController.groups);
+              }
             },
-            title: 'Create one?',
+            title: user.role == 'teacher' ? 'Create one?' : 'Join one?',
             fontSize: UiConsts.normalFontSize,
           )
         ],

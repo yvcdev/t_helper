@@ -5,3 +5,4 @@ export 'package:t_helper/models/group_users.dart';
 export 'package:t_helper/models/search_users_response.dart';
 export 'package:t_helper/models/subject.dart';
 export 'package:t_helper/models/activity.dart';
+export 'package:t_helper/models/user_groups.dart';

@@ -79,8 +79,8 @@ class AuthController extends GetxController {
 
   Future<void> signOut() async {
     await auth.signOut();
-    UserController userController = Get.find();
-    userController.reset();
+    resetControllers();
+    Get.delete<GroupController>();
   }
 
   verifyUserEmail() async {

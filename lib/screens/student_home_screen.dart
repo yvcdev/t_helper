@@ -3,7 +3,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 
 import 'package:t_helper/constants/constants.dart';
-import 'package:t_helper/controllers/user_controller.dart';
+import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/options_lists/options_lists.dart';
 import 'package:t_helper/widgets/widgets.dart';
@@ -12,6 +12,9 @@ class StudentHomeScreen extends StatelessWidget {
   const StudentHomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<GroupController>() == false) {
+      Get.lazyPut(() => GroupController(), fenix: true);
+    }
     final _cards = studentHomeInfoList(context);
 
     return DefaultAppBarLayout(

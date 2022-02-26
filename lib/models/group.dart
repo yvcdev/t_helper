@@ -38,6 +38,7 @@ class Group {
       );
 
   Map<String, dynamic> toMap() => {
+        "id": id,
         "name": name,
         "namedId": namedId,
         "owner": owner,

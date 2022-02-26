@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:t_helper/controllers/controllers.dart';
-
-import 'package:t_helper/screens/screens.dart';
 
 List<Map<String, dynamic>> studentHomeInfoList(BuildContext context) {
   return [
-    {
-      'icon': Icons.group,
-      'text': 'Your groups',
-      'onTap': () async {},
-    },
     {
       'icon': Icons.add_box_rounded,
       'text': 'Pending activities',
@@ -30,51 +21,6 @@ List<Map<String, dynamic>> studentHomeInfoList(BuildContext context) {
       'icon': Icons.checklist_rounded,
       'text': 'Attendance',
       'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
-    {
-      'icon': Icons.checklist_rounded,
-      'text': 'Attendance',
-      'onTap': () async {},
-    },
+    }
   ];
 }

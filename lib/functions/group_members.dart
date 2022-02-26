@@ -3,6 +3,7 @@ import 'package:get/instance_manager.dart';
 
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/models/models.dart';
+import 'package:t_helper/services/services.dart';
 
 groupMembersOnChanged(
     String value, BuildContext context, GlobalKey<FormState> formkey) async {
@@ -34,7 +35,9 @@ void groupMembersOnDeleteDismiss(
     GlobalKey<AnimatedListState> globalKey,
     Tween<Offset> offset) async {
   GroupUsersController groupUsersController = Get.find();
+  UserGroupsController userGroupsController = Get.find();
 
+  await userGroupsController.removeGroup(groupId, userId);
   final index = await groupUsersController.removeUserFromGroup(groupId, userId);
 
   if (index == null) return;
@@ -58,7 +61,7 @@ Future groupMembersOnAddPressed(
     TextEditingController formController) async {
   UsersController usersController = Get.find();
   CurrentGroupController currentGroupController = Get.find();
-
+  UserGroupsController userGroupsController = Get.find();
   GroupUsersController groupUsersController = Get.find();
 
   final group = currentGroupController.currentGroup.value;
@@ -66,6 +69,8 @@ Future groupMembersOnAddPressed(
 
   final _groupUsers = GroupUsers.fromGroupAndUser(group!, student.value!);
 
+  await userGroupsController
+      .addGroup(UserGroups.fromGroupAndUser(group, student.value!));
   await groupUsersController.addUserToGroup(_groupUsers);
 
   globalKey.currentState!
@@ -88,9 +93,12 @@ Future groupMembersOnRemovePressed(
     TextEditingController formController,
     Tween<Offset> offset) async {
   CurrentGroupController currentGroupController = Get.find();
-
+  UserGroupsController userGroupsController = Get.find();
   GroupUsersController groupUsersController = Get.find();
   UsersController usersController = Get.find();
+
+  await userGroupsController.removeGroup(
+      currentGroupController.currentGroup.value!.id, student.uid);
 
   final index = await groupUsersController.removeUserFromGroup(
       currentGroupController.currentGroup.value!.id, student.uid);
@@ -120,6 +128,9 @@ Future _updateMembersNumber(BuildContext context, String groupId,
   CurrentGroupController currentGroupController = Get.find();
 
   int members = currentGroupController.updateMembers(increment: increment);
+
+  await UserGroupsService()
+      .updateStudentNumber(currentGroupController.currentGroup.value!);
 
   await groupController.updateGroup(groupId, "members", members);
 }

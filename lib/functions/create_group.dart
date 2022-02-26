@@ -39,6 +39,9 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       activities: []);
 
   final groupId = await groupController.createGroup(group);
+  if (groupId != null) {
+    await groupController.updateGroup(groupId, 'id', groupId);
+  }
 
   if (groupId != null) {
     group.id = groupId;

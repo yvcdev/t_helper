@@ -160,6 +160,7 @@ class _UserInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final usersController = Get.put(UsersController());
+    Get.put(UserGroupsController());
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Obx(() {

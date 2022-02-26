@@ -26,6 +26,29 @@ class GroupService {
     });
   }
 
+  Future<List<String>> getStudentGroupsIds(User student) async {
+    final result =
+        await groupUsersReference.where('userId', isEqualTo: student.uid).get();
+
+    final groupsList = result.docs
+        .map((groupUsers) =>
+            GroupUsers.fromMap(groupUsers.data() as Map).groupId)
+        .toList();
+
+    return groupsList;
+  }
+
+  Future<List<Group>> getStudentGroups(List<String> groupIds) async {
+    final result =
+        await groupsReference.where('id', arrayContains: groupIds).get();
+
+    final _groups = result.docs
+        .map((group) => Group.fromMap(group as Map, group.id))
+        .toList();
+
+    return _groups;
+  }
+
   Future<String?> createGroup(Group group) async {
     try {
       final existingGroupQuery = await groupsReference
