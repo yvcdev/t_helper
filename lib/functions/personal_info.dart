@@ -24,14 +24,14 @@ personalInfoOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
 
   if (personalInfoForm.selectedImage.value != '') {
     downloadUrl = await StorageUserService.uploadProfilePicture(
-        personalInfoForm.selectedImage.value, user.value.uid);
+        personalInfoForm.selectedImage.value, user.value!.uid);
 
     if (downloadUrl == null) return;
   }
 
   User userToSend = User(
-      email: user.value.email,
-      uid: user.value.uid,
+      email: user.value!.email,
+      uid: user.value!.uid,
       firstName: personalInfoForm.firstName.toCapitalized(),
       middleName: personalInfoForm.middleName.value.toCapitalized(),
       lastName: personalInfoForm.lastName.toCapitalized(),

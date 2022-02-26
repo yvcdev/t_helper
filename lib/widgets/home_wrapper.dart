@@ -9,47 +9,42 @@ class HomeWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => UserController());
     UserController userController = Get.find();
     final user = userController.user;
     AuthController authController = Get.find();
 
-    return Obx(() {
-      if (user.value.uid == '') {
-        return const LoadingScreen();
-      } else if (user.value.uid != '' && user.value.role == null) {
-        return const LoadingScreen();
-      } else if (user.value.role == 'teacher') {
-        if (!authController.auth.currentUser!.emailVerified) {
-          return const VerifyEmailScreen();
-        }
-        return const TeacherHomeScreen();
-      } else if (user.value.role == 'student') {
-        if (!authController.auth.currentUser!.emailVerified) {
-          return const VerifyEmailScreen();
-        }
-        return const StudentHomeScreen();
-      } else {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Invalid role'),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextButton(
-                    onPressed: () {
-                      authController.signOut();
-                    },
-                    child: const Text('Sign Out'))
-              ],
-            ),
-          ),
-        );
+    if (user.value!.role == 'teacher') {
+      if (!authController.auth.currentUser!.emailVerified) {
+        return const VerifyEmailScreen();
       }
-    });
+      return const TeacherHomeScreen();
+    } else if (user.value!.role == 'student') {
+      if (!authController.auth.currentUser!.emailVerified) {
+        return const VerifyEmailScreen();
+      }
+      return const StudentHomeScreen();
+    } else {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Invalid role'),
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                  onPressed: () {
+                    authController.signOut();
+                  },
+                  child: const Text('Sign Out'))
+            ],
+          ),
+        ),
+      );
+    }
+    //}
+    //);
   }
 }

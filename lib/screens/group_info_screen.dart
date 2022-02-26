@@ -34,7 +34,7 @@ class GroupInfoScreen extends StatelessWidget {
             UserController userController = Get.find();
             final user = userController.user;
 
-            final userId = user.value.uid;
+            final userId = user.value!.uid;
             await subjectController.getSubjects(userId, onlyActive: true);
 
             createGroupFormController.populateFields();
@@ -52,8 +52,15 @@ class GroupInfoScreen extends StatelessWidget {
                       description:
                           'Deleting the group will remove all of its information. This action cannot be undone.',
                       onAccept: () async {
+                        if (!Get.isRegistered<UserGroupsController>()) {
+                          Get.lazyPut(() => UserGroupsController(),
+                              fenix: true);
+                        }
+                        UserGroupsController userGroupsController = Get.find();
+                        await userGroupsController.deleteUserGroups(group!);
+
                         await groupController.deleteGroup(
-                            group!.id, group.image ?? '');
+                            group.id, group.image ?? '');
                         Get.to(() => const RegisteredGroupScreen());
                       },
                       isAcceptActive: !groupController.isLoading.value,

@@ -9,7 +9,7 @@ registeredGroupsOnCreateGroupTap() async {
   UserController userController = Get.find();
   final user = userController.user;
 
-  final userId = user.value.uid;
+  final userId = user.value!.uid;
 
   if (Get.isRegistered<CreateGroupFormController>()) {
     CreateGroupFormController createGroupFormController = Get.find();

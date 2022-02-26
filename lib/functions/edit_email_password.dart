@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:t_helper/controllers/controllers.dart';
+import 'package:t_helper/models/user.dart';
 import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
@@ -23,6 +24,22 @@ editEmailPasswordOnUpdate(
 
   switch (editEmailPasswordForm.toUpdate.value) {
     case 'email':
+      if (!Get.isRegistered<GroupUsersController>()) {
+        Get.lazyPut(() => GroupUsersController());
+      }
+      GroupUsersController groupUsersController = Get.find();
+      UserController userController = Get.find();
+      final _user = userController.user.value;
+
+      final newUser = User(
+          email: _fieldMap['email'],
+          uid: _user!.uid,
+          firstName: _user.firstName,
+          middleName: _user.middleName,
+          lastName: _user.lastName,
+          profilePic: _user.profilePic);
+
+      await groupUsersController.updateUserInfo(newUser);
       await authController.updateEmail(
           _fieldMap['email'], _fieldMap['currentPassword']);
       break;
@@ -31,6 +48,22 @@ editEmailPasswordOnUpdate(
           _fieldMap['password'], _fieldMap['currentPassword']);
       break;
     case 'both':
+      if (!Get.isRegistered<GroupUsersController>()) {
+        Get.lazyPut(() => GroupUsersController());
+      }
+      GroupUsersController groupUsersController = Get.find();
+      UserController userController = Get.find();
+      final _user = userController.user.value;
+
+      final newUser = User(
+          email: _fieldMap['email'],
+          uid: _user!.uid,
+          firstName: _user.firstName,
+          middleName: _user.middleName,
+          lastName: _user.lastName,
+          profilePic: _user.profilePic);
+
+      await groupUsersController.updateUserInfo(newUser);
       await authController.updateEmailPassword(_fieldMap['email'],
           _fieldMap['password'], _fieldMap['currentPassword']);
       break;

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import 'package:t_helper/models/group_users.dart';
+import 'package:t_helper/models/user.dart';
 import 'package:t_helper/services/services.dart';
 
 class GroupUsersController extends GetxController {
@@ -26,6 +27,11 @@ class GroupUsersController extends GetxController {
 
   Future<List<GroupUsers>> getGroupUsers(String groupId) async {
     final response = await GroupUsersService().getGroupUsers(groupId);
+    return response;
+  }
+
+  Future<bool> updateUserInfo(User user) async {
+    final response = await GroupUsersService().updateUserInfo(user);
     return response;
   }
 }

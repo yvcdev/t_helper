@@ -10,16 +10,15 @@ class GroupController extends GetxController {
   UserController userController = Get.find();
   @override
   onReady() async {
-    if (userController.user.value.role == 'teacher') {
-      groups.bindStream(GroupService().getGroups(userController.user.value));
+    if (userController.user.value!.role == 'teacher') {
+      groups.bindStream(GroupService().getGroups(userController.user.value!));
+      isLoading.value = false;
     } else {
       Get.lazyPut(() => UserGroupsController(), fenix: true);
 
-      isLoading.value = true;
-
       UserGroupsController userGroupsController = Get.find();
       studentGroups.value = await userGroupsController
-          .getUserGroups(userController.user.value.uid);
+          .getUserGroups(userController.user.value!.uid);
 
       isLoading.value = false;
     }

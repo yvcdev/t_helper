@@ -66,7 +66,7 @@ Future subjectsOnAddPressed(
   final newSubject = Subject(
       name: addSubjectForm.subject.trim().toTitleCase(),
       namedId: generateUniqueId(subject, 1, 's'),
-      owner: user.value.uid,
+      owner: user.value!.uid,
       active: true);
 
   if (newSubject.name == 'Create Subject') {

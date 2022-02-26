@@ -30,7 +30,7 @@ class SRegisteredGroups extends StatelessWidget {
             UserController userController = Get.find();
             final user = userController.user;
 
-            final userId = user.value.uid;
+            final userId = user.value!.uid;
             await subjectController.getSubjects(userId, onlyActive: true);
 
             if (Get.isRegistered<CreateGroupFormController>()) {

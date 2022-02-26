@@ -20,7 +20,7 @@ String generateUniqueId(String name, int sequence, String character) {
       sequenceString +
       randomNumber +
       firstLetter +
-      userController.user.value.uid.substring(0, 2) +
+      userController.user.value!.uid.substring(0, 2) +
       lastLetter +
       year +
       second +
