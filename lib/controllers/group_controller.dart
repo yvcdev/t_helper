@@ -6,7 +6,7 @@ import 'package:t_helper/services/group_service.dart';
 class GroupController extends GetxController {
   var groups = <Group>[].obs;
   var studentGroups = <UserGroups>[].obs;
-  var isLoading = false.obs;
+  var isLoading = true.obs;
   UserController userController = Get.find();
   @override
   onReady() async {
