@@ -98,6 +98,7 @@ editEmailPasswordShowDialog(
               acceptButtonColor: CustomColors.green,
               cancelButtonColor: CustomColors.red,
               onAccept: () {
+                Get.back();
                 editEmailPasswordOnUpdate(editEmailPasswordFormKey, context);
               },
               onCancel: () => Get.back(),

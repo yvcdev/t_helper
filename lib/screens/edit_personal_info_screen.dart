@@ -182,7 +182,7 @@ class _InfoFormState extends State<_InfoForm> {
           ),
           Obx(() => RequestButton(
               waitTitle: 'Please Wait',
-              title: 'Save',
+              title: 'Update',
               isLoading: editInfoForm.isLoading.value,
               isActive: !editInfoForm.isSaved.value,
               onTap: (editInfoForm.isLoading.value ||

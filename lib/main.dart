@@ -34,9 +34,10 @@ void main() async {
   AuthController authController = Get.find();
   if (authController.auth.currentUser != null) {
     UserController userController = Get.find();
-    userController.streamUserInfo(authController.auth.currentUser!.uid,
-        authController.auth.currentUser!.email!,
-        navigate: false);
+    userController.streamUserInfo(
+      authController.auth.currentUser!.uid,
+      authController.auth.currentUser!.email!,
+    );
 
     await userController.populateUser(authController.auth.currentUser!.uid);
     await storage.write(key: SKV.isAuthenticated, value: SKV.yes);

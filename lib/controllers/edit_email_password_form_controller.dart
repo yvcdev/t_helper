@@ -98,6 +98,7 @@ class EditEmailPasswordFormController extends GetxController {
   }
 
   void reset() {
+    toUpdate.value = '';
     newEmail.value = '';
     newPassword.value = '';
     currentPassword.value = '';

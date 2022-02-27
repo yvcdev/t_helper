@@ -4,39 +4,31 @@ import 'package:get/get.dart';
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/screens/personal_info_setup_screen.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
 class UserService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<User> getUser(String uid, String email, {bool navigate = true}) {
+  Stream<User> getUser(String uid, String email) {
     return _firestore.collection('users').doc(uid).snapshots().map((snapshot) {
       if (!snapshot.exists) {
-        if (navigate) {
-          LoginFormController form = Get.find();
-          Get.offAll(() => const PersonalInfoSetupScreen());
-          form.isLoading.value = false;
-        }
-
         return User(email: email, uid: uid);
       } else {
-        if (navigate) {
-          LoginFormController form = Get.find();
-          Get.offAll(() => const HomeWrapper());
-          form.isLoading.value = false;
-        }
         return User.fromSnapshot(snapshot, uid);
       }
     });
   }
 
   Future<User?> populateUser(String uid) async {
-    final result = await _firestore.collection('users').doc(uid).get();
+    try {
+      final result = await _firestore.collection('users').doc(uid).get();
 
-    if (result.exists) {
-      return User.fromSnapshot(result, result.id);
+      if (result.exists) {
+        return User.fromSnapshot(result, result.id);
+      }
+    } catch (e) {
+      Snackbar.error('Unknown error', 'Unable to get the user data');
     }
   }
 

@@ -7,8 +7,8 @@ import 'package:t_helper/utils/storage_keys_values.dart';
 class UserController extends GetxController {
   Rx<User?> user = Rx(null);
 
-  streamUserInfo(String uid, String email, {navigate = true}) {
-    user.bindStream(UserService().getUser(uid, email, navigate: navigate));
+  streamUserInfo(String uid, String email) {
+    user.bindStream(UserService().getUser(uid, email));
 
     ever(user, (_user) async {
       const storage = FlutterSecureStorage();
@@ -20,8 +20,9 @@ class UserController extends GetxController {
     });
   }
 
-  populateUser(uid) async {
-    user.value = await UserService().populateUser(uid);
+  Future<User?> populateUser(String uid) async {
+    final response = user.value = await UserService().populateUser(uid);
+    return response;
   }
 
   reset() {
