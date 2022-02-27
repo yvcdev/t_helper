@@ -19,49 +19,50 @@ class RegisteredGroupScreen extends StatelessWidget {
     UserController userController = Get.find();
     final user = userController.user.value;
 
-    return DefaultAppBarLayout(
-        title: 'Your Groups',
-        topSeparation: false,
-        loading: groupController.isLoading.value,
-        showAdditionalOptions: user.role == 'teacher' ? true : false,
-        additionalOptions: const [
-          'Create group'
-        ],
-        optionFunctions: {
-          'Create group': () async {
-            SubjectController subjectController = Get.find();
+    return Obx(() => DefaultAppBarLayout(
+            title: 'Your Groups',
+            topSeparation: false,
+            loading: groupController.isLoading.value,
+            showAdditionalOptions: user!.role == 'teacher' ? true : false,
+            additionalOptions: const [
+              'Create group'
+            ],
+            optionFunctions: {
+              'Create group': () async {
+                SubjectController subjectController = Get.find();
 
-            UserController userController = Get.find();
-            final user = userController.user;
+                UserController userController = Get.find();
+                final user = userController.user;
 
-            final userId = user.value.uid;
-            await subjectController.getSubjects(userId, onlyActive: true);
+                final userId = user.value!.uid;
+                await subjectController.getSubjects(userId, onlyActive: true);
 
-            if (Get.isRegistered<CreateGroupFormController>()) {
-              CreateGroupFormController createGroupFormController = Get.find();
-              createGroupFormController.reset();
-            }
+                if (Get.isRegistered<CreateGroupFormController>()) {
+                  CreateGroupFormController createGroupFormController =
+                      Get.find();
+                  createGroupFormController.reset();
+                }
 
-            Get.to(() => CreateGroupScreen());
-          }
-        },
-        children: [
-          Obx(() {
-            if (user.role == 'teacher') {
-              if (groupController.groups.isEmpty) {
-                return const _NoGroups();
-              } else {
-                return const _GroupList();
+                Get.to(() => CreateGroupScreen());
               }
-            } else {
-              if (groupController.studentGroups.isEmpty) {
-                return const _NoGroups();
-              } else {
-                return const _GroupList();
-              }
-            }
-          })
-        ]);
+            },
+            children: [
+              Obx(() {
+                if (user.role == 'teacher') {
+                  if (groupController.groups.isEmpty) {
+                    return const _NoGroups();
+                  } else {
+                    return const _GroupList();
+                  }
+                } else {
+                  if (groupController.studentGroups.isEmpty) {
+                    return const _NoGroups();
+                  } else {
+                    return const _GroupList();
+                  }
+                }
+              })
+            ]));
   }
 }
 
@@ -77,7 +78,7 @@ class _GroupList extends StatelessWidget {
     List<UserGroups> studentGroups = groupController.studentGroups;
     UserController userController = Get.find();
     final user = userController.user.value;
-    final role = user.role;
+    final role = user!.role;
 
     bool isTeacher() {
       return role == 'teacher';
@@ -149,7 +150,7 @@ class _NoGroups extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            user.role == 'teacher'
+            user!.role == 'teacher'
                 ? 'You have not created any group yet'
                 : 'You are not part of any group yet',
             style: const TextStyle(
@@ -161,10 +162,7 @@ class _NoGroups extends StatelessWidget {
             onPressed: () {
               if (user.role == 'teacher') {
                 registeredGroupsOnCreateGroupTap();
-              } else {
-                GroupController groupController = Get.find();
-                print(groupController.groups);
-              }
+              } else {}
             },
             title: user.role == 'teacher' ? 'Create one?' : 'Join one?',
             fontSize: UiConsts.normalFontSize,

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:t_helper/helpers/helpers.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/controllers/controllers.dart';
-import 'package:t_helper/screens/personal_info_setup_screen.dart';
 import 'package:t_helper/services/services.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
@@ -13,9 +12,7 @@ class UserService {
 
   Stream<User> getUser(String uid, String email) {
     return _firestore.collection('users').doc(uid).snapshots().map((snapshot) {
-      if (uid == '') return User(email: '', uid: '');
       if (!snapshot.exists) {
-        Get.to(() => const PersonalInfoSetupScreen());
         return User(email: email, uid: uid);
       } else {
         return User.fromSnapshot(snapshot, uid);
@@ -23,13 +20,15 @@ class UserService {
     });
   }
 
-  Future<User> getUserMAnually(String uid) async {
-    final _user = await _firestore.collection('users').doc(uid).get();
+  Future<User?> populateUser(String uid) async {
+    try {
+      final result = await _firestore.collection('users').doc(uid).get();
 
-    if (_user.exists) {
-      return User.fromSnapshot(_user, uid);
-    } else {
-      return User(email: '', uid: '');
+      if (result.exists) {
+        return User.fromSnapshot(result, result.id);
+      }
+    } catch (e) {
+      Snackbar.error('Unknown error', 'Unable to get the user data');
     }
   }
 
@@ -61,6 +60,8 @@ class UserService {
 
   Future updateUserInfo(User user, Map<String, dynamic> updateInfo) async {
     try {
+      String? downloadUrl;
+
       if (updateInfo['profilePic'] != null) {
         if (user.profilePic != null) {
           await StorageUserService.deleteProfilePicture(user.profilePic!);
@@ -69,7 +70,7 @@ class UserService {
         if (updateInfo['profilePic'] == '') {
           updateInfo['profilePic'] = null;
         } else {
-          String? downloadUrl = await StorageUserService.uploadProfilePicture(
+          downloadUrl = await StorageUserService.uploadProfilePicture(
               updateInfo['profilePic'], user.uid);
 
           if (downloadUrl == null) return;
@@ -80,7 +81,29 @@ class UserService {
 
       await _firestore.collection('users').doc(user.uid).update(updateInfo);
 
-      Get.to(() => const HomeWrapper());
+      if (!Get.isRegistered<GroupUsersController>()) {
+        Get.lazyPut(() => GroupUsersController());
+      }
+
+      final newUser = User(
+        email: user.email,
+        uid: user.uid,
+        firstName: updateInfo['firstName'] ?? user.firstName,
+        middleName: updateInfo.containsKey('middleName')
+            ? updateInfo['middleName']
+            : user.middleName,
+        lastName: updateInfo['lastName'] ?? user.lastName,
+      );
+
+      if (updateInfo.containsKey('profilePic')) {
+        if (updateInfo['profilePic'] == null) {
+          newUser.profilePic = null;
+        } else {
+          newUser.profilePic = downloadUrl;
+        }
+      } else {
+        newUser.profilePic = user.profilePic;
+      }
 
       if (!updateInfo.containsKey('email')) {
         Snackbar.success(

@@ -14,7 +14,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
         UserController userController = Get.find();
         final user = userController.user;
 
-        final userId = user.value.uid;
+        final userId = user.value!.uid;
 
         Get.to(() => const SubjectsScreen());
 
@@ -46,7 +46,7 @@ List<Map<String, dynamic>> teacherHomeInfoList(BuildContext context) {
         UserController userController = Get.find();
         final user = userController.user;
 
-        final userId = user.value.uid;
+        final userId = user.value!.uid;
         await subjectController.getSubjects(userId, onlyActive: true);
 
         if (Get.isRegistered<CreateGroupFormController>()) {

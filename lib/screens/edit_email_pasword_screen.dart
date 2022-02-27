@@ -33,7 +33,7 @@ class EditEmailPasswordScreen extends StatelessWidget {
                       color: Colors.black.withOpacity(0.8)),
                 ),
                 Text(
-                  userController.user.value.email,
+                  userController.user.value!.email,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: const TextStyle(

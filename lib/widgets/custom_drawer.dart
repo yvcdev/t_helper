@@ -131,7 +131,7 @@ class _Body extends StatelessWidget {
                 scaffoldKey: scaffoldKey,
                 iconData: Icons.home,
                 onTap: () {
-                  if (route == '/HomeWrapper') {
+                  if (route == '/HomeWrapper' || route == '/') {
                     Get.back();
                   } else {
                     Get.offAll(() => const HomeWrapper());
@@ -234,9 +234,9 @@ class _Header extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              user.value.preferredName! == 'firstName'
-                                  ? '${user.value.firstName!} ${user.value.lastName!}'
-                                  : '${user.value.middleName!} ${user.value.lastName!}',
+                              user.value!.preferredName! == 'firstName'
+                                  ? '${user.value!.firstName!} ${user.value!.lastName!}'
+                                  : '${user.value!.middleName!} ${user.value!.lastName!}',
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
@@ -246,7 +246,7 @@ class _Header extends StatelessWidget {
                                   fontSize: UiConsts.normalFontSize),
                             ),
                             Text(
-                              user.value.email,
+                              user.value!.email,
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -262,10 +262,10 @@ class _Header extends StatelessWidget {
                       ),
                       Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: user.value.profilePic == null
+                          child: user.value!.profilePic == null
                               ? Image.asset('assets/no_profile.png')
                               : FadeInImage(
-                                  image: NetworkImage(user.value.profilePic!),
+                                  image: NetworkImage(user.value!.profilePic!),
                                   placeholder:
                                       const AssetImage('assets/no_profile.png'),
                                   fit: BoxFit.cover,

@@ -36,7 +36,7 @@ class VerifyEmailScreen extends StatelessWidget {
                   height: 15,
                 ),
                 Text(
-                  'Email verification process for ${userController.user.value.email}',
+                  'Email verification process for ${userController.user.value!.email}',
                   style: const TextStyle(
                       fontSize: UiConsts.normalFontSize,
                       fontWeight: FontWeight.bold),
@@ -123,9 +123,9 @@ class _AppBarBottom extends StatelessWidget {
               color: Colors.white, fontSize: UiConsts.normalFontSize - 4),
         ),
         Obx(() => Text(
-              user.value.preferredName == 'firstName'
-                  ? user.value.firstName!
-                  : user.value.middleName!,
+              user.value!.preferredName == 'firstName'
+                  ? user.value!.firstName!
+                  : user.value!.middleName!,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: UiConsts.normalFontSize,

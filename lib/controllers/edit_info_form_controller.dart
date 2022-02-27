@@ -34,23 +34,23 @@ class EditInfoFormController extends GetxController {
     ever(
         firstName,
         (value) => updateIsSaved(
-            'firstName', value, userController.user.value.firstName));
+            'firstName', value, userController.user.value!.firstName));
     ever(
         middleName,
         (value) => updateIsSaved(
-            'middleName', value, userController.user.value.middleName));
+            'middleName', value, userController.user.value!.middleName));
     ever(
         lastName,
         (value) => updateIsSaved(
-            'lastName', value, userController.user.value.lastName));
+            'lastName', value, userController.user.value!.lastName));
     ever(
         selectedImage,
         (value) => updateIsSaved(
-            'profilePic', value, userController.user.value.profilePic));
+            'profilePic', value, userController.user.value!.profilePic));
     ever(
         preferredName,
         (value) => updateIsSaved(
-            'preferredName', value, userController.user.value.preferredName));
+            'preferredName', value, userController.user.value!.preferredName));
   }
 
   bool isValidForm(GlobalKey<FormState> formKey) {
@@ -84,11 +84,11 @@ class EditInfoFormController extends GetxController {
   void populate() {
     final user = userController.user;
 
-    firstName.value = user.value.firstName!;
-    middleName.value = user.value.middleName ?? '';
-    lastName.value = user.value.lastName!;
-    preferredName.value = user.value.preferredName!;
-    selectedImage.value = user.value.profilePic ?? '';
+    firstName.value = user.value!.firstName!;
+    middleName.value = user.value!.middleName ?? '';
+    lastName.value = user.value!.lastName!;
+    preferredName.value = user.value!.preferredName!;
+    selectedImage.value = user.value!.profilePic ?? '';
   }
 
   void setSelectedImage(String path) {

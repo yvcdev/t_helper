@@ -29,7 +29,7 @@ createGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
       id: '',
       name: createGroupForm.name.trim().toTitleCase(),
       namedId: generateUniqueId(createGroupForm.name.value, 1, 'g'),
-      owner: user.value.uid,
+      owner: user.value!.uid,
       subject: {
         'name': createGroupForm.subject['name']!,
         'id': createGroupForm.subject['id']!
@@ -77,7 +77,7 @@ createGroupOnSubjectTextTap(BuildContext context) async {
   CreateGroupFormController createGroupForm = Get.find();
 
   final user = userController.user;
-  final userId = user.value.uid;
+  final userId = user.value!.uid;
 
   createGroupForm.subject.value = {'name': '', 'id': ''};
 
@@ -129,6 +129,11 @@ editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
   String? response;
 
   if (currentGroup.image == createGroupForm.selectedImage.value) {
+    if (!Get.isRegistered<UserGroupsController>()) {
+      Get.lazyPut(() => UserGroupsController(), fenix: true);
+    }
+    UserGroupsController userGroupsController = Get.find();
+    await userGroupsController.updateUserGroups(group);
     response = await groupController.updateGroupNoImage(group);
   } else {
     if (currentGroup.image == null &&
@@ -165,6 +170,11 @@ editGroupOnTap(BuildContext context, GlobalKey<FormState> formKey) async {
         group.image = null;
       }
     }
+    if (!Get.isRegistered<UserGroupsController>()) {
+      Get.lazyPut(() => UserGroupsController(), fenix: true);
+    }
+    UserGroupsController userGroupsController = Get.find();
+    await userGroupsController.updateUserGroups(group);
     response = await groupController.updateGroupWithImage(group);
   }
   if (response != null) {

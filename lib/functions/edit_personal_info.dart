@@ -32,7 +32,7 @@ editPersonalInfoOnUpdate(
     }
   });
 
-  await userController.updateUserInfo(userController.user.value, _updateInfo);
+  await userController.updateUserInfo(userController.user.value!, _updateInfo);
   editInfoForm.isSaved.value = true;
 
   editInfoForm.isLoading.value = false;

@@ -1,16 +1,28 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:t_helper/controllers/auth_controller.dart';
 import 'package:t_helper/models/user.dart';
 import 'package:t_helper/services/services.dart';
+import 'package:t_helper/utils/storage_keys_values.dart';
 
 class UserController extends GetxController {
-  AuthController authController = Get.find();
-  Rx<User> user = User(email: '', uid: '').obs;
+  Rx<User?> user = Rx(null);
 
-  void onAuth() {
-    final authUser = authController.fbUser;
-    user.bindStream(
-        UserService().getUser(authUser.value!.uid, authUser.value!.email!));
+  streamUserInfo(String uid, String email) {
+    user.bindStream(UserService().getUser(uid, email));
+
+    ever(user, (_user) async {
+      const storage = FlutterSecureStorage();
+      if (_user == null) {
+        await storage.write(key: SKV.hasData, value: SKV.no);
+      } else {
+        await storage.write(key: SKV.hasData, value: SKV.yes);
+      }
+    });
+  }
+
+  Future<User?> populateUser(String uid) async {
+    final response = user.value = await UserService().populateUser(uid);
+    return response;
   }
 
   reset() {

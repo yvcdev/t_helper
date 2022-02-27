@@ -1,85 +1,82 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/helpers/helpers.dart';
-
 import 'package:t_helper/screens/screens.dart';
-import 'package:t_helper/services/user_service.dart';
+
+import 'package:t_helper/utils/utils.dart';
 import 'package:t_helper/widgets/home_wrapper.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  late Rx<User?> fbUser;
+  Rx<User?> fbUser = Rx(null);
 
   @override
   onReady() {
     super.onReady();
     fbUser = Rx<User?>(auth.currentUser);
     fbUser.bindStream(auth.userChanges());
-    if (auth.currentUser != null) {
-      final userController = Get.put(UserController(), permanent: true);
-      userController.onAuth();
-    }
-    ever(fbUser, _initialScreen);
-  }
-
-  _initialScreen(User? user) {
-    if (user == null) {
-      Get.offAll(() => const LoginScreen());
-    } else {
-      Get.offAll(() => const HomeWrapper());
-    }
   }
 
   Future login(String email, String password) async {
+    const storage = FlutterSecureStorage();
     try {
-      final userController = Get.put(UserController(), permanent: true);
-
-      final authUser = await auth.signInWithEmailAndPassword(
+      final result = await auth.signInWithEmailAndPassword(
           email: email, password: password);
-      final _user = await UserService().getUserMAnually(authUser.user!.uid);
 
-      userController.onAuth();
-      userController.user.value = _user;
+      await storage.write(key: SKV.isAuthenticated, value: SKV.yes);
+      return result;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         Snackbar.error(
             'Wrong credentials', 'Please check your credentials and try again');
+        await storage.write(key: SKV.isAuthenticated, value: SKV.no);
       } else {
         Snackbar.error('Login error', 'Please try again later');
+        await storage.write(key: SKV.isAuthenticated, value: SKV.no);
       }
     } catch (unknowError) {
       Snackbar.error('Login error', 'Please try again later');
+      await storage.write(key: SKV.isAuthenticated, value: SKV.no);
     }
   }
 
   Future signup(String email, String password) async {
+    const storage = FlutterSecureStorage();
     try {
-      final userController = Get.put(UserController(), permanent: true);
-
-      await auth.createUserWithEmailAndPassword(
+      final result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-
-      userController.onAuth();
+      await storage.write(key: SKV.isAuthenticated, value: SKV.yes);
+      return result;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Snackbar.error('Weak password', 'The password provided is too weak');
+        await storage.write(key: SKV.isAuthenticated, value: SKV.no);
       } else if (e.code == 'email-already-in-use') {
         Snackbar.error(
             'Email in use', 'An account for that email already exists');
+        await storage.write(key: SKV.isAuthenticated, value: SKV.no);
       } else {
         Snackbar.error(
             'Account creation failed', 'Your account could not be created');
+        await storage.write(key: SKV.isAuthenticated, value: SKV.no);
       }
     } catch (unknowError) {
       Snackbar.error(
           'Account creation failed', 'Your account could not be created');
+      await storage.write(key: SKV.isAuthenticated, value: SKV.no);
     }
   }
 
   Future<void> signOut() async {
+    const storage = FlutterSecureStorage();
     await auth.signOut();
-    resetControllers();
+
+    await storage.write(key: SKV.isAuthenticated, value: SKV.no);
+
+    Get.offAll(() => const LoginScreen());
+
     Get.delete<GroupController>();
   }
 
@@ -106,14 +103,19 @@ class AuthController extends GetxController {
       await user!.updateEmail(newEmail);
 
       await userController
-          .updateUserInfo(userController.user.value, {'email': newEmail});
+          .updateUserInfo(userController.user.value!, {'email': newEmail});
 
       if (onlyEmail) {
-        Snackbar.success('Email change', 'Email successfully updated');
+        Snackbar.success('Success', 'Email updated');
       }
+
+      Get.to(() => const VerifyEmailScreen());
+
+      EditEmailPasswordFormController editEmailPasswordForm = Get.find();
+      editEmailPasswordForm.reset();
       return true;
     } catch (e) {
-      Snackbar.error('Email change', 'Error when trying to change the email');
+      Snackbar.error('Error', 'Error when trying to change the email');
       return true;
     }
   }
@@ -129,12 +131,20 @@ class AuthController extends GetxController {
       await user.updatePassword(newPassword);
 
       if (onlyPassword) {
-        Snackbar.success('Password change', 'Password successfully updated');
+        Snackbar.success('Success', 'Password updated');
       }
+
+      if (auth.currentUser!.emailVerified) {
+        Get.to(() => const HomeWrapper());
+      } else {
+        Get.to(() => const VerifyEmailScreen());
+      }
+
+      EditEmailPasswordFormController editEmailPasswordForm = Get.find();
+      editEmailPasswordForm.reset();
       return true;
     } catch (e) {
-      Snackbar.error(
-          'Password change', 'Error when trying to change the email');
+      Snackbar.error('Error', 'Error when trying to change the email');
       return false;
     }
   }
@@ -146,9 +156,13 @@ class AuthController extends GetxController {
     final passwordChanged =
         await updatePassword(newPassword, currentPassword, onlyPassword: false);
 
+    Get.to(() => const VerifyEmailScreen());
+
+    EditEmailPasswordFormController editEmailPasswordForm = Get.find();
+    editEmailPasswordForm.reset();
+
     if (emailChanged && passwordChanged) {
-      Snackbar.success('Email and password change',
-          'Email and Password successfully updated');
+      Snackbar.success('Success', 'Email and Password updated');
     }
   }
 }

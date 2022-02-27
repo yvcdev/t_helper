@@ -96,4 +96,28 @@ class GroupUsersService {
       return false;
     }
   }
+
+  Future<bool> updateUserInfo(User user) async {
+    try {
+      final _result =
+          await groupUsers.where('userId', isEqualTo: user.uid).get();
+
+      if (_result.docs.isNotEmpty) {
+        for (var groupUser in _result.docs) {
+          await groupUser.reference.set({
+            'userEmail': user.email,
+            'userFirstName': user.firstName,
+            'userMiddleName': user.middleName,
+            'userLastName': user.lastName,
+            'userProfilePic': user.profilePic
+          }, SetOptions(merge: true));
+        }
+      }
+      return true;
+    } catch (e) {
+      Snackbar.error('Unknown error',
+          'There was an error updating the information in the groups');
+      return false;
+    }
+  }
 }

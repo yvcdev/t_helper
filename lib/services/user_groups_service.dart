@@ -90,4 +90,47 @@ class UserGroupsService {
           'Unknown error', 'There was an error updating the number of users');
     }
   }
+
+  Future<bool> updateUserGroups(Group group) async {
+    try {
+      final _groups =
+          await userGroups.where('groupId', isEqualTo: group.id).get();
+
+      if (_groups.docs.isNotEmpty) {
+        for (var _group in _groups.docs) {
+          await _group.reference.set({
+            'groupName': group.name,
+            'groupPicture': group.image,
+            'groupSubject': group.subject['name'],
+            'groupSubjectId': group.subject['id']
+          }, SetOptions(merge: true));
+        }
+      }
+
+      return true;
+    } catch (e) {
+      Snackbar.error('Unknown error',
+          'There was an error updating the your student\'s group info');
+      return false;
+    }
+  }
+
+  Future<bool> deleteUserGroups(Group group) async {
+    try {
+      final _groups =
+          await userGroups.where('groupId', isEqualTo: group.id).get();
+
+      if (_groups.docs.isNotEmpty) {
+        for (var _group in _groups.docs) {
+          await _group.reference.delete();
+        }
+      }
+
+      return true;
+    } catch (e) {
+      Snackbar.error('Unknown error',
+          'There was an error updating the deleting the group on the students\'s accounts');
+      return false;
+    }
+  }
 }

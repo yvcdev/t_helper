@@ -7,7 +7,7 @@ class User {
   final String? middleName;
   final String? lastName;
   final String? role;
-  final String? profilePic;
+  String? profilePic;
   final String? preferredName;
   final List<String>? groups;
 

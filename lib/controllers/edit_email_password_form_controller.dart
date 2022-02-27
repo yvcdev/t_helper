@@ -26,7 +26,7 @@ class EditEmailPasswordFormController extends GetxController {
     ever(
         newEmail,
         (value) =>
-            updateIsSaved('email', value, userController.user.value.email));
+            updateIsSaved('email', value, userController.user.value!.email));
     ever(newPassword,
         (value) => updateIsSaved('password', newPassword.value, value));
     ever(
@@ -98,6 +98,7 @@ class EditEmailPasswordFormController extends GetxController {
   }
 
   void reset() {
+    toUpdate.value = '';
     newEmail.value = '';
     newPassword.value = '';
     currentPassword.value = '';
