@@ -74,6 +74,7 @@ class AuthController extends GetxController {
     await auth.signOut();
 
     await storage.write(key: SKV.isAuthenticated, value: SKV.no);
+    await storage.write(key: SKV.hasData, value: SKV.no);
 
     Get.offAll(() => const LoginScreen());
 
@@ -115,7 +116,8 @@ class AuthController extends GetxController {
       editEmailPasswordForm.reset();
       return true;
     } catch (e) {
-      Snackbar.error('Error', 'Error when trying to change the email');
+      Snackbar.error('Error',
+          'Either the password is incorrect or there is a server error');
       return true;
     }
   }
@@ -144,7 +146,8 @@ class AuthController extends GetxController {
       editEmailPasswordForm.reset();
       return true;
     } catch (e) {
-      Snackbar.error('Error', 'Error when trying to change the email');
+      Snackbar.error('Error',
+          'Either the password is incorrect or there is a server error');
       return false;
     }
   }

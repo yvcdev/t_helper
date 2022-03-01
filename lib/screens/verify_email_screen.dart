@@ -5,6 +5,7 @@ import 'package:t_helper/constants/constants.dart';
 import 'package:t_helper/controllers/controllers.dart';
 import 'package:t_helper/layouts/layouts.dart';
 import 'package:t_helper/screens/screens.dart';
+import 'package:t_helper/widgets/home_wrapper.dart';
 import 'package:t_helper/widgets/widgets.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
@@ -87,6 +88,9 @@ class VerifyEmailScreen extends StatelessWidget {
                     isLoading: verifyEmailController.isLoadingVerify.value,
                     onTap: () async {
                       await authController.auth.currentUser!.reload();
+                      if (authController.auth.currentUser!.emailVerified) {
+                        Get.to(() => const HomeWrapper());
+                      }
                     },
                     waitTitle: 'Please wait',
                     title: 'Already Verified My Email')),

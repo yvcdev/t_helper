@@ -31,6 +31,7 @@ class UsersService {
     } catch (e) {
       usersController.error.value = "There was an error finding the student";
       usersController.message.value = null;
+      return null;
     }
   }
 }

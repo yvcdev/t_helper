@@ -27,8 +27,11 @@ class UserService {
       if (result.exists) {
         return User.fromSnapshot(result, result.id);
       }
+
+      return null;
     } catch (e) {
       Snackbar.error('Unknown error', 'Unable to get the user data');
+      return null;
     }
   }
 

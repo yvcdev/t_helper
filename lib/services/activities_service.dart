@@ -28,6 +28,7 @@ class ActivitiesService {
       activitiesController.isLoading.value = false;
       Snackbar.error(
           'Unknown error', 'There was an error getting the activites list');
+      return null;
     }
   }
 }

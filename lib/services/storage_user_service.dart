@@ -28,8 +28,10 @@ class StorageUserService {
       } else {
         Snackbar.error('Unknown Error', 'Please try again later');
       }
+      return null;
     } catch (e) {
       Snackbar.error('Unknown Error', 'Please try again later');
+      return null;
     }
   }
 

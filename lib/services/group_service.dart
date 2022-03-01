@@ -65,6 +65,7 @@ class GroupService {
       return documentReference.id;
     } catch (e) {
       Snackbar.error('Unknown error', 'There was an error creating the group');
+      return null;
     }
   }
 
@@ -77,6 +78,7 @@ class GroupService {
       return id;
     } catch (e) {
       Snackbar.error('Unknown error', 'There was an error updating the group');
+      return null;
     }
   }
 
@@ -89,6 +91,7 @@ class GroupService {
       return group.id;
     } catch (e) {
       Snackbar.error('Unknown error', 'There was an error updating the group');
+      return null;
     }
   }
 
@@ -106,6 +109,7 @@ class GroupService {
       return group.id;
     } catch (e) {
       Snackbar.error('Unknown error', 'There was an error updating the group');
+      return null;
     }
   }
 

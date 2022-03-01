@@ -84,6 +84,8 @@ class GroupMembersScreen extends StatelessWidget {
                                 ? null
                                 : 'This does not look like an email';
                           }
+
+                          return null;
                         },
                         onChanged: (value) {
                           groupMembersOnChanged(value, context, formKey);

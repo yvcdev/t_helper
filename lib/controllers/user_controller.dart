@@ -21,7 +21,8 @@ class UserController extends GetxController {
   }
 
   Future<User?> populateUser(String uid) async {
-    final response = user.value = await UserService().populateUser(uid);
+    final response = await UserService().populateUser(uid);
+    user.value = response;
     return response;
   }
 
