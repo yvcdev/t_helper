@@ -149,7 +149,25 @@ class GroupService {
       groupController.isLoading.value = false;
       Snackbar.error(
           'Unknown error', 'There was an error removing the picture');
-      return true;
+      return false;
+    }
+  }
+
+  Future<Group?> getGroup(String groupId) async {
+    try {
+      groupController.isLoading.value = true;
+      final _group = await groupsReference.doc(groupId).get();
+
+      if (_group.exists) {
+        return Group.fromMap(_group.data() as Map, _group.id);
+      }
+      groupController.isLoading.value = false;
+      return null;
+    } catch (e) {
+      groupController.isLoading.value = false;
+      Snackbar.error(
+          'Unknown error', 'There was an error retrieving the group');
+      return null;
     }
   }
 }

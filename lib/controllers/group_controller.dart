@@ -58,4 +58,9 @@ class GroupController extends GetxController {
     final response = await GroupService().deletePicture(imageUrl);
     return response;
   }
+
+  Future<Group?> getGroup(String groupId) async {
+    final response = await GroupService().getGroup(groupId);
+    return response;
+  }
 }
