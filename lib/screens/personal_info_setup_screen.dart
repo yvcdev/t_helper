@@ -149,6 +149,8 @@ class _InfoForm extends StatelessWidget {
                     ? null
                     : 'Your middle name can only have letters (3-20)';
               }
+
+              return null;
             },
             onChanged: (value) {
               personalInfoForm.middleName.value = value;

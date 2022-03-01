@@ -17,7 +17,6 @@ editEmailPasswordOnUpdate(
   };
 
   if (!editEmailPasswordForm.isValidForm(editEmailPassword)) return;
-
   FocusScope.of(context).unfocus();
 
   editEmailPasswordForm.isLoading.value = true;

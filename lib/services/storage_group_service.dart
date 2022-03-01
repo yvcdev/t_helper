@@ -27,8 +27,10 @@ class StorageGroupService {
       } else {
         Snackbar.error('Unknown error', 'Please try again later');
       }
+      return null;
     } catch (e) {
       Snackbar.error('Unknown error', 'Please try again later');
+      return null;
     }
   }
 }

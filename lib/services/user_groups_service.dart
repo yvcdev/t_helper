@@ -71,6 +71,7 @@ class UserGroupsService {
     } catch (e) {
       Snackbar.error('Unknown error',
           'There was an error removing the user from the group');
+      return null;
     }
   }
 

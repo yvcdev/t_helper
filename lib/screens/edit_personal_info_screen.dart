@@ -119,6 +119,7 @@ class _InfoFormState extends State<_InfoForm> {
                     ? null
                     : 'Your middle name can only have letters (3-20)';
               }
+              return null;
             },
             onChanged: (value) {
               editInfoForm.middleName.value = value;

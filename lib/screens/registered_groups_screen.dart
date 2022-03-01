@@ -18,11 +18,13 @@ class RegisteredGroupScreen extends StatelessWidget {
     GroupController groupController = Get.find();
     UserController userController = Get.find();
     final user = userController.user.value;
+    final arguments = Get.arguments;
 
     return Obx(() => DefaultAppBarLayout(
             title: 'Your Groups',
             topSeparation: false,
             loading: groupController.isLoading.value,
+            drawer: arguments?['showDrawer'] ? true : false,
             showAdditionalOptions: user!.role == 'teacher' ? true : false,
             additionalOptions: const [
               'Create group'

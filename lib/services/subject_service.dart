@@ -9,6 +9,8 @@ import 'package:t_helper/utils/generate_unique_id.dart';
 class SubjectService {
   CollectionReference subjectsReference =
       FirebaseFirestore.instance.collection('subjects');
+  CollectionReference groupsReference =
+      FirebaseFirestore.instance.collection('groups');
   SubjectController subjectController = Get.find();
 
   Future<List<Subject>> getSubjects(String userId,
@@ -107,6 +109,7 @@ class SubjectService {
     } catch (e) {
       Snackbar.error(
           'Unknown error', 'There was an error deleting the subject');
+      return null;
     }
   }
 
@@ -153,6 +156,16 @@ class SubjectService {
 
   Future<int?> deleteSubject(String subjectId) async {
     try {
+      final associatedGroups =
+          await groupsReference.where('subject.id', isEqualTo: subjectId).get();
+
+      if (associatedGroups.docs.isNotEmpty) {
+        final length = associatedGroups.docs.length;
+        Snackbar.error('Subject in $length ${length == 1 ? "group" : "groups"}',
+            'Please delete/edit the ${length == 1 ? "group" : "groups"} first');
+        return null;
+      }
+
       subjectsReference.doc(subjectId).delete();
 
       final index = subjectController.subjectList
@@ -167,6 +180,7 @@ class SubjectService {
     } catch (e) {
       Snackbar.error(
           'Unknown error', 'There was an error deleting the subject');
+      return null;
     }
   }
 }
