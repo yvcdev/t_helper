@@ -24,7 +24,9 @@ class RegisteredGroupScreen extends StatelessWidget {
             title: 'Your Groups',
             topSeparation: false,
             loading: groupController.isLoading.value,
-            drawer: arguments?['showDrawer'] ? true : false,
+            drawer: arguments?['showDrawer'] != null
+                ? arguments['showDrawer']
+                : true,
             showAdditionalOptions: user!.role == 'teacher' ? true : false,
             additionalOptions: const [
               'Create group'
@@ -117,15 +119,23 @@ class _GroupList extends StatelessWidget {
                       ? groups[index].image
                       : studentGroups[index].groupPicture,
                   useAssetImage: useAssetImage(index),
-                  onTap: () {
+                  onTap: () async {
+                    CurrentGroupController currentGroupController = Get.find();
                     if (isTeacher()) {
-                      CurrentGroupController currentGroupController =
-                          Get.find();
-
                       currentGroupController.currentGroup.value = groups[index];
-
                       Get.to(() => const GroupInfoScreen());
-                    } else {}
+                    } else {
+                      GroupController groupController = Get.find();
+                      final groupInfo = studentGroups[index];
+
+                      final _group =
+                          await groupController.getGroup(groupInfo.groupId);
+
+                      if (_group != null) {
+                        currentGroupController.currentGroup.value = _group;
+                        Get.to(() => const GroupInfoScreen());
+                      }
+                    }
                   },
                 ));
           },
