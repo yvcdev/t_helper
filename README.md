@@ -1,16 +1,32 @@
-# t_helper
+# T Helper
 
-A new Flutter project.
+The idea behind this application is to provide teachers with a suite of tools that they can use in order to enhance their full teaching cycle. With the mobile app, educators will be able to manage groups, track attendance and grades, and assign various activities (which can be used in and out of class). 
 
-## Getting Started
+## Architecture
 
-This project is a starting point for a Flutter application.
+- [Flutter](https://flutter.dev/) - an open source framework by Google for building beautiful, natively compiled, multi-platform applications from a single codebase. 
 
-A few resources to get you started if this is your first Flutter project:
+- [Firebase](https://flutter.dev/) - a Google's platform that helps high-quality develop apps in a quick way. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Prerequisites
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Dart: version 2.16.1
+- Flutter: version 2.10.2
+- Android Studio: latest version 
+- Xcode: latest version (optional)
+
+## Access
+- [x] Android
+- [x] iOS
+- [ ] Web
+
+## Related Technologies
+
+- [Git](https://git-scm.com/)
+- [Azure DevOps](https://dev.azure.com/yvc-dev/t-helper/)
+
+## Author
+
+- Yeinson Valencia Cuadros
+- [GitHub](https://github.com/yvcdev/)
+- [LinkedIn](https://www.linkedin.com/mwlite/in/yeinson-valencia)
