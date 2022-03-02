@@ -15,6 +15,8 @@ The idea behind this application is to provide teachers with a suite of tools th
 - Android Studio: latest version 
 - Xcode: latest version (optional)
 
+**Note: Xcode is only necessary if the application wants to be tested on iOS.
+
 ## Access
 - [x] Android
 - [x] iOS
@@ -23,7 +25,7 @@ The idea behind this application is to provide teachers with a suite of tools th
 ## Related Technologies
 
 - [Git](https://git-scm.com/)
-- [Azure DevOps](https://dev.azure.com/yvc-dev/t-helper/)
+- [AzureDevOps](https://dev.azure.com/yvc-dev/t-helper/)
 
 ## Author
 
