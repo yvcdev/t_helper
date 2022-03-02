@@ -159,6 +159,7 @@ class GroupService {
       final _group = await groupsReference.doc(groupId).get();
 
       if (_group.exists) {
+        groupController.isLoading.value = false;
         return Group.fromMap(_group.data() as Map, _group.id);
       }
       groupController.isLoading.value = false;
