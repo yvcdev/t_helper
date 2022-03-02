@@ -25,7 +25,7 @@ The idea behind this application is to provide teachers with a suite of tools th
 ## Related Technologies
 
 - [Git](https://git-scm.com/)
-- [AzureDevOps](https://dev.azure.com/yvc-dev/t-helper/)
+- [Azure DevOps](https://dev.azure.com/yvc-dev/t-helper/)
 
 ## Author
 
